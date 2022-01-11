@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import {Navbar} from "./components/Navbar";
+import {Todo} from "./components/Todo";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+import {Itodo} from "./Interfaces";
+import {ToDoList} from "./components/ToDoList";
+
+const App:React.FC =()=>{
+  const [todos,setTodos]  = useState<Itodo[]>([])
+  const addHandler = (title:string) =>{
+    const  todo:Itodo={
+      title:title,
+      id: Date.now(),
+      completed:false
+
+    }
+   setTodos(prevState => [todo, ...prevState])
+  }
+  const deleteHandler = (id:number) => {
+   if ( window.confirm(`Are you sure?`))
+    setTodos(prevState => prevState.filter(todo=>{
+      if (todo.id !=id){
+        return todo
+      }
+    }))
+  }
+  const toggleHandler = (id:number) => {
+    console.log(id)
+    setTodos(prevState => prevState.map(todo=>{
+      if (todo.id===id){
+        const newTodo = {...todo,completed:!todo.completed}
+       return newTodo
+      }
+      return todo
+    }))
+  }
+  return <>
+    <Navbar></Navbar>
+    <div className="container">
+      <Todo onAdd={addHandler}/>
+      <ToDoList todos={todos} onRemove={deleteHandler} onToggle={toggleHandler}/>
     </div>
-  );
-}
 
-export default App;
+  </>
+}
+export default App
