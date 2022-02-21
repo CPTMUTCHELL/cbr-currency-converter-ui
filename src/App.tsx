@@ -1,46 +1,50 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {Navbar} from "./components/Navbar";
-import {Todo} from "./components/Todo";
+import {BrowserRouter, Routes, Route, useLocation, Navigate} from "react-router-dom";
+import {LoginPage} from "./pages/LoginPage/LoginPage";
+import {ConvertPage} from "./pages/ConvertPage/ConvertPage";
+import {SignUpPage} from "./pages/SignUpPage";
+import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
+import {UserContext} from "./functions/UserContext";
+import {useValidate} from "./hooks/useValidate";
+import {getUser} from "./functions/JwtToken";
+import {RequireAuth} from "./components/RequireAuth";
+import {Layout} from "./components/Layout";
+import {NotFoundPage} from "./pages/NotFoundPage";
 
-import {Itodo} from "./Interfaces";
-import {ToDoList} from "./components/ToDoList";
 
-const App:React.FC =()=>{
-  const [todos,setTodos]  = useState<Itodo[]>([])
-  const addHandler = (title:string) =>{
-    const  todo:Itodo={
-      title:title,
-      id: Date.now(),
-      completed:false
+const App: React.FC = () => {
 
-    }
-   setTodos(prevState => [todo, ...prevState])
-  }
-  const deleteHandler = (id:number) => {
-   if ( window.confirm(`Are you sure?`))
-    setTodos(prevState => prevState.filter(todo=>{
-      if (todo.id !=id){
-        return todo
-      }
-    }))
-  }
-  const toggleHandler = (id:number) => {
-    console.log(id)
-    setTodos(prevState => prevState.map(todo=>{
-      if (todo.id===id){
-        const newTodo = {...todo,completed:!todo.completed}
-       return newTodo
-      }
-      return todo
-    }))
-  }
-  return <>
-    <Navbar></Navbar>
-    <div className="container">
-      <Todo onAdd={addHandler}/>
-      <ToDoList todos={todos} onRemove={deleteHandler} onToggle={toggleHandler}/>
-    </div>
+    const [userToken, setUserToken] = useState(Object)
+    const value = useMemo(
+        () => ({userToken, setUserToken}),
+        [userToken]
+    );
 
-  </>
+    return <BrowserRouter>
+        <UserContext.Provider value={value}>
+
+
+
+
+                <Routes>
+
+                    <Route path="/" element={<Layout/>}>
+                    <Route element={<SignUpPage/>} path="/registration"/>
+                    <Route element={<LoginPage/>} path="/login"/>
+                    <Route element={<RequireAuth/>}>
+
+                    <Route path="/convert" element={<ConvertPage/>}/>
+
+                    <Route element={<HistoryPage/>} path="/history"/>
+                </Route>
+
+                    </Route>
+                    <Route path="*" element={<NotFoundPage/>}/>
+                </Routes>
+
+
+        </UserContext.Provider>
+    </BrowserRouter>
 }
 export default App

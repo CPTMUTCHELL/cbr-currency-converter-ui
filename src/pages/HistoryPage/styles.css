@@ -1,0 +1,23 @@
+th,td{
+    border: 1px solid #ddd;
+}
+
+.desc:after,
+.asc:after {
+    content: ' ';
+    position: relative;
+
+    left: 2px;
+    border: 8px solid transparent;
+}
+
+.desc:after {
+    top: 10px;
+    border-top-color: silver;
+}
+
+.asc:after {
+    bottom: 15px;
+    border-bottom-color: silver;
+}
+
