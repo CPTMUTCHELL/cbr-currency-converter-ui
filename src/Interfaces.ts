@@ -1,9 +1,3 @@
-export interface Itodo {
-    title:string,
-    id: number,
-    completed:boolean
-}
-
 export interface IUser {
     username:string,
     password: string
@@ -28,9 +22,14 @@ export interface IHistoryPage {
     "totalElements":number
     dto:IConvert[]
 }
+export interface IRole{
+    id?:number
+    name: string
+}
 export interface IUserToken {
+    "id"?:number,
     "username":string
-    "roles":String[]
+    "roles":IRole[]
 }
 
 export interface IUserContext {

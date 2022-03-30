@@ -11,6 +11,7 @@ import {getUser} from "./functions/JwtToken";
 import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";
 import {NotFoundPage} from "./pages/NotFoundPage";
+import {AdminPage} from "./pages/AdminPage/AdminPage";
 
 
 const App: React.FC = () => {
@@ -25,23 +26,24 @@ const App: React.FC = () => {
         <UserContext.Provider value={value}>
 
 
+            <Routes>
 
+                <Route path="/" element={<Layout/>}>
 
-                <Routes>
-
-                    <Route path="/" element={<Layout/>}>
                     <Route element={<SignUpPage/>} path="/registration"/>
                     <Route element={<LoginPage/>} path="/login"/>
-                    <Route element={<RequireAuth/>}>
+                    <Route element={<RequireAuth allowedRoles={["1-ADMIN", "2-USER"]}/>}>
+                        <Route path="/convert" element={<ConvertPage/>}/>
+                        <Route element={<HistoryPage/>} path="/history"/>
+                    </Route>
+                    <Route element={<RequireAuth allowedRoles={["1-ADMIN"]}/>}>
 
-                    <Route path="/convert" element={<ConvertPage/>}/>
-
-                    <Route element={<HistoryPage/>} path="/history"/>
-                </Route>
+                        <Route element={<AdminPage/>} path="/users"/>
 
                     </Route>
-                    <Route path="*" element={<NotFoundPage/>}/>
-                </Routes>
+                </Route>
+                <Route path="*" element={<NotFoundPage/>}/>
+            </Routes>
 
 
         </UserContext.Provider>

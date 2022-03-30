@@ -6,9 +6,9 @@ import {useValidate} from "../hooks/useValidate";
 import { singletonTokenInstance} from "../functions/Tokens";
 import { ClipLoader } from "react-spinners";
 
-export const RequireAuth = () => {
-    let {userToken,setUserToken}  = useContext(UserContext);
-    let location = useLocation();
+export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) => {
+    const {userToken,setUserToken}  = useContext(UserContext);
+    const location = useLocation();
     const {performValidation} = useValidate();
     const token = singletonTokenInstance.getToken().access
     const [useEffectCompleted,setUseEffectCompleted] =useState(false);
@@ -30,6 +30,6 @@ export const RequireAuth = () => {
     }
 
 
-    return userToken.username!==undefined ?  <Outlet/>:<Navigate to="/login" state={{ from:location }} replace/>;
+    return userToken.roles.find(role=>allowedRoles.includes(String(role))) ?  <Outlet/>:<Navigate to="/login" state={{ from:location }} replace/>;
 
 }

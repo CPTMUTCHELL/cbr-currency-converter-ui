@@ -18,8 +18,12 @@ export const Navbar:React.FC = () =>{
                 <li><NavLink to="/registration">Sign Up</NavLink></li>
             </ul>
             ):
+
+
+
                 (  <ul className="right hide-on-med-and-down">
                     <li><Logout/></li>
+                    { Math.min(...userToken.roles.map(role=>Number(String(role).split("-")[0])))<=1 ?  <li><NavLink to="/users"><button type="button">Users</button></NavLink></li> :<></>}
 
             </ul>)
             }

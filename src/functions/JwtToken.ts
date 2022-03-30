@@ -5,7 +5,9 @@ import {singletonTokenInstance} from "./Tokens";
 interface MyToken {
     sub: string;
     exp: number;
-    roles:String[]
+    roles: {
+        name:string
+    }[]
 
 }
 export function JwtToken (accessToken:string)  {
