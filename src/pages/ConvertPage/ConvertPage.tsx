@@ -78,7 +78,6 @@ export const ConvertPage: React.FC = () => {
 
     const convertInputHandler = (field: string) => (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
         setConvert({...convert, [field]: e.target.value})
-        console.log(convert)
     }
     const getResultHandler = () => {
         JwtToken(token)

@@ -10,7 +10,6 @@ import {FadeOutText} from "./FadeOutText";
 const roles: Readonly<IRole[]> = [{id:1,name:"ADMIN"},{id:2,name:"USER"}];
 export const AdminPage: React.FC = () => {
     const API_URL_USERS = "http://localhost:8081/auth/admin/users";
-
     const token = localStorage.getItem("access")!
     const {userToken}  = useContext(UserContext);
     const [active,setActive] = useState<boolean>(false)
@@ -30,15 +29,18 @@ export const AdminPage: React.FC = () => {
                     setDelMsg(e.target.value + " deleted")
                     setShowingAlert(true)
                     //remove DOM element with deleted user's name
-                    setTimeout(()=>{
-                        document.getElementById("fadeout")!.remove()
-                    },2000)
+                    // setTimeout(()=>{
+                    //     document.getElementById("fadeout")!.remove()
+                    // },2000)
                 }
             })
     }
     const changeRolesHandler = (e:any) =>{
         setActive(true);
-        setUser(user)
+        setUser(e.target.value)
+        // setShowingAlert(true)
+
+
     }
     useEffect(() => {
         JwtToken(token)
@@ -53,14 +55,17 @@ export const AdminPage: React.FC = () => {
         <>
             <FadeOutText isShowingAlert={isShowingAlert} setShowingAlert={setShowingAlert}>{delMsg}</FadeOutText>
             <ModalWindow user={user}  active={active} setActive={setActive}>
-                <p>{user.username}</p>
-                <select className="pop_up" >
+                <p className='top-left'>Available roles to add:</p>
+
+                <select className="" >
                     {roles.filter(role=>role.id!>minRoleId).map(role => {
                         return (
-                            <option key={role.id} value={role.name}>{role.name} </option>);
+                            <option key={role.id} value={role.name}>{role.name}</option>);
                     })}
                 </select>
-
+                <div className="btn-bottom-center">
+                <button type='button'>Accept</button>
+                </div>
             </ModalWindow>
 
              <table>

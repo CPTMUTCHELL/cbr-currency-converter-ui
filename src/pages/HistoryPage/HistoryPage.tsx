@@ -5,7 +5,7 @@ import {IHistoryPage} from "../../Interfaces";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
 import {UserContext} from "../../functions/UserContext";
 import {useValidate} from "../../hooks/useValidate";
-import './styles.css';
+import   "./styles.css"
 import {singletonTokenInstance} from "../../functions/Tokens";
 
 export const HistoryPage: React.FC = () => {
@@ -101,8 +101,8 @@ export const HistoryPage: React.FC = () => {
                 </Table>
             </TableContainer>
 
-            <div>
-                <input type="text" onKeyPress={(e) => {
+            <div className="page">
+                <input className="box" type="text" onKeyPress={(e) => {
                     if (e.key == 'Enter') {
                         setPageNum(pageNumSelect-1) //another pageNumState to avoid instant change, but use enter button
                         axios

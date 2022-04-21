@@ -21,3 +21,10 @@ th,td{
     border-bottom-color: silver;
 }
 
+.page {
+    display: flex;
+    justify-content: space-between;
+}
+.box {
+    height: 50px;
+}

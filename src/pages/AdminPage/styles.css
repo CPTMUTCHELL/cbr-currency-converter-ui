@@ -38,6 +38,8 @@ th.user {
     transform: scale(0);
     transition: 0.4s ;
     background-color: transparent;
+    display: flex;
+
 }
 .pop_up.active{
     transform: scale(1);
@@ -48,7 +50,7 @@ th.user {
     height: 50px;
     top: 40%;
     left: 40%;
-    display: flex;
+
     margin: auto;
     width: 500px;
     background-color: #fff;
@@ -68,12 +70,33 @@ th.user {
 .alert-shown {
     opacity: 1;
     transition: all 250ms linear;
+
 }
 
 .alert-hidden {
     opacity: 0;
     transition: all 250ms linear 2s;
+
 }
-.red{
-    color: red;
+.box{
+    text-align: center;
+    border: 2px red dashed;
+    padding: 0.1em;
+   min-width:100px;
+    display: inline-block;
+}
+
+.btn-bottom-center {
+    margin: 0;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.top-left {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+
 }

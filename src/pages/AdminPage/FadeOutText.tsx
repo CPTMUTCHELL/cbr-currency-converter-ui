@@ -6,7 +6,7 @@ export interface FadeOutTextProps {
 
 }
 
-export const FadeOutText:React.FC<FadeOutTextProps> = ({isShowingAlert,setShowingAlert,children}) =>{
+export const FadeOutText: React.FC<FadeOutTextProps> = ({isShowingAlert, setShowingAlert, children}) => {
 
     return (
         <>
