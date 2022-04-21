@@ -1,26 +1,16 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {getUser, JwtToken} from "../../functions/JwtToken";
+import {JwtToken} from "../../functions/JwtToken";
 import axios from "axios";
-import {IConvert, IHistoryPage} from "../../Interfaces";
+import {IHistoryPage} from "../../Interfaces";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
-import {Pagination} from "../../components/Pagination/Pagination";
 import {UserContext} from "../../functions/UserContext";
 import {useValidate} from "../../hooks/useValidate";
 import './styles.css';
 import {singletonTokenInstance} from "../../functions/Tokens";
 
 export const HistoryPage: React.FC = () => {
-    const {setUserToken}  = useContext(UserContext);
-    const token = localStorage.getItem("access")!
 
-    // useEffect(()=>{
-    //     performValidation(token)
-    //     //might be new if expired during page refresh
-    //     setUserToken(getUser(localStorage.getItem("access")!))
-    // },[])
-
-    // const [convert, setConvert] = useState<IConvert[]>([])
-    const [pageNum, setPageNum] = useState<number>(0)
+        const [pageNum, setPageNum] = useState<number>(0)
     const [pageSize, setPageSize] = useState<number>(5)
     const [dir, setDir] = useState<string>("desc")
     const [sortField, setSortField] = useState<string>("date")
@@ -29,17 +19,16 @@ export const HistoryPage: React.FC = () => {
     const [date, setDate] = useState<string>("")
 
     const [hpage, setPage] = useState<IHistoryPage>();
-
+    const [pageNumSelect, setPageNumSelect] = useState<number>(1)
     const url = (`http://localhost:8083/history/show/${pageNum + 1}?pageSize=${pageSize}
     &sortField=${sortField}&dir=${dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
-    const arr: number[] = []
-    let i =0;
+
     //to reduce auth-service calls
     useEffect(() => {
         JwtToken(localStorage.getItem("access")!)
     }, [])
     useEffect(() => {
-
+        setPageNumSelect(pageNum+1)
         axios
             .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
             .then((res) => {
@@ -111,27 +100,35 @@ export const HistoryPage: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
 
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={hpage.totalElements}
-                rowsPerPage={pageSize}
-                page={pageNum}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-            <Pagination
-                className="pagination-bar"
-                currentPage={pageNum+1}
-                totalCount={hpage.totalPages}
-                pageSize={pageSize}
-                onPageChange={(ps: number) => {
-                    setPageNum(ps-1 )
-                }}
-            />
             <div>
-                <button className="btn" onClick={()=>window.history.go(-1)}>Back to converter</button>
+                <input type="text" onKeyPress={(e) => {
+                    if (e.key == 'Enter') {
+                        setPageNum(pageNumSelect-1) //another pageNumState to avoid instant change, but use enter button
+                        axios
+                            .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
+                            .then((res) => {
+                                setPage(res.data)
+                            })
+                    }
+                }}
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                           setPageNumSelect(Number(e.target.value))
+                       }}
+                       value={pageNumSelect}/>
+                <TablePagination
+
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={hpage.totalElements}
+                    rowsPerPage={pageSize}
+                    page={pageNum}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </div>
+            <div>
+                <button className="btn" onClick={() => window.history.go(-1)}>Back to converter</button>
             </div>
         </>
     )
