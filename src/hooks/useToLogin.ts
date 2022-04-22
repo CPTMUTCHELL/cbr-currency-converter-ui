@@ -7,8 +7,8 @@ export const useToLogin = () => {
     const navigate = useNavigate();
     const performLogout = useCallback((message:string) => {
         localStorage.clear();
-        setUserToken({username:"",roles:[]})
         navigate("/login", {state: {msg: message }} );
+        setUserToken({username:"",roles:[]})
     }, [])
     return {performLogout};
 

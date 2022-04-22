@@ -1,9 +1,9 @@
-th,td{
+.history-page-container th,td{
     border: 1px solid #ddd;
 }
 
-.desc:after,
-.asc:after {
+.history-page-container .desc:after,
+.history-page-container .asc:after {
     content: ' ';
     position: relative;
 
@@ -11,20 +11,40 @@ th,td{
     border: 8px solid transparent;
 }
 
-.desc:after {
+.history-page-container .desc:after {
     top: 10px;
     border-top-color: silver;
 }
 
-.asc:after {
+.history-page-container .asc:after {
     bottom: 15px;
     border-bottom-color: silver;
 }
 
-.page {
+.history-page-container .page {
     display: flex;
     justify-content: space-between;
 }
-.box {
-    height: 50px;
+.history-page-container .box {
+    height: 30px;
+    width: 5em;
+    margin-top: 1rem;
+    text-align: center;
+
+}
+
+.history-page-container .align {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: right;
+    gap: 40px;
+    align-items: center;
+
+}
+
+.history-page-container .align1 {
+    align-items: baseline;
+    display: flex;
+    justify-content: right;
+    gap: 10px;
 }

@@ -6,7 +6,6 @@ import {ConvertPage} from "./pages/ConvertPage/ConvertPage";
 import {SignUpPage} from "./pages/SignUpPage";
 import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
 import {UserContext} from "./functions/UserContext";
-import {useValidate} from "./hooks/useValidate";
 import {getUser} from "./functions/JwtToken";
 import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";

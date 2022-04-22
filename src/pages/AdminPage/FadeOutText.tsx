@@ -15,7 +15,7 @@ export const FadeOutText: React.FC<FadeOutTextProps> = ({isShowingAlert, setShow
                 className={`${isShowingAlert ? 'alert-shown' : 'alert-hidden'}`}
                 onTransitionEnd={() => setShowingAlert(false)}
             >
-                <h3 id="fadeout" className="red">{children}</h3>
+                <h3 className="box">{children}</h3>
             </div>
 
 

@@ -20,26 +20,21 @@ export const AdminPage: React.FC = () => {
 
 
     const deleteUserHandler =(e:any) =>{
-        window.confirm("Delete the item?")
+       if ( window.confirm("Delete the item?")){
         JwtToken(token)
-        axios
-            .delete(API_URL_USERS+"/"+e.target.id, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
-            .then((res) => {
-                if (res.status==204){
+       axios
+           .delete(API_URL_USERS+"/"+e.target.id, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
+           .then((res) => {
+               if (res.status==204){
                     setDelMsg(e.target.value + " deleted")
                     setShowingAlert(true)
-                    //remove DOM element with deleted user's name
-                    // setTimeout(()=>{
-                    //     document.getElementById("fadeout")!.remove()
-                    // },2000)
-                }
-            })
+               }
+           })
+           }
     }
     const changeRolesHandler = (e:any) =>{
         setActive(true);
         setUser(e.target.value)
-        // setShowingAlert(true)
-
 
     }
     useEffect(() => {
@@ -52,7 +47,7 @@ export const AdminPage: React.FC = () => {
     },[delMsg]);
     const minRoleId=Math.min(...userToken.roles.map(role=>Number(String(role).split("-")[0])))
     return (
-        <>
+        <>  <div className="admin-page-container">
             <FadeOutText isShowingAlert={isShowingAlert} setShowingAlert={setShowingAlert}>{delMsg}</FadeOutText>
             <ModalWindow user={user}  active={active} setActive={setActive}>
                 <p className='top-left'>Available roles to add:</p>
@@ -101,7 +96,7 @@ export const AdminPage: React.FC = () => {
                     </tbody>
                 </table>
 
-
+        </div>
         </>
     )
 }

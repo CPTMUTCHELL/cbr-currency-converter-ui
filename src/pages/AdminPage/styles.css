@@ -67,23 +67,26 @@ th.user {
     cursor: pointer;
 }
 
-.alert-shown {
+.admin-page-container .alert-shown {
+    height:50px;
     opacity: 1;
     transition: all 250ms linear;
 
 }
 
-.alert-hidden {
+.admin-page-container .alert-hidden {
     opacity: 0;
     transition: all 250ms linear 2s;
-
+    height:50px;
 }
-.box{
+.admin-page-container .box{
     text-align: center;
     border: 2px red dashed;
     padding: 0.1em;
    min-width:100px;
+    color: red;
     display: inline-block;
+
 }
 
 .btn-bottom-center {
@@ -99,4 +102,9 @@ th.user {
     top: 10%;
     left: 5%;
 
+}
+.admin-page-container h3{
+    font-size: 18px;
+}
+.admin-page-container table{
 }
