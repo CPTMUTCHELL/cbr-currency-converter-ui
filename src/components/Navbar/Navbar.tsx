@@ -22,6 +22,15 @@ export const Navbar: React.FC = () => {
 
                             <li><NavLink to="/login">Login</NavLink></li>
                             <li><NavLink to="/registration">Sign Up</NavLink></li>
+                            <li><NavLink to="/convert">Converter</NavLink></li>
+                            <li><NavLink to="/history">History</NavLink></li>
+                            <div className="user-and-logout">
+
+                                <p>Logged as <i>{userToken.username}</i></p>
+
+                                <Logout logoutBtn="logoutBtn"/>
+
+                            </div>
                         </ul>
                     ) :
 
@@ -33,15 +42,7 @@ export const Navbar: React.FC = () => {
                                 Admin Page
                             </NavLink></li> :
                             <></>}
-                        <li><NavLink to="/convert">Converter</NavLink></li>
-                        <li><NavLink to="/history">History</NavLink></li>
-                            <div className="user-and-logout">
 
-                                <p>Logged as <i>{userToken.username}</i></p>
-
-                                <Logout logoutBtn="logoutBtn"/>
-
-                            </div>
                     </ul>
 
                     )
