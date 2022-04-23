@@ -1,12 +1,10 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import {Navbar} from "./components/Navbar";
-import {BrowserRouter, Routes, Route, useLocation, Navigate} from "react-router-dom";
+import React, {useMemo, useState} from 'react';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {LoginPage} from "./pages/LoginPage/LoginPage";
 import {ConvertPage} from "./pages/ConvertPage/ConvertPage";
-import {SignUpPage} from "./pages/SignUpPage";
+import {SignUpPage} from "./pages/SignUpPage/SignUpPage";
 import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
 import {UserContext} from "./functions/UserContext";
-import {getUser} from "./functions/JwtToken";
 import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";
 import {NotFoundPage} from "./pages/NotFoundPage";

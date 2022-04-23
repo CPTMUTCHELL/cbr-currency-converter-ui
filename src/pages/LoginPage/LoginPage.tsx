@@ -98,7 +98,7 @@ export const LoginPage: React.FC = () => {
                                value={user.password}/>
                     </label>
 
-                    <p>{error}</p>
+                    <p className="error">{error}</p>
 
                 </form>
 

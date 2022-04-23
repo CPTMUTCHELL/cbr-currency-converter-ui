@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import {IConvert} from "../../Interfaces";
 
-import {getUser, JwtToken} from "../../functions/JwtToken";
-import {Navigate, NavLink, useLocation} from 'react-router-dom'
+import {JwtToken} from "../../functions/JwtToken";
+import { NavLink} from 'react-router-dom'
 import {useToLogin} from "../../hooks/useToLogin"
-// import {useValidate} from "../../hooks/useValidate";
-import {LoginPage} from "../LoginPage/LoginPage";
+
 import {singletonTokenInstance} from "../../functions/Tokens";
 
 interface ICurrency {
@@ -96,11 +95,7 @@ export const ConvertPage: React.FC = () => {
 
 
     return (
-        <>  <nav>
-            <ul className="right hide-on-med-and-down">
-                <li><NavLink to="/history">Show history</NavLink></li>
-            </ul>
-        </nav>
+        <>
                 <div>
                 <select  onChange={convertInputHandler('baseCurrency')}>
                     {currency.map(item => {

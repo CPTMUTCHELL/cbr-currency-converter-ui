@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {IUser} from "../Interfaces";
+import {IUser} from "@src/Interfaces";
 import {useNavigate} from 'react-router-dom';
 
 interface IError {
@@ -92,31 +92,31 @@ export const SignUpPage: React.FC = () => {
     return (
         <>
             <div className='login-wrapper'>
-                <h2>Sign Up</h2>
-                <div className='form-wrapper'>
+                <h1 className="alg">Sign Up</h1>
+                <div>
 
                     <form method='post' action={REGISTER_URL} onSubmit={handleSubmit}>
-                        <div>
+
                             <label>
                                 <p>Username</p>
                                 <input onPaste={handleChange('username')} type='text'
                                        onChange={handleChange('username')}/>
-                                {error?.usernameError != "" && <p style={{color: "red"}}>{error?.usernameError}</p>}
+                                {error?.usernameError != "" &&  <p className="error">{error?.usernameError}</p>}
                             </label>
-                        </div>
 
 
-                        <div>
+
+
                             <label>
                                 <p>Password</p>
                                 <input onPaste={handleChange('password')} type='password'
                                        onChange={handleChange('password')}/>
-                                {error?.passwordError != "" && <p style={{color: "red"}}>{error?.passwordError}</p>}
+                                {error?.passwordError != "" && <p className="error">{error?.passwordError}</p>}
                             </label>
 
-                        </div>
-                        <div className='submit'>
-                            <button>Register Me</button>
+
+                        <div className="btn">
+                            <button type="button" >Register Me</button>
                             {!error.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
                             {error.noError && <p style={{color: "red"}}>You've been registered</p>}
                             {error.errorMsg && <p style={{color: "red"}}>{error.errorMsg}</p>}

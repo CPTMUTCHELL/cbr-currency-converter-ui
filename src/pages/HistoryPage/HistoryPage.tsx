@@ -6,7 +6,7 @@ import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagi
 import "./styles.css"
 import {singletonTokenInstance} from "../../functions/Tokens";
 import {useToLogin} from "../../hooks/useToLogin";
-
+const pageSizes:number[] = [5, 10, 25]
 export const HistoryPage: React.FC = () => {
 
     const [pageNum, setPageNum] = useState<number>(0)
@@ -127,7 +127,7 @@ export const HistoryPage: React.FC = () => {
                     </div>
                     <TablePagination
 
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={pageSizes}
                         component="div"
                         count={hpage.totalElements}
                         rowsPerPage={pageSize}
@@ -137,9 +137,7 @@ export const HistoryPage: React.FC = () => {
                     />
                 </div>
             </div>
-            <div>
-                <button className="btn" onClick={() => window.history.go(-1)}>Back to converter</button>
-            </div>
+
         </>
     )
 }
