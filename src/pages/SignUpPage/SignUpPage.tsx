@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosResponse, AxiosError} from 'axios';
-import {IUser} from "@src/Interfaces";
+import {IUser} from "@/Interfaces";
 import {useNavigate} from 'react-router-dom';
 
 interface IError {

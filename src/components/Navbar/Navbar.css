@@ -29,7 +29,7 @@
     grid-gap: 10px;
     list-style: none;
     text-align: center;
-    width: 70vw;
+    width: 60vw;
     justify-content: end;
 }
 
@@ -47,11 +47,11 @@
 
 .navbar-container .user-and-logout {
     display: flex;
-    position: relative;
     color: white;
-    left: 15rem;
     align-items: center;
-
+    right: 50px;
+    position: absolute;
+    gap: 30px;
 
 }
 
@@ -61,8 +61,8 @@
     border: none;
     cursor: pointer;
     background-color: aqua;
-    position: relative;
-    right: -20px;
+
+
 
 }
 

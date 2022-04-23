@@ -6,9 +6,9 @@
       "dom.iterable",
       "esnext"
     ],
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "paths": {
-      "@src/*": ["*"]
+      "@/*": ["src/*"]
     },
 
     "allowJs": true,
@@ -27,5 +27,6 @@
   },
   "include": [
     "src"
-  ]
+  ],
+
 }

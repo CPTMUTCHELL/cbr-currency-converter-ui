@@ -3,7 +3,6 @@ import axios from 'axios';
 import {IConvert} from "../../Interfaces";
 
 import {JwtToken} from "../../functions/JwtToken";
-import { NavLink} from 'react-router-dom'
 import {useToLogin} from "../../hooks/useToLogin"
 
 import {singletonTokenInstance} from "../../functions/Tokens";
@@ -96,13 +95,15 @@ export const ConvertPage: React.FC = () => {
 
     return (
         <>
-                <div>
+                <div className="select-box">
+
                 <select  onChange={convertInputHandler('baseCurrency')}>
                     {currency.map(item => {
                         return (
                             <option  key={item.charCode} value={item.charCode}>{item.name} ({item.charCode})</option>);
                     })}
                 </select>
+
                 <input
 
                     onKeyPress={(event) => {
