@@ -1,11 +1,13 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import {IConvert} from "../../Interfaces";
 
 import {JwtToken} from "../../functions/JwtToken";
 import {useToLogin} from "../../hooks/useToLogin"
-
+import "./ConvertPage.css"
 import {singletonTokenInstance} from "../../functions/Tokens";
+import Select, {OnChangeValue} from 'react-select'
+import ValueType = WebAssembly.ValueType;
 
 interface ICurrency {
     "date": Date
@@ -20,6 +22,8 @@ interface ICurrency {
 export const ConvertPage: React.FC = () => {
     const token = localStorage.getItem("access")!
     const {performLogout} = useToLogin();
+    const [open, setOpen] = useState<boolean>(false)
+    const opts: any = [{value: '9', label: '9'}]
     // useEffect(()=>{
     //
     //
@@ -32,105 +36,130 @@ export const ConvertPage: React.FC = () => {
     const CONVERT_URL = "http://localhost:8082/convert/convert";
     const [currency, setCurrency] = useState<ICurrency[]>([]);
     // const [storedDate, setDate] = useState<number>();
-
-    let today=Date.parse(new Date().toISOString().slice(0,10))
-    useEffect(()=>{
+    const [cur, setCur] = useState()
+    let today = Date.parse(new Date().toISOString().slice(0, 10))
+    useEffect(() => {
         JwtToken(singletonTokenInstance.getToken().access)
         const raw = JSON.parse(localStorage.getItem("currencies") || '[]')
         setCurrency(raw)
-    },[])
-    useEffect(()=> {
-        console.log("1 "+localStorage.getItem("date"))
+    }, [])
+    useEffect(() => {
+        console.log("1 " + localStorage.getItem("date"))
 
-        const storedDate= localStorage.getItem("date")
-        if (storedDate == null || today > Date.parse(storedDate ) ) {
+        const storedDate = localStorage.getItem("date")
+        if (storedDate == null || today > Date.parse(storedDate)) {
             JwtToken(token)
             axios
                 .get<ICurrency[]>(CURRENCIES_URL, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
                 .then((res) => {
                     localStorage.setItem("currencies", JSON.stringify(res.data));
-                    console.log("2 "+localStorage.getItem("date"))
+                    console.log("2 " + localStorage.getItem("date"))
 
                     setCurrency(res.data)
-                    if (Date.parse(localStorage.getItem("date")!)!= today) {
+                    if (Date.parse(localStorage.getItem("date")!) != today) {
 
-                        localStorage.setItem("date", new Date().toISOString().slice(0,10))
-                        console.log("3 "+localStorage.getItem("date"))
+                        localStorage.setItem("date", new Date().toISOString().slice(0, 10))
+                        console.log("3 " + localStorage.getItem("date"))
                     }
 
                 })
                 .catch((err) => {
-                    performLogout   (`Bad credentials \n ${err.response.data.error_message}`)
+                    performLogout(`Bad credentials \n ${err.response.data.error_message}`)
                 });
 
             //sunday
 
 
         }
-    },[])
+    }, [])
     //
     // useEffect(() => {
     //     localStorage.setItem("currencies", JSON.stringify(currency));
     // }, [currency])
-    const [convert, setConvert] = useState<IConvert>({baseCurrency:"NOK",targetCurrency:"NOK",result:0,quantityToConvert:0})
+    const [convert, setConvert] = useState<IConvert>({
+        baseCurrency: "NOK",
+        targetCurrency: "NOK",
+        result: 0,
+        quantityToConvert: 0
+    })
 
-    const convertInputHandler = (field: string) => (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
-        setConvert({...convert, [field]: e.target.value})
+    const convertInputHandler = (field: string) => (e: any) => {
+
+        setConvert({...convert, [field]: e.value})
     }
     const getResultHandler = () => {
+        console.log(convert)
         JwtToken(token)
 
         axios
 
-            .post<IConvert>(CONVERT_URL, convert,{headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
+            .post<IConvert>(CONVERT_URL, convert, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
             .then((res) => {
-                setConvert({...convert, result:res.data.result})
+                setConvert({...convert, result: res.data.result})
             })
             .catch((err) => {
-                performLogout   (`Bad credentials \n ${err.response.data.error_message}`)
+                performLogout(`Bad credentials \n ${err.response.data.error_message}`)
             });
 
     }
-
+    const options = (): { label: string, value: string }[] => {
+        const res: { label: string, value: string }[] = [];
+        currency.map(item => res.push({label: item.name.concat(" (" + item.charCode + ")"), value: item.charCode}))
+        // console.log(res.find(item=>item.label.includes("RUB")).label)
+        return res
+    }
 
     return (
         <>
-                <div className="select-box">
+            <div className="convert-page-container">
+                <div className="convert-el">
+                    <div className="base">
+                        <div className="select-container">
 
-                <select  onChange={convertInputHandler('baseCurrency')}>
-                    {currency.map(item => {
-                        return (
-                            <option  key={item.charCode} value={item.charCode}>{item.name} ({item.charCode})</option>);
-                    })}
-                </select>
+                            <h3>Select base currency</h3>
+                            <Select onChange={convertInputHandler('baseCurrency')}
+                                    value={options().find(item => item.label.includes(convert.baseCurrency))}
+                                    defaultValue={options().find(item => item.label.includes("RUB"))}
+                                    options={options()}
+                                    classNamePrefix="custom-select" isSearchable
+                            />
+                        </div>
+                        <input
 
-                <input
+                            onKeyPress={(event) => {
+                                if (!/[.]|[0-9]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
+                            onChange={(e) => setConvert({...convert, ["quantityToConvert"]: Number(e.target.value)})}
+                            type="text" maxLength={6}
+                            placeholder="amount to convert" required
+                        />
 
-                    onKeyPress={(event) => {
-                        if (!/[.]|[0-9]/.test(event.key)) {
-                            event.preventDefault();
-                        }
-                    }}
-                    onChange={convertInputHandler('quantityToConvert')} type="text" maxLength={6}  placeholder="amount to convert" required
-                />
+                    </div>
+                    <div className="target">
+                        <div className="select-container">
+
+                            <h3>Select target currency</h3>
+                            <Select onChange={convertInputHandler('targetCurrency')}
+                                    value={options().find(item => item.label.includes(convert.targetCurrency))}
+                                    defaultValue={options().find(item => item.label.includes("RUB"))}
+                                    options={options()}
+                                    classNamePrefix="custom-select" isSearchable
+
+
+                            />
+
+                        </div>
+                        <input readOnly value={convert.result}/>
+                    </div>
+                    <div className="convert-btn">
+                        <button onClick={getResultHandler} type="submit">Convert</button>
+                    </div>
 
                 </div>
 
-
-
-            <div>
-                <select  onChange={convertInputHandler('targetCurrency')}>
-                    {currency.map(item => {
-                        return (
-                            <option key={item.charCode} value={item.charCode}>{item.name} ({item.charCode})</option>);
-                    })}
-                </select>
-                <input readOnly value={convert.result}/>
-
             </div>
-                <button onClick={getResultHandler} type="submit">Convert</button>
-
-
 
         </>
     )

@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {JwtToken} from "../../functions/JwtToken";
 import axios from "axios";
 import {IHistoryPage} from "../../Interfaces";
@@ -6,7 +6,8 @@ import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagi
 import "./styles.css"
 import {singletonTokenInstance} from "../../functions/Tokens";
 import {useToLogin} from "../../hooks/useToLogin";
-const pageSizes:number[] = [5, 10, 25]
+
+const pageSizes: number[] = [5, 10, 25]
 export const HistoryPage: React.FC = () => {
 
     const [pageNum, setPageNum] = useState<number>(0)
@@ -35,8 +36,8 @@ export const HistoryPage: React.FC = () => {
                 setPage(res.data)
             })
             .catch((err) => {
-            performLogout   (`Bad credentials \n ${err.response.data.error_message}`)
-        });
+                performLogout(`Bad credentials \n ${err.response.data.error_message}`)
+            });
     }, [pageNum, pageSize, sortField, dir, baseCurrency, targetCurrency, date])
 
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +112,11 @@ export const HistoryPage: React.FC = () => {
                     <div className="align1">
                         <p>Select page: </p>
                         <input className="box" type="text" onKeyPress={(e) => {
+                            if (!/[.]|[0-9]/.test(e.key)) {
+                                e.preventDefault();
+                            }
                             if (e.key == 'Enter') {
+
                                 setPageNum(pageNumSelect - 1) //another pageNumState to avoid instant change, but use enter button
                                 axios
                                     .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
@@ -121,9 +126,12 @@ export const HistoryPage: React.FC = () => {
                             }
                         }}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                   setPageNumSelect(Number(e.target.value))
+                                   Number(e.target.value) >= hpage.totalElements / pageSize
+                                       ? setPageNumSelect(hpage.totalElements / pageSize)
+                                       : setPageNumSelect(Number(e.target.value))
                                }}
                                value={pageNumSelect}/>
+                        <p> of {hpage.totalElements / pageSize}</p>
                     </div>
                     <TablePagination
 

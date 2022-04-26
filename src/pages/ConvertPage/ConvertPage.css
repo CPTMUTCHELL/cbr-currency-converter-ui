@@ -1,4 +1,79 @@
-.test {
-    width: 90px;
-    height: 90px;
+
+.convert-page-container .convert-el .select-container .custom-select__control {
+    border: none !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid #66676e !important;
+    box-shadow: none !important;
+
+}
+.convert-page-container .convert-el .select-container .custom-select__menu-list {
+    background-color: antiquewhite;
+    border: none !important;
+    border-radius: 0 !important;
+
+    box-shadow: none !important;
+    padding: 0 !important;
+
+}
+
+.convert-page-container .convert-el .select-container .custom-select__value-container{
+    background-color: antiquewhite;
+
+}
+.convert-page-container .select-container .custom-select__menu-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.convert-page-container .convert-el .select-container .custom-select__menu-list::-webkit-scrollbar-thumb {
+    background: #888;
+}
+.convert-page-container .convert-el .select-container .custom-select__menu-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.convert-page-container .convert-el .select-container .custom-select__indicator{
+    background-color: antiquewhite;
+}
+.convert-page-container .convert-el .base {
+    display: flex;
+    flex-direction: column;
+    margin-right: 75px;
+
+}
+.convert-page-container .convert-el .target {
+    display: flex;
+    flex-direction: column;
+    margin-left: 75px;
+}
+
+
+.convert-page-container h3 {
+    font-size: 1rem;
+}
+
+
+.convert-page-container .convert-el {
+    /*inline-flex to get width as max of child to center-align the button*/
+    display: inline-flex;
+    margin-left: 240px;
+
+    margin-top: 70px;
+    position: relative;
+}
+.convert-page-container .select-container {
+    margin-bottom: 10px;
+}
+
+.convert-page-container .target .select-container {
+    margin-bottom: 10px;
+}
+
+.convert-page-container .convert-btn {
+    margin-top: 100px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center; /** Y-axis align **/
+    justify-content: center; /** X-axis align **/
 }
