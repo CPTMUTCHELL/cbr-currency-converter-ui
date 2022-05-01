@@ -1,9 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Navigate, useLocation,Outlet} from "react-router-dom";
+import { useLocation,Outlet} from "react-router-dom";
 import {UserContext} from "../functions/UserContext";
 import {getUser} from "../functions/JwtToken";
 import { singletonTokenInstance} from "../functions/Tokens";
 import { ClipLoader } from "react-spinners";
+import {NotAuthorizedPage} from "../pages/NotAuthorizedPage";
 
 export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) => {
     const {userToken,setUserToken}  = useContext(UserContext);
@@ -26,6 +27,6 @@ export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) =>
     }
 
 
-    return userToken.roles.find(role=>allowedRoles.includes(String(role))) ?  <Outlet/>:<Navigate to="/login" state={{ from:location }} replace/>;
+    return userToken.roles.find(role=>allowedRoles.includes(String(role))) ?  <Outlet/>: <NotAuthorizedPage/>;
 
 }

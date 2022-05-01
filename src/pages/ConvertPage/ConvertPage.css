@@ -70,8 +70,7 @@
 .convert-page-container .convert-btn {
     margin-top: 100px;
     position: absolute;
-    top: 0;
-    width: 100%;
+    width: 105%;
     height: 100%;
     display: flex;
     align-items: center; /** Y-axis align **/

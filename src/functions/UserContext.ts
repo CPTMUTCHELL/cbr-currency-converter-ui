@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import {IUserContext} from "../Interfaces";
+import {IUserContext} from "@/Interfaces";
 const defaultUserCtx:IUserContext={
     userToken:{
         username:"",

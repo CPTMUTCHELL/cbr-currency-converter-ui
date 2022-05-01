@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import axios from 'axios';
-import {IUser, IToken, IUserContext} from "../../Interfaces";
-import {useNavigate, useLocation, BrowserRouter} from 'react-router-dom';
+import {IUser, IToken} from "../../Interfaces";
+import {useNavigate, useLocation} from 'react-router-dom';
 import {getUser} from "../../functions/JwtToken";
 import  {UserContext} from "../../functions/UserContext";
 import './styles.css';

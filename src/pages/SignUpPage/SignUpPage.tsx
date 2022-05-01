@@ -26,7 +26,6 @@ export const SignUpPage: React.FC = () => {
 
     const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement
-
         setUser({...user, [field]: target.value});
         switch (field) {
             case 'username':
@@ -64,8 +63,8 @@ export const SignUpPage: React.FC = () => {
                 ...prevState,
                 validated: true
             }));
-            axios
 
+            axios
                 .post<IUser>(REGISTER_URL, user)
                 .then((res: AxiosResponse) => {
                     if (res.status >= 200 && res.status < 400) setError(prevState => ({
@@ -116,7 +115,7 @@ export const SignUpPage: React.FC = () => {
 
 
                         <div className="btn">
-                            <button type="button" >Register Me</button>
+                            <button type="submit" >Register Me</button>
                             {!error.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
                             {error.noError && <p style={{color: "red"}}>You've been registered</p>}
                             {error.errorMsg && <p style={{color: "red"}}>{error.errorMsg}</p>}

@@ -1,13 +1,12 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {IConvert} from "../../Interfaces";
+import {IConvert} from "@/Interfaces";
 
 import {JwtToken} from "../../functions/JwtToken";
 import {useToLogin} from "../../hooks/useToLogin"
 import "./ConvertPage.css"
 import {singletonTokenInstance} from "../../functions/Tokens";
-import Select, {OnChangeValue} from 'react-select'
-import ValueType = WebAssembly.ValueType;
+import Select from 'react-select'
 
 interface ICurrency {
     "date": Date
@@ -22,21 +21,9 @@ interface ICurrency {
 export const ConvertPage: React.FC = () => {
     const token = localStorage.getItem("access")!
     const {performLogout} = useToLogin();
-    const [open, setOpen] = useState<boolean>(false)
-    const opts: any = [{value: '9', label: '9'}]
-    // useEffect(()=>{
-    //
-    //
-    //         performValidation(token)
-    //         //might be new if expired during page refresh
-    //         setUserToken(getUser(localStorage.getItem("access")!))
-    //
-    // },[])
     const CURRENCIES_URL = "http://localhost:8082/convert/currencies";
     const CONVERT_URL = "http://localhost:8082/convert/convert";
     const [currency, setCurrency] = useState<ICurrency[]>([]);
-    // const [storedDate, setDate] = useState<number>();
-    const [cur, setCur] = useState()
     let today = Date.parse(new Date().toISOString().slice(0, 10))
     useEffect(() => {
         JwtToken(singletonTokenInstance.getToken().access)
@@ -54,8 +41,7 @@ export const ConvertPage: React.FC = () => {
                 .then((res) => {
                     localStorage.setItem("currencies", JSON.stringify(res.data));
                     console.log("2 " + localStorage.getItem("date"))
-
-                    setCurrency(res.data)
+                    setCurrency(res.data.sort((o1,o2)=>o1.charCode > o2.charCode ? 1 : o2.charCode > o1.charCode ? -1 : 0))
                     if (Date.parse(localStorage.getItem("date")!) != today) {
 
                         localStorage.setItem("date", new Date().toISOString().slice(0, 10))
@@ -66,19 +52,12 @@ export const ConvertPage: React.FC = () => {
                 .catch((err) => {
                     performLogout(`Bad credentials \n ${err.response.data.error_message}`)
                 });
-
-            //sunday
-
-
         }
     }, [])
-    //
-    // useEffect(() => {
-    //     localStorage.setItem("currencies", JSON.stringify(currency));
-    // }, [currency])
+
     const [convert, setConvert] = useState<IConvert>({
-        baseCurrency: "NOK",
-        targetCurrency: "NOK",
+        baseCurrency: "RUB",
+        targetCurrency: "USD",
         result: 0,
         quantityToConvert: 0
     })
@@ -146,8 +125,6 @@ export const ConvertPage: React.FC = () => {
                                     defaultValue={options().find(item => item.label.includes("RUB"))}
                                     options={options()}
                                     classNamePrefix="custom-select" isSearchable
-
-
                             />
 
                         </div>

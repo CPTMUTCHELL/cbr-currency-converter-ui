@@ -25,6 +25,9 @@ export interface IHistoryPage {
 export interface IRole{
     id?:number
     name: string
+    isRevoked?:boolean
+    isAdded?:boolean
+
 }
 export interface IUserToken {
     "id"?:number,

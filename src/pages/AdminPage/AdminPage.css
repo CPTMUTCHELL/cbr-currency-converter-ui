@@ -1,0 +1,175 @@
+th.subject {
+    width: 30%;
+}
+
+th.user {
+    width: 30%;
+}
+
+.material-icons.red {
+    color: red;
+    float: right;
+    border-color: white;
+    background: transparent;
+    border-style: solid;
+
+}
+
+.material-icons.blue {
+    float: right;
+    color: blue;
+    background: transparent;
+    border-color: white;
+    border-style: solid;
+}
+
+.p.right {
+    justify-content: center;
+    align-items: center;
+
+}
+
+.pop_up {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: scale(0);
+    transition: 0.4s;
+    background-color: transparent;
+    display: flex;
+
+}
+
+.pop_up.active {
+    transform: scale(1);
+    background-color: rgba(0, 0, 0, 0.4);
+
+}
+
+.pop_up_body {
+    height: 250px;
+    top: 40%;
+    left: 40%;
+    margin: auto;
+    width: 500px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 100px 15px 110px 15px;
+    position: fixed;
+    z-index: 2;
+}
+
+.pop_up_close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.admin-page-container .alert-shown {
+    height: 50px;
+    opacity: 1;
+    transition: all 250ms linear;
+
+}
+
+.admin-page-container .alert-hidden {
+    opacity: 0;
+    transition: all 250ms linear 2s;
+    height: 50px;
+}
+
+.admin-page-container .box {
+    text-align: center;
+    border: 2px red dashed;
+    padding: 0.1em;
+    min-width: 100px;
+    color: red;
+    display: inline-block;
+
+}
+
+.admin-page-container .modal-window-content .btn-bottom-center {
+    margin-top: 100px;
+    position: absolute;
+    width: 110%;
+    height: 100%;
+    display: flex;
+    align-items: center; /** Y-axis align **/
+    justify-content: center; /** X-axis align **/
+    flex-direction: column;
+}
+.admin-page-container .modal-window-content .btn-bottom-center .error {
+    position: absolute;
+    color: red;
+    margin-bottom: 60px;
+}
+
+.admin-page-container .modal-window-content {
+    position: absolute;
+    padding-top: 20px;
+    top: 0;
+    left: 0;
+    display: flex;
+    gap: 80px;
+}
+
+.admin-page-container .modal-window-content i {
+    align-items: center;
+}
+
+.admin-page-container .modal-window-content ul {
+    list-style-type: none;
+}
+
+.admin-page-container .modal-window-content .add-roles .unselected {
+    display: none;
+
+}
+
+.admin-page-container .modal-window-content .add-roles .selected {
+    position: absolute;
+    margin-left: -15px;
+
+}
+
+.admin-page-container .modal-window-content .add-roles span .active {
+    color: green;
+}
+
+.admin-page-container .modal-window-content .add-roles {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.admin-page-container .modal-window-content .add-roles .active {
+    color: green;
+}
+
+.admin-page-container .modal-window-content .revoke-roles {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+
+}
+
+.admin-page-container .modal-window-content .revoke-roles .revoked {
+    text-decoration: line-through;
+    color: darkred;
+}
+
+.admin-page-container .modal-window-content .final-roles {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding-top: 30px;
+    height: 150px;
+    width: 100px;
+
+
+}
+

@@ -3,7 +3,7 @@ import {JwtToken} from "../../functions/JwtToken";
 import axios from "axios";
 import {IHistoryPage} from "../../Interfaces";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
-import "./styles.css"
+import "./HistoryPage.css"
 import {singletonTokenInstance} from "../../functions/Tokens";
 import {useToLogin} from "../../hooks/useToLogin";
 
