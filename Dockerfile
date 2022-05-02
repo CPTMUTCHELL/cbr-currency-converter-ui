@@ -2,13 +2,11 @@ FROM node:alpine as build
 
 WORKDIR /app
 
-ENV PATH /app/node_modules/.bin:$PATH
-COPY package.json package-lock.json ./
+COPY . .
 RUN npm install
 
-COPY . .
 RUN npm run build
-
+RUN rm -rf node_modules
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
