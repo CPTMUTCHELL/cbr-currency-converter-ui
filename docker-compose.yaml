@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  cbr-converter-ui:
+    build:
+      context: .
+    ports:
+    - 3000:80
+    networks:
+      - cbr-network-frontend
+
+
+networks:
+  cbr-network-frontend:
+    external:
+      name: cbr-network

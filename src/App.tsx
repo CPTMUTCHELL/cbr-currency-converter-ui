@@ -29,11 +29,11 @@ const App: React.FC = () => {
 
                     <Route element={<SignUpPage/>} path="/registration"/>
                     <Route element={<LoginPage/>} path="/login"/>
-                    <Route element={<RequireAuth allowedRoles={["1-ADMIN", "2-USER"]}/>}>
+                    <Route element={<RequireAuth allowedRoles={["OWNER","ADMIN", "USER"]}/>}>
                         <Route path="/convert" element={<ConvertPage/>}/>
                         <Route element={<HistoryPage/>} path="/history"/>
                     </Route>
-                    <Route element={<RequireAuth allowedRoles={["1-ADMIN"]}/>}>
+                    <Route element={<RequireAuth allowedRoles={["OWNER","ADMIN"]}/>}>
 
                         <Route element={<AdminPage/>} path="/users"/>
 

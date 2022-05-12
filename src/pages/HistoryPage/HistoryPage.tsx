@@ -131,7 +131,7 @@ export const HistoryPage: React.FC = () => {
                                        : setPageNumSelect(Number(e.target.value))
                                }}
                                value={pageNumSelect}/>
-                        <p> of {hpage.totalElements / pageSize}</p>
+                        <p> of {hpage.totalElements / pageSize<1 ? 1 : hpage.totalElements / pageSize}</p>
                     </div>
                     <TablePagination
 

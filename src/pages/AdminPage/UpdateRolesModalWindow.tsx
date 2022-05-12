@@ -24,9 +24,10 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, a
     }
 
     const [roles, setRoles] = useState<IRole[]>([
-        {id: 1, name: "ADMIN", isAdded: false, isRevoked: false},
-        {id: 2, name: "USER", isAdded: false, isRevoked: false},
-        {id: 3, name: "BANNED", isAdded: false, isRevoked: false}
+        {id: 1, name: "OWNER", isAdded: false, isRevoked: false},
+        {id: 2, name: "ADMIN", isAdded: false, isRevoked: false},
+        {id: 3, name: "USER", isAdded: false, isRevoked: false},
+        {id: 4, name: "BANNED", isAdded: false, isRevoked: false}
     ])
     const [updateRoleErr, setUpdateRoleErr] = useState<string>("")
     const [rolesToUpdate, setRolesToUpdate] = useState<IRole[]>([])

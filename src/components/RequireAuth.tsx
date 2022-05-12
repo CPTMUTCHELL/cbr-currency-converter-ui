@@ -8,7 +8,6 @@ import {NotAuthorizedPage} from "../pages/NotAuthorizedPage";
 
 export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) => {
     const {userToken,setUserToken}  = useContext(UserContext);
-    const location = useLocation();
     const token = singletonTokenInstance.getToken().access
     const [useEffectCompleted,setUseEffectCompleted] =useState(false);
     useEffect(()=>{
@@ -25,8 +24,6 @@ export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) =>
             <ClipLoader color={"#123abc"} loading={!useEffectCompleted} />
         </div> )
     }
-
-
-    return userToken.roles.find(role=>allowedRoles.includes(String(role))) ?  <Outlet/>: <NotAuthorizedPage/>;
+    return allowedRoles.some(role=>JSON.stringify(userToken.roles).includes(role)) ?  <Outlet/>: <NotAuthorizedPage/>;
 
 }
