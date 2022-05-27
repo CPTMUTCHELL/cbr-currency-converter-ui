@@ -22,7 +22,7 @@ export const SignUpPage: React.FC = () => {
         noError: false,
         errorMsg: ""
     })
-    const REGISTER_URL = "http://localhost:8081/auth/registration"
+    const REGISTER_URL = "/api/auth/registration"
 
     const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement

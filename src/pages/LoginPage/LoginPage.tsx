@@ -11,7 +11,7 @@ interface IFrom {
     msg: string
 }
 export const LoginPage: React.FC = () => {
-    const API_URL = "http://localhost:8081/auth/login";
+    const API_URL = "api/auth/login";
     const from = useLocation();
     const navigate = useNavigate();
 

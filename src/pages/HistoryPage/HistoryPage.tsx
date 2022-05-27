@@ -21,7 +21,7 @@ export const HistoryPage: React.FC = () => {
 
     const [hpage, setPage] = useState<IHistoryPage>();
     const [pageNumSelect, setPageNumSelect] = useState<number>(1)
-    const url = (`http://localhost:8083/history/show/${pageNum + 1}?pageSize=${pageSize}
+    const url = (`/api/history/show/${pageNum + 1}?pageSize=${pageSize}
     &sortField=${sortField}&dir=${dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
 
     //to reduce auth-service calls
@@ -117,7 +117,7 @@ export const HistoryPage: React.FC = () => {
                             }
                             if (e.key == 'Enter') {
 
-                                setPageNum(pageNumSelect - 1) //another pageNumState to avoid instant change, but use enter button
+                                setPageNum((pageNumSelect - 1) < 1 ? 0 : pageNumSelect -1) //another pageNumState to avoid instant change, but use enter button
                                 axios
                                     .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
                                     .then((res) => {
@@ -130,7 +130,7 @@ export const HistoryPage: React.FC = () => {
                                        ? setPageNumSelect(hpage.totalElements / pageSize)
                                        : setPageNumSelect(Number(e.target.value))
                                }}
-                               value={pageNumSelect}/>
+                               value={pageNumSelect <= 1 ? 1 : pageNumSelect}/>
                         <p> of {hpage.totalElements / pageSize<1 ? 1 : hpage.totalElements / pageSize}</p>
                     </div>
                     <TablePagination

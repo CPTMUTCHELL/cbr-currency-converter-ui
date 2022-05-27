@@ -21,8 +21,8 @@ interface ICurrency {
 export const ConvertPage: React.FC = () => {
     const token = localStorage.getItem("access")!
     const {performLogout} = useToLogin();
-    const CURRENCIES_URL = "http://localhost:8082/convert/currencies";
-    const CONVERT_URL = "http://localhost:8082/convert/convert";
+    const CURRENCIES_URL = "api/convert/currencies";
+    const CONVERT_URL = "api/convert/convert";
     const [currency, setCurrency] = useState<ICurrency[]>([]);
     let today = Date.parse(new Date().toISOString().slice(0, 10))
     useEffect(() => {

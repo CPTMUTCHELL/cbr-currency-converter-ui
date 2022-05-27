@@ -9,7 +9,7 @@ import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 import {FadeOutText} from "./FadeOutText";
 
 export const AdminPage: React.FC = () => {
-    const API_URL_USERS = "http://localhost:8081/auth/admin/users";
+    const API_URL_USERS = "api/auth/admin/users";
     const token = localStorage.getItem("access")!
     const {userToken} = useContext(UserContext);
     const [active, setActive] = useState<boolean>(false)
