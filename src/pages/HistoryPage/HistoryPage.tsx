@@ -109,7 +109,7 @@ export const HistoryPage: React.FC = () => {
                 </TableContainer>
 
                 <div className="align">
-                    <div className="align1">
+                    <div className="page-select">
                         <p>Select page: </p>
                         <input className="box" type="text" onKeyPress={(e) => {
                             if (!/[.]|[0-9]/.test(e.key)) {

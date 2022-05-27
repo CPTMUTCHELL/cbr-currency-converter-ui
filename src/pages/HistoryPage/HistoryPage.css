@@ -36,15 +36,13 @@
 .history-page-container .align {
     margin-top: 1rem;
     display: flex;
-    justify-content: right;
+    justify-content: flex-end;
     gap: 40px;
     align-items: center;
-
 }
 
-.history-page-container .align1 {
+.history-page-container .page-select {
     align-items: baseline;
     display: flex;
-    justify-content: right;
     gap: 10px;
 }
