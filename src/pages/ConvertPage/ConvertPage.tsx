@@ -21,8 +21,8 @@ interface ICurrency {
 export const ConvertPage: React.FC = () => {
     const token = localStorage.getItem("access")!
     const {performLogout} = useToLogin();
-    const CURRENCIES_URL = "api/convert/currencies";
-    const CONVERT_URL = "api/convert/convert";
+    const CURRENCIES_URL = "backend/convert/currencies";
+    const CONVERT_URL = "backend/convert/convert";
     const [currency, setCurrency] = useState<ICurrency[]>([]);
     let today = Date.parse(new Date().toISOString().slice(0, 10))
     useEffect(() => {
@@ -49,9 +49,10 @@ export const ConvertPage: React.FC = () => {
                     }
 
                 })
-                .catch((err) => {
-                    performLogout(`Bad credentials \n ${err.response.data.error_message}`)
-                });
+            //let the users look at html
+                // .catch((err) => {
+                //     performLogout(`Bad credentials \n ${err.response.data.error_message}`)
+                // });
         }
     }, [])
 
@@ -84,7 +85,6 @@ export const ConvertPage: React.FC = () => {
     const options = (): { label: string, value: string }[] => {
         const res: { label: string, value: string }[] = [];
         currency.map(item => res.push({label: item.name.concat(" (" + item.charCode + ")"), value: item.charCode}))
-        // console.log(res.find(item=>item.label.includes("RUB")).label)
         return res
     }
 

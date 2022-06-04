@@ -2,9 +2,10 @@ version: '3.7'
 services:
   cbr-converter-ui:
     build:
+      dockerfile: Dockerfile
       context: .
     ports:
-    - 3000:80
+    - 80:80
     networks:
       - cbr-network-frontend
 

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-config
+  namespace: {{ .Values.ns }}
+
+data:
+  DNS: myconverter
+  EXTERNAL_IP: "10.128.54.230"

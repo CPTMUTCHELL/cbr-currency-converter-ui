@@ -13,7 +13,7 @@ export interface ModalProps {
 }
 
 
-const UPDATE_ROLES_URL = "api/auth/admin/roles"
+const UPDATE_ROLES_URL = "backend/auth/admin/roles"
 
 export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, active, setActive, children}) => {
     function refreshState() {

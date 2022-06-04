@@ -1,0 +1,7 @@
+image: cptmutchell/cbr-ui
+tag: v1
+port: "80"
+name: cbr-ui
+ns: cbr
+replicas: 1
+pullPolicy: Always

@@ -11,7 +11,7 @@ interface MyToken {
 
 }
 export function JwtToken (accessToken:string)  {
-    const API_URL = "api/auth/token";
+    const API_URL = "backend/auth/token";
     const refreshToken = singletonTokenInstance.getToken().refresh
     const decodedAccessToken=jwtDecode<MyToken>(accessToken)
     const decodedRefreshToken=jwtDecode<MyToken>(refreshToken)

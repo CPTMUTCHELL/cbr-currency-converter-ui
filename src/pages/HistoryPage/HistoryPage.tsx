@@ -21,7 +21,7 @@ export const HistoryPage: React.FC = () => {
 
     const [hpage, setPage] = useState<IHistoryPage>();
     const [pageNumSelect, setPageNumSelect] = useState<number>(1)
-    const url = (`/api/history/show/${pageNum + 1}?pageSize=${pageSize}
+    const url = (`/backend/history/show/${pageNum + 1}?pageSize=${pageSize}
     &sortField=${sortField}&dir=${dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
 
     //to reduce auth-service calls
@@ -35,9 +35,10 @@ export const HistoryPage: React.FC = () => {
             .then((res) => {
                 setPage(res.data)
             })
-            .catch((err) => {
-                performLogout(`Bad credentials \n ${err.response.data.error_message}`)
-            });
+            //don't logout
+            // .catch((err) => {
+            //     performLogout(`Bad credentials \n ${err.response.data.error_message}`)
+            // });
     }, [pageNum, pageSize, sortField, dir, baseCurrency, targetCurrency, date])
 
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
