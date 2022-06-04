@@ -1,16 +1,11 @@
-#FROM node:16.15.0-alpine as build
-##
-#WORKDIR /app
-##
-#COPY . .
-#RUN npm install
-##
-#RUN npm run build
-#RUN rm -rf node_modules
+FROM node:16.15.0-alpine as build
+WORKDIR /app
+COPY . .
+RUN npm install && npm run build && rm -rf node_modules
+
 FROM nginx:alpine
-COPY /build /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 RUN mkdir /etc/nginx/templates/
-# COPY nginx-compose.conf /etc/nginx/conf.d/default.conf
 COPY nginx-k8s.conf.template /etc/nginx/templates/default.conf.template
 EXPOSE 80
 #Required for creating default.conf in conf.d folder outta .template

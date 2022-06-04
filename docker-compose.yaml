@@ -2,7 +2,7 @@ version: '3.7'
 services:
   cbr-converter-ui:
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.compose
       context: .
     ports:
     - 80:80
