@@ -20,7 +20,7 @@ pipeline {
           steps {
                     withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
                             sh """
-                             bash ./docker.sh cbr-ui v${BUILD_NUMBER}
+                             bash ./docker.sh cbr-ui v${BUILD_NUMBER} Dockerfile
                              """
                         }
                           script {
