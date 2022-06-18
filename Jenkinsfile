@@ -25,8 +25,9 @@ pipeline {
             }
             steps {
                 sh """
-               npm i
+               npm i && CI=true npm run build
                """
+               sh
 //                 withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
 //                     sh """
 //                              bash ./docker.sh cbr-ui v${BUILD_NUMBER} Dockerfile.cache
