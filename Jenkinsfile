@@ -26,16 +26,16 @@ pipeline {
             steps {
                 sh """
                npm i
-               npm run build
+//                npm run build
                """
-                withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
-                    sh """
-                             bash ./docker.sh cbr-ui v${BUILD_NUMBER} Dockerfile.cache
-                             """
-                }
-                script {
-                    set = set + 'tag=v${BUILD_NUMBER},'
-                }
+//                 withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
+//                     sh """
+//                              bash ./docker.sh cbr-ui v${BUILD_NUMBER} Dockerfile.cache
+//                              """
+//                 }
+//                 script {
+//                     set = set + 'tag=v${BUILD_NUMBER},'
+//                 }
             }
 
         }
@@ -56,24 +56,24 @@ pipeline {
                 }
             }
         }
-        stage("Helm") {
-            steps {
-                script {
-                    if (set =~ '--set [A-Za-z]') {
-                        set = set.substring(0, set.length() - 1);
-                        sh """
-                                cd k8s/helm
-                                eval ${set}
-                                """
-                    } else {
-                        sh """
-                            cd k8s/helm
-                            helm upgrade --install -n cbr  cbr-ui ./cbr-ui
-                                """
-                    }
-                }
-            }
-        }
+//         stage("Helm") {
+//             steps {
+//                 script {
+//                     if (set =~ '--set [A-Za-z]') {
+//                         set = set.substring(0, set.length() - 1);
+//                         sh """
+//                                 cd k8s/helm
+//                                 eval ${set}
+//                                 """
+//                     } else {
+//                         sh """
+//                             cd k8s/helm
+//                             helm upgrade --install -n cbr  cbr-ui ./cbr-ui
+//                                 """
+//                     }
+//                 }
+//             }
+//         }
     }
 
 }
