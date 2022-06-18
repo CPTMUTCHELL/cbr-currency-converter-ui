@@ -26,7 +26,6 @@ pipeline {
             steps {
                 sh """
                npm i
-//                npm run build
                """
 //                 withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
 //                     sh """
