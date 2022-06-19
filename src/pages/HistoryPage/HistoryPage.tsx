@@ -128,7 +128,7 @@ export const HistoryPage: React.FC = () => {
                         }}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    Number(e.target.value) >= hpage.totalElements / pageSize
-                                       ? setPageNumSelect(hpage.totalElements / pageSize)
+                                       ? setPageNumSelect(Math.ceil(hpage.totalElements / pageSize))
                                        : setPageNumSelect(Number(e.target.value))
                                }}
                                value={pageNumSelect <= 1 ? 1 : pageNumSelect}/>
