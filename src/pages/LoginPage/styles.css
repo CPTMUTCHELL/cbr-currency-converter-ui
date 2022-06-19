@@ -5,11 +5,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
 }
 .login-wrapper .error{
     color: red;
-    width: 180px;
 
 }
 .login-wrapper .btn{

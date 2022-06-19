@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {IUser} from "@/Interfaces";
 import {useNavigate} from 'react-router-dom';
+import './styles.css';
 
 interface IError {
     "usernameError": string,
@@ -90,11 +91,10 @@ export const SignUpPage: React.FC = () => {
 
     return (
         <>
-            <div className='login-wrapper'>
+            <div className='signup-container'>
                 <h1 className="alg">Sign Up</h1>
-                <div>
 
-                    <form method='post' action={REGISTER_URL} onSubmit={handleSubmit}>
+                    <form className="form-class" method='post' action={REGISTER_URL} onSubmit={handleSubmit}>
 
                             <label>
                                 <p>Username</p>
@@ -102,9 +102,6 @@ export const SignUpPage: React.FC = () => {
                                        onChange={handleChange('username')}/>
                                 {error?.usernameError != "" &&  <p className="error">{error?.usernameError}</p>}
                             </label>
-
-
-
 
                             <label>
                                 <p>Password</p>
@@ -114,14 +111,18 @@ export const SignUpPage: React.FC = () => {
                             </label>
 
 
-                        <div className="btn">
+                        <div className="signup-btn">
+
                             <button type="submit" >Register Me</button>
+
+                        </div>
+                        <div className="signup-error">
                             {!error.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
                             {error.noError && <p style={{color: "red"}}>You've been registered</p>}
                             {error.errorMsg && <p style={{color: "red"}}>{error.errorMsg}</p>}
                         </div>
                     </form>
-                </div>
+
             </div>
         </>
     )

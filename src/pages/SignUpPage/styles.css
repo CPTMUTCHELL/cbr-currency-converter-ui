@@ -1,0 +1,19 @@
+.signup-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-container .signup-btn  {
+    justify-content: center;
+    display: flex;
+    margin: 20px;
+}
+
+.signup-container .signup-error  {
+    justify-content: center;
+    display: flex;
+    margin-top: -30px;
+}
+.signup-container .error{ color: red}

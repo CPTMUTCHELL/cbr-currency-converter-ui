@@ -98,10 +98,10 @@ export const LoginPage: React.FC = () => {
                                value={user.password}/>
                     </label>
 
-                    <p className="error">{error}</p>
+
 
                 </form>
-
+                <p className="error">{error}</p>
                 <button type="button" onClick={clickHandler}>Submit</button>
 
             </div>
