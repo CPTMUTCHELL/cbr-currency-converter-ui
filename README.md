@@ -1,6 +1,6 @@
 # cbr-currency-converter-ui
 
-This is frontend for [cbr-currency converter](https://github.com/CPTMUTCHELL/cbr-currency-converter)
+This is frontend for [cbr-currency converter](https://github.com/CPTMUTCHELL/cbr-currency-converter/tree/k8s)
 
 It has following options to start:
 ## local
