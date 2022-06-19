@@ -33,5 +33,5 @@ I created Dockerfile.cache to cache node_modules in jenkins WORKSPACE, but you c
 ## P.S
 
 I plan to:
-- [] make css responsive for modible devices
-- [] refactore code :)
+- [ ] make css responsive for modible devices
+- [ ] refactore code :)
