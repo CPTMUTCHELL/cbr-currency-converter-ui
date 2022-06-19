@@ -5,5 +5,5 @@ metadata:
   namespace: {{ .Values.ns }}
 
 data:
-  DNS: myconverter
-  EXTERNAL_IP: "164.92.149.162.nip.io"
+  DNS: cbr.cptmutchell.xyz
+  EXTERNAL_IP: "164.92.149.162"

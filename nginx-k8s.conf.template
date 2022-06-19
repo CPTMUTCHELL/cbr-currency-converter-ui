@@ -1,4 +1,4 @@
-
+# https://stackoverflow.com/questions/5877929/what-does-upstream-mean-in-nginx
 upstream ${DNS} {
 # /etc/hosts ( by metallb )
   server ${EXTERNAL_IP};

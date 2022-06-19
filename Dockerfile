@@ -1,7 +1,7 @@
 FROM node:16.15.0-alpine as build
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build --no-source-maps && rm -rf node_modules
+RUN npm install && npm run build && rm -rf node_modules
 
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
