@@ -22,5 +22,10 @@ You can set your own external ip and dns in cm.
 **Important:**
 Don't forget to create [ingress rule](https://github.com/CPTMUTCHELL/cbr-currency-converter/blob/k8s/k8s/helm/cbr-converter-chart/templates/ing.yml#L34). 
 
+## Cloud provider
 
+I recommend to use a different [subdomain](https://github.com/CPTMUTCHELL/cbr-currency-converter/blob/k8s/k8s/helm/cbr-converter-chart/templates/ing.yml#L42) to avoid any traefik misunderstanding. 
 
+In [CM](https://github.com/CPTMUTCHELL/cbr-currency-converter-ui/blob/master/k8s/helm/cbr-ui/templates/cbr-ui-cm.yml#L7) specify your own backend ip ( traefik ip ) and backend domain name
+
+I created Dockerfile.cache to cache node_modules in jenkins WORKSPACE, but you can install node_nodules with each push. Check Jenkinsfile.
