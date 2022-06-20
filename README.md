@@ -13,6 +13,8 @@ Execute `docker-compose up --build` to start react in prod mode (static). Proxy 
 
 **Important:**
 Don't forget to run backend compose first, because this compose requires the [network](https://github.com/CPTMUTCHELL/cbr-currency-converter/blob/k8s/docker-compose.yaml#L133)
+
+Frontend will be available at localhost:3000
 ## local k8s
 [**Local-k8s**](#local-k8s)
 `cd k8s/helm` and install release: `helm upgrade --install -n cbr cbr-ui ./cbr-ui`
