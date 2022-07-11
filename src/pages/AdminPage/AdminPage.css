@@ -68,6 +68,10 @@ th.user {
     font-size: 21px;
     cursor: pointer;
 }
+.admin-page-container {
+    padding-top: 6rem;
+
+}
 
 .admin-page-container .alert-shown {
     height: 50px;

@@ -9,6 +9,7 @@ import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";
 import {NotFoundPage} from "./pages/NotFoundPage";
 import {AdminPage} from "./pages/AdminPage/AdminPage";
+import {AboutPage} from "./pages/AboutPage/AboutPage";
 
 
 const App: React.FC = () => {
@@ -29,6 +30,7 @@ const App: React.FC = () => {
 
                     <Route element={<SignUpPage/>} path="/registration"/>
                     <Route element={<LoginPage/>} path="/login"/>
+                    <Route element={<AboutPage/>} path="/about"/>
                     <Route element={<RequireAuth allowedRoles={["OWNER","ADMIN", "USER"]}/>}>
                         <Route path="/convert" element={<ConvertPage/>}/>
                         <Route element={<HistoryPage/>} path="/history"/>

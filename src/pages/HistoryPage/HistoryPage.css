@@ -1,3 +1,6 @@
+.history-page-container {
+    padding-top: 6rem;
+}
 .history-page-container th,td{
     border: 1px solid #ddd;
 }

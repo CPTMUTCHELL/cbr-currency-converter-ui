@@ -1,4 +1,7 @@
 .navbar-container nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background: rgba(73, 63, 252, 1);
     height: 80px;
     display: flex;

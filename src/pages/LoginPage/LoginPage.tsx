@@ -4,7 +4,7 @@ import {IUser, IToken} from "../../Interfaces";
 import {useNavigate, useLocation} from 'react-router-dom';
 import {getUser} from "../../functions/JwtToken";
 import  {UserContext} from "../../functions/UserContext";
-import './styles.css';
+import './LoginPage.css';
 import {singletonTokenInstance} from "../../functions/Tokens";
 
 interface IFrom {
