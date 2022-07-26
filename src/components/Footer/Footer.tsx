@@ -7,7 +7,7 @@ import './Footer.css';
 export const Footer: React.FC = () => {
     const curYear = new Date().getFullYear().toString();
     return <>
-        <div className="footer">
+        <footer>
             <div className="social-media">
                 <LinkedInIcon onClick={() => {window.open("https://www.linkedin.com/in/cptmutchell/")}}/>
                 <GitHubIcon onClick={() => {window.open("https://github.com/CPTMUTCHELL")}}/>
@@ -18,6 +18,6 @@ export const Footer: React.FC = () => {
             <NavLink  to="/about">About</NavLink>
             </div>
 
-        </div>
+        </footer>
     </>
 }

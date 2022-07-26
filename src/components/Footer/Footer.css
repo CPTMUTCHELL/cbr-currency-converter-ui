@@ -1,7 +1,7 @@
 
-.footer {
-    position: absolute;
-    bottom: 0;
+footer {
+    margin-top: 10px;
+
      display: flex;
     gap: 1rem;
     width: 100%;
@@ -10,17 +10,17 @@
     justify-content: center;
 
 }
-.footer .social-media{
+footer .social-media{
     justify-content: center;
     display: flex;
     gap: 1rem;
     cursor: pointer
 }
-.footer .info{
+footer .info{
     justify-content: center;
     display: flex;
     gap: 1rem;
 }
-.footer .info span {
+footer .info span {
     margin-bottom: 10px;
 }
