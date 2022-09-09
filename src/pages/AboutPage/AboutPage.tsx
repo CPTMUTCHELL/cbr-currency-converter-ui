@@ -69,10 +69,10 @@ export const AboutPage: React.FC = () => {
                             <button className="dropdownBtn" onClick={()=>setSmsoftExpState(!smsoftExpState)}>
                                 <i className={`arrow ${smsoftExpState ? `up` : `down`}`}/>
 
-                                <span className="btnName">Smartsoft (04/2021 - present)</span></button>
+                                <span className="btnName">Smartsoft (q0/2020 - present)</span></button>
                             {smsoftExpState ?
                                 <div  className="box">
-                    <span>As a junior developer I create Spring web services, write jenkinsfile, dockerize them and deploy to
+                    <span>As a Java developer I create Spring web services, write jenkinsfile, dockerize them and deploy to
 Openshift. Sometimes I do help with frontend apps (React) and drink coffee. The code quality is checked by Sonarqube's quality gates.
 One of the projects I have been working under with a collegue is repository parser. It retrieves
 different ( around 40 metrics ) data like paths, insides of sql scripts , e.t.c and builds JSON file with
