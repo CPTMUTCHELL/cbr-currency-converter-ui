@@ -9,7 +9,6 @@ server {
     server_name ${DNS};
 
     location / {
-    resolver 8.8.8.8;
         autoindex on;
         root  /usr/share/nginx/html;
         index index.html;
