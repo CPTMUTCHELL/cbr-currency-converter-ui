@@ -69,7 +69,7 @@ export const AboutPage: React.FC = () => {
                             <button className="dropdownBtn" onClick={()=>setSmsoftExpState(!smsoftExpState)}>
                                 <i className={`arrow ${smsoftExpState ? `up` : `down`}`}/>
 
-                                <span className="btnName">Smartsoft (q0/2020 - present)</span></button>
+                                <span className="btnName">Smartsoft (10/2020 - present)</span></button>
                             {smsoftExpState ?
                                 <div  className="box">
                     <span>As a Java developer I create Spring web services, write jenkinsfile, dockerize them and deploy to
