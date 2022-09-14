@@ -19,7 +19,10 @@ export const AboutPage: React.FC = () => {
             <img src={logo}/>
                 </div>
             <button className="btnCv">
-                <Link style={{textDecoration:"none"}} to="/resume.pdf" target="_blank" download>Download CV</Link>
+                <Link style={{textDecoration:"none"}} to="/resume.pdf" target="_blank" download>Download CV (Pdf)</Link>
+            </button>
+            <button className="btnCv">
+                <Link style={{textDecoration:"none"}} to="/resume.docx" target="_blank" download>Download CV (Docx)</Link>
             </button>
 
             <ul>
