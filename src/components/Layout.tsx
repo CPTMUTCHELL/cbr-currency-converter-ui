@@ -7,9 +7,11 @@ export const Layout = () => {
     return <main className="App">
         <div id="container" className="container">
             <Navbar/>
+            <div className="outlet">
             <Outlet/>
+            </div>
+            <Footer/>
         </div>
-        <Footer/>
     </main>
 
 }

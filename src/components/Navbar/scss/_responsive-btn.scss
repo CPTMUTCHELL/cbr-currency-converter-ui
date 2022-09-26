@@ -1,0 +1,41 @@
+@import "functions";
+.responsive-btn{
+  position: absolute;
+  right: 1rem;
+  top: 2.5rem;
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  visibility: hidden;
+  @include transition;
+  &.open{
+
+    background-color: transparent;
+    transform: rotate(720deg);
+    &:before{
+      transform: rotate(45deg) translate(5.5px,15px);
+    }
+    &:after{
+      width: 28px;
+      transform: rotate(-45deg) translate(6px,-15px);
+    }
+  }
+  &:before{
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    top: -1rem;
+    content: '';
+    background-color: white;
+
+  }
+  &:after{
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    top: 1rem;
+    content: '';
+    background-color: white;
+
+  }
+}

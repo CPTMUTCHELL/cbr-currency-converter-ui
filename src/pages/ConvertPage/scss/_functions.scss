@@ -1,0 +1,11 @@
+@mixin flex-select{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+@mixin border-bottom-style{
+  border: none ;
+  border-radius: 0 ;
+  background-color: $select-color;
+  border-bottom: 1px solid #66676e ;
+}

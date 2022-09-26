@@ -1,0 +1,67 @@
+@import "variables","functions";
+
+.convert-page-container {
+    width: 100vw;
+    margin-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    justify-content: center;
+    align-items: center;
+    .convert-el{
+        display: grid;
+
+        grid-template-columns: repeat(2, minmax(90px,300px));
+        grid-gap: 4vw;
+     .select-container{
+         position: static;
+         p{
+             text-align: center;
+             margin-bottom: 1rem;
+         }
+
+         .custom-select__control{
+             @include border-bottom-style;
+
+         }
+         .custom-select__menu-list{
+             @include border-bottom-style;
+
+             &::-webkit-scrollbar{
+                 width: 4px;
+
+             }
+             &::-webkit-scrollbar-thumb {
+                 background: #888;
+             }
+             &::-webkit-scrollbar-thumb:hover {
+                 background: #555;
+             }
+
+
+         }
+         .custom-select__value-container{
+             background-color: $select-color;
+
+         }
+         .custom-select__indicator{
+             background-color: $select-color;
+         }
+
+     }
+        .base{
+
+            @include flex-select
+        }
+        .target{
+            @include flex-select
+        }
+        input{
+            @include border-bottom-style;
+
+        }
+
+    }
+
+
+}

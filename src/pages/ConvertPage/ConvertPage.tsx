@@ -4,7 +4,7 @@ import {IConvert} from "@/Interfaces";
 
 import {JwtToken} from "../../functions/JwtToken";
 import {useToLogin} from "../../hooks/useToLogin"
-import "./ConvertPage.css"
+import "./scss/ConvertPage.scss"
 import {singletonTokenInstance} from "../../functions/Tokens";
 import Select from 'react-select'
 
@@ -89,14 +89,14 @@ export const ConvertPage: React.FC = () => {
     }
 
     return (
-        <>
+            <>
             <div className="convert-page-container">
                 <div className="convert-el">
                     <div className="base">
                         <div className="select-container">
 
-                            <h3>Select base currency</h3>
-                            <Select onChange={convertInputHandler('baseCurrency')}
+                            <p>Select base currency</p>
+                                <Select onChange={convertInputHandler('baseCurrency')}
                                     value={options().find(item => item.label.includes(convert.baseCurrency))}
                                     defaultValue={options().find(item => item.label.includes("RUB"))}
                                     options={options()}
@@ -119,7 +119,7 @@ export const ConvertPage: React.FC = () => {
                     <div className="target">
                         <div className="select-container">
 
-                            <h3>Select target currency</h3>
+                            <p>Select target currency</p>
                             <Select onChange={convertInputHandler('targetCurrency')}
                                     value={options().find(item => item.label.includes(convert.targetCurrency))}
                                     defaultValue={options().find(item => item.label.includes("RUB"))}
@@ -129,13 +129,14 @@ export const ConvertPage: React.FC = () => {
 
                         </div>
                         <input readOnly value={convert.result}/>
+
                     </div>
-                    <div className="convert-btn">
-                        <button onClick={getResultHandler} type="submit">Convert</button>
-                    </div>
+
 
                 </div>
-
+                <div className="convert-btn">
+                    <button onClick={getResultHandler} type="submit">Convert</button>
+                </div>
             </div>
 
         </>

@@ -1,16 +1,19 @@
 import React from "react";
 import {useToLogin} from "../hooks/useToLogin";
 
-export const Logout: React.FC<{logoutBtn:string}> = ({ logoutBtn}) => {
+export const Logout: React.FC<{logoutBtn:string, setOpenResponsiveBtn: (openResponsiveBtn: boolean) => void }> = ({ logoutBtn,setOpenResponsiveBtn}) => {
     const {performLogout} = useToLogin();
 
-    const handleLogOut = (e: any) => {
+    function handleLogOut (){
         performLogout("You've logged out")
     }
 
     return (
 
-        <button className={logoutBtn} type="button" onClick={handleLogOut}>
+        <button className={logoutBtn} type="button" onClick={()=>{
+            handleLogOut()
+            setOpenResponsiveBtn(false)
+        }}>
             Logout
         </button>
 

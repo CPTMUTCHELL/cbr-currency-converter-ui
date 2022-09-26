@@ -1,0 +1,171 @@
+@import "functions","variables","responsive-btn";
+.navbar-container {
+    height: $nav-height;
+
+    nav {
+        z-index: 4;
+        max-height: $nav-height;
+
+        position: fixed;
+        top: 0;
+        width: 100vw;
+        background: $nav-color;
+        display: flex;
+        justify-content: space-between;
+
+        .cbr-logo {
+            display: grid;
+            grid-template-columns: repeat(1, 200px) $nav-height;
+            grid-column-gap: min(2vw, 30px);
+
+            img {
+                max-height: $nav-height;
+                max-width: $nav-height;
+            }
+
+            h3 {
+                padding: 1rem;
+                margin-left: 1rem;
+                color: white;
+            }
+
+            @include media-small {
+                img {
+                    margin-top: 1.5rem;
+                    max-height: $nav-height /2;
+                    max-width: $nav-height /2;
+                }
+            }
+
+
+        }
+        .invisible{
+            z-index: -1;
+            background-color: transparent;
+            cursor: pointer;
+            width: 30px;
+            height: 40px;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .pages {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-areas: "a a a a b";
+            grid-gap: min(4vw,50px);
+            align-items: center;
+
+
+            ul {
+
+                grid-area: a;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(5vw, 150px));
+                list-style: none;
+                text-align: center;
+
+                li {
+                    color: white;
+                    padding: 1rem;
+
+                    &:hover {
+                        background-color: #6d76f7;
+                        border-radius: 3px;
+                        transition: all 0.3s ease-out;
+                    }
+                }
+            }
+
+            .user-and-logout {
+                margin-right: 5rem  ;
+                grid-area: b;
+                display: flex;
+                align-items: center;
+                color: white;
+                gap: 3rem;
+                .logoutBtn {
+                    padding: 4px;
+                    border-radius: 4px;
+                    border: none;
+                    cursor: pointer;
+                    background-color: aqua;
+
+                    &:hover {
+                        border-radius: 4px;
+                        transition: all 0.3s ease-out;
+                        background-color: #ffffff;
+
+                    }
+
+                }
+            }
+
+            &.open{
+                margin-top: 0;
+                position: fixed;
+                top:$nav-height;
+                visibility: visible;
+                background-color: $nav-color;
+                display: flex;
+                flex-flow: column;
+                width: 100vw;
+                @include transition;
+
+                ul{
+                    margin-top: 0;
+                    padding: 0;
+                    display: flex;
+                    background-color: rgba($nav-color,0.8);
+                    flex-flow: column;
+                    @include transition;
+
+                    li{
+
+                        color: white;
+                    }
+                }
+                .user-and-logout{
+                    @include transition;
+
+                    align-self: center;
+                    p{
+                       position: absolute;
+                        left: -100000px;
+                    }
+                    margin-right: 0;
+                    gap: 0;
+                }
+            }
+
+
+        }
+
+        @include media-medium {
+                .pages{
+                    visibility: hidden;
+                }
+            .responsive-btn{
+                visibility: visible;
+                cursor: pointer;
+            }
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
