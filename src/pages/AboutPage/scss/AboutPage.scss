@@ -6,7 +6,10 @@
   align-items: center;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  url("../back.JPG");
   background-size: cover;
-  background-position: bottom center;
+  background-position-y: 80%;
+  @include media-medium{
+    background-position:  center ;
+  }
 
   .image-wrapper {
     width: 150px;
