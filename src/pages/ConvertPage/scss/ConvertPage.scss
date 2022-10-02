@@ -1,20 +1,19 @@
-@import "variables","functions";
+@import "src/scss/functions","variables","functions";
 
 .convert-page-container {
     width: 100vw;
     margin-top: 6rem;
-    display: flex;
-    flex-direction: column;
+
     gap: 5rem;
-    justify-content: center;
-    align-items: center;
+    @include flex-column-centered;
+    @include button-style;
     .convert-el{
         display: grid;
 
         grid-template-columns: repeat(2, minmax(90px,300px));
         grid-gap: 4vw;
+
      .select-container{
-         position: static;
          p{
              text-align: center;
              margin-bottom: 1rem;

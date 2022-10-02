@@ -12,6 +12,8 @@ export const Navbar: React.FC = () => {
     const [openResponsiveBtn, setOpenResponsiveBtn] = useState<boolean>(false);
     return (
         <div className="navbar-container">
+            <div className="test"></div>
+
             <nav className={openResponsiveBtn ? "open" : ""}>
                 <div className="cbr-logo">
                     <h3>Cbr converter</h3>

@@ -134,9 +134,7 @@ export const ConvertPage: React.FC = () => {
 
 
                 </div>
-                <div className="convert-btn">
                     <button onClick={getResultHandler} type="submit">Convert</button>
-                </div>
             </div>
 
         </>

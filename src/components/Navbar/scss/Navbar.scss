@@ -1,4 +1,4 @@
-@import "functions","variables","responsive-btn";
+@import "src/scss/variables","src/scss/functions","variables","responsive-btn";
 .navbar-container {
     height: $nav-height;
 
@@ -91,17 +91,14 @@
                     border: none;
                     cursor: pointer;
                     background-color: aqua;
-
                     &:hover {
                         border-radius: 4px;
                         transition: all 0.3s ease-out;
                         background-color: #ffffff;
 
                     }
-
                 }
             }
-
             &.open{
                 margin-top: 0;
                 position: fixed;

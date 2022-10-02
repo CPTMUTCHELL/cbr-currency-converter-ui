@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 import {IUser} from "@/Interfaces";
 import {useNavigate} from 'react-router-dom';
-import './SignUpPage.css';
+import './scss/SignUpPage.scss';
 
 interface IError {
     "usernameError": string,
@@ -64,7 +64,6 @@ export const SignUpPage: React.FC = () => {
                 ...prevState,
                 validated: true
             }));
-
             axios
                 .post<IUser>(REGISTER_URL, user)
                 .then((res: AxiosResponse) => {
@@ -94,34 +93,29 @@ export const SignUpPage: React.FC = () => {
             <div className='signup-container'>
                 <h1 className="alg">Sign Up</h1>
 
-                    <form className="form-class" method='post' action={REGISTER_URL} onSubmit={handleSubmit}>
+                    <form>
 
                             <label>
                                 <p>Username</p>
                                 <input onPaste={handleChange('username')} type='text'
                                        onChange={handleChange('username')}/>
-                                {error?.usernameError != "" &&  <p className="error">{error?.usernameError}</p>}
                             </label>
-
+                        {error?.usernameError != "" &&  <p className="error">{error?.usernameError}</p>}
                             <label>
                                 <p>Password</p>
                                 <input onPaste={handleChange('password')} type='password'
                                        onChange={handleChange('password')}/>
-                                {error?.passwordError != "" && <p className="error">{error?.passwordError}</p>}
                             </label>
+                        {error?.passwordError != "" && <p className="error">{error?.passwordError}</p>}
 
-
-                        <div className="signup-btn">
-
-                            <button type="submit" >Register Me</button>
-
-                        </div>
                         <div className="signup-error">
                             {!error.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
                             {error.noError && <p style={{color: "red"}}>You've been registered</p>}
                             {error.errorMsg && <p style={{color: "red"}}>{error.errorMsg}</p>}
                         </div>
                     </form>
+                <button type="submit" onClick={handleSubmit}>Register Me</button>
+
 
             </div>
         </>
