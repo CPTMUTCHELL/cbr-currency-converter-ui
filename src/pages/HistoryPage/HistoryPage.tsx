@@ -3,7 +3,7 @@ import {JwtToken} from "../../functions/JwtToken";
 import axios from "axios";
 import {IHistoryPage} from "../../Interfaces";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
-import "./HistoryPage.css"
+import "./scss/HistoryPage.scss"
 import {singletonTokenInstance} from "../../functions/Tokens";
 import {useToLogin} from "../../hooks/useToLogin";
 
@@ -64,7 +64,7 @@ export const HistoryPage: React.FC = () => {
 
         <>
             <div className="history-page-container">
-                <div>
+                <div className="filters">
                     <input type="text" placeholder="Search for base currency" value={baseCurrency}
                            onChange={e => setBaseCurrency(e.target.value)}/>
                     &nbsp;
@@ -109,7 +109,7 @@ export const HistoryPage: React.FC = () => {
                     </Table>
                 </TableContainer>
 
-                <div className="align">
+                <div className="pagination-container">
                     <div className="page-select">
                         <p>Select page: </p>
                         <input className="box" type="text" onKeyPress={(e) => {
@@ -134,6 +134,7 @@ export const HistoryPage: React.FC = () => {
                                value={pageNumSelect <= 1 ? 1 : pageNumSelect}/>
                         <p> of {hpage.totalElements / pageSize<1 ? 1 : Math.ceil(hpage.totalElements / pageSize)}</p>
                     </div>
+                    <div className="pagination">
                     <TablePagination
 
                         rowsPerPageOptions={pageSizes}
@@ -144,6 +145,7 @@ export const HistoryPage: React.FC = () => {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
+                </div>
                 </div>
             </div>
 

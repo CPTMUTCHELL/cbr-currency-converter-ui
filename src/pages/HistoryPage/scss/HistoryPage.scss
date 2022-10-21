@@ -1,0 +1,60 @@
+@import "src/scss/variables";
+.history-page-container {
+  margin-top: $margin-top;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  table {
+
+    tr {
+      background-color: white;
+    }
+
+    th, td {
+
+      border: 1px solid #ddd;
+    }
+
+    .desc:after,
+    .asc:after {
+      content: ' ';
+      position: relative;
+
+      left: 2px;
+      border: 8px solid transparent;
+    }
+
+
+    .desc:after {
+      top: 10px;
+      border-top-color: silver;
+    }
+
+    .asc:after {
+      bottom: 15px;
+      border-bottom-color: silver;
+    }
+  }
+  .pagination-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+    align-items: center;
+
+
+    .page-select {
+      align-items: baseline;
+      display: flex;
+      gap: 10px;
+      .box {
+        height: 2rem;
+        width: 5rem;
+        text-align: center;
+
+      }
+    }
+  }
+}
+

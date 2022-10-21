@@ -1,0 +1,12 @@
+@mixin ul-for-modal($color,$text-decoration){
+  ul {
+    list-style-type: none;
+    li {
+      &.selected {
+        color: $color;
+        text-decoration: $text-decoration;
+
+      }
+    }
+  }
+}

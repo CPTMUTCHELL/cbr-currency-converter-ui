@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import './AdminPage.css';
+import './scss/AdminPage.scss';
 import {IRole, IUserToken} from "@/Interfaces";
 import axios from "axios";
 import {singletonTokenInstance} from "../../functions/Tokens";
@@ -15,7 +15,7 @@ export interface ModalProps {
 
 const UPDATE_ROLES_URL = "backend/auth/admin/roles"
 
-export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, active, setActive, children}) => {
+export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,active, setActive}) => {
     function refreshState() {
         setActive(false)
         roles.forEach(role => role.isAdded = false)
@@ -45,7 +45,7 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, a
     useEffect(() => {
         if (user)
             setRolesToUpdate([...user.roles.filter(userRole => roles.find(role => userRole.id == role.id && !role.isRevoked)), ...roles.filter(role => role.isAdded && !role.isRevoked)])
-    }, [roles, user, active])
+    }, [roles, user])
     const updateRolesHandler = () => {
         axios
             .put<IUserToken>(UPDATE_ROLES_URL, {
@@ -63,18 +63,23 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, a
 
     return (
 
-        <div className={active ? "pop_up active" : "pop_up"}>
-            <div className="pop_up_body">
+        <div className={active ? "modal-background" :"modal-background closed"}>
+            <div className="modal-container">
+
+                <div className="modal-close" onClick={() => {
+                    refreshState()
+                }}>&#10006;</div>
                 <div className="modal-window-content">
                     <div className="add-roles">
                         <i>Roles to add</i>
                         <ul>
                             {user
                                 ? roles.filter(role => role.id! > minRoleId && !user.roles.find(userRole => userRole.id == role.id)).map(role =>
-                                    <li className={role.isAdded ? "active" : ""}
+                                    <li className={role.isAdded ? "selected" : ""}
                                         id={String(role.id)}
                                         onClick={setRolesToUpdateHandler("isAdded")}>
-                                        <span className={role.isAdded ? "selected" : "unselected"}>&#10004;</span> {role.name}
+                                        <span
+                                            className={role.isAdded ? "selected" : "unselected"}>&#10004;</span> {role.name}
                                     </li>)
                                 : null
                             }
@@ -86,7 +91,7 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, a
                         <ul>
                             {user
                                 ? roles.filter(role => user.roles.find(userRole => userRole.id == role.id)).map(role =>
-                                    <li className={role.isRevoked ? "revoked" : ""} id={String(role.id)}
+                                    <li className={role.isRevoked ? "selected" : ""} id={String(role.id)}
                                         onClick={setRolesToUpdateHandler("isRevoked")}>{role.name}</li>)
                                 : null}
 
@@ -100,16 +105,17 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user, a
                         </ul>
                     </div>
 
-                    <div className="btn-bottom-center">
-                        <span className="error">{updateRoleErr}</span>
+                </div>
+                <div className="apply-roles">
+                    <span className="error">{updateRoleErr}</span>
+                    <div className="apply-btn">
                         <button type='button' onClick={updateRolesHandler}>Apply</button>
                     </div>
                 </div>
-                <div className="pop_up_close" onClick={() => {
-                    refreshState()
-                }}>&#10006;</div>
+
             </div>
 
         </div>
     )
+
 }

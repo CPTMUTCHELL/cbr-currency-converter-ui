@@ -3,7 +3,7 @@ h1.alg{
     font-family: Algerian;
 }
 .login-wrapper {
-    padding-top: 6rem;
+    padding-top: $margin-top;
     gap: 1rem;
     @include flex-column-centered;
     .error{

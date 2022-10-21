@@ -1,0 +1,58 @@
+@import 'src/scss/variables',"src/scss/functions","variables";
+
+.admin-table {
+  margin-top: $margin-top;
+  border-bottom: 2px $nav-color solid;
+  border-collapse: collapse;
+
+  thead tr {
+    background-color: $nav-color;
+    color: white;
+  }
+
+  th.subject,.user {
+    width: $table-width/2;
+    @include media-medium{
+      width: 100vw;
+    }
+  }
+
+
+  th, td {
+    padding: 1rem;
+    &:not(:last-child){
+      border-right: 1px solid $nav-color;
+    }
+
+    .material-icons.red {
+      @include media-medium{
+        width: 20px;
+        height: 20px;
+      }
+      color: red;
+      float: right;
+      background: transparent;
+      border: none;
+
+    }
+    .material-icons.blue {
+      @include media-medium{
+        width: 20px;
+        height: 20px;
+      }
+      float: right;
+      color: blue;
+      background: transparent;
+      border: none;
+
+    }
+  }
+
+
+  tbody {
+    tr, td {
+      background-color: aliceblue;
+    }
+  }
+
+}

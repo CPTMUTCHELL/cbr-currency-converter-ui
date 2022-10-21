@@ -2,7 +2,7 @@
 
 .convert-page-container {
     width: 100vw;
-    margin-top: 6rem;
+    margin-top: $margin-top;
 
     gap: 5rem;
     @include flex-column-centered;

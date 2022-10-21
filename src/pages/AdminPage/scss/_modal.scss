@@ -1,0 +1,79 @@
+@import "list-mixin","src/scss/functions","src/scss/variables";
+.modal-background {
+  &.closed{
+    transform: scale(0);
+  }
+  left: 0;
+  top: 0;
+  position: fixed;
+  z-index: 7;
+  width: 100%;
+  height: 100%;
+  transform: scale(1);
+  @include transition;
+  background-color: rgba(128,128,128,0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .modal-container {
+    height: 250px;
+    width: 500px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: rgba(0,0,0,.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    .modal-close {
+      color: $nav-color;
+      align-self: flex-end;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin: 0.5rem 0.5rem 0 0;
+    }
+    .modal-window-content {
+      display: flex;
+      padding: 1rem;
+      justify-content: space-between;
+
+      .add-roles {
+        @include ul-for-modal(rgb(0,128,0),none);
+        margin-left: 0.5rem;
+        span.selected {
+          position: absolute;
+          margin-left: -1rem;
+        }
+        span.unselected {
+          display: none;
+
+        }
+      }
+      .revoke-roles {
+        @include ul-for-modal(rgb(139,0,0),line-through);
+      }
+      .final-roles {
+        @include ul-for-modal(rgb(0,0,0),none);
+      }
+
+    }
+
+    .apply-roles:last-of-type {
+
+      margin-top: auto;
+      margin-bottom: 1rem;
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      .error {
+        color: red;
+        margin-bottom: 0.5rem;
+      }
+      .apply-btn {
+        text-align: center;
+        @include button-style
+      }
+
+    }
+
+  }
+}

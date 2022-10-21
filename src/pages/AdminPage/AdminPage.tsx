@@ -3,7 +3,7 @@ import axios from 'axios';
 import {IUserToken} from "@/Interfaces";
 import {JwtToken} from "../../functions/JwtToken";
 import {UserContext} from "../../functions/UserContext";
-import './AdminPage.css';
+import './scss/AdminPage.scss';
 import {singletonTokenInstance} from "../../functions/Tokens";
 import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 import {FadeOutText} from "./FadeOutText";
@@ -52,11 +52,9 @@ export const AdminPage: React.FC = () => {
             <div className="admin-page-container">
                 <FadeOutText isShowingAlert={isShowingAlert} setShowingAlert={setShowingAlert}>{delMsg}</FadeOutText>
                 <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
-
-                <table>
+                <table className="admin-table">
                     <thead>
                     <tr>
-
                         <th className="user" align="center">User</th>
                         <th className="subject" align="center">Roles</th>
 
@@ -87,6 +85,13 @@ export const AdminPage: React.FC = () => {
 
                     </tbody>
                 </table>
+
+                {/*<button onClick={()=>{*/}
+                {/*    setDelMsg("Admin" + " deleted")*/}
+                {/*    setShowingAlert(true)*/}
+
+                {/*}*/}
+                {/*}>fff</button>*/}
 
             </div>
         </>

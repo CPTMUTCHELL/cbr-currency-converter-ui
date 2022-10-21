@@ -1,0 +1,24 @@
+@import "src/scss/variables";
+
+footer {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  background: $nav-color;
+  color: white;
+  justify-content: center;
+  .social-media {
+    display: flex;
+    gap: 1rem;
+    cursor: pointer;
+  }
+  .info {
+    justify-content: center;
+    display: flex;
+    gap: 1rem;
+
+    span {
+      margin-bottom: 10px;
+    }
+  }
+}
