@@ -1,0 +1,26 @@
+.column-head {
+
+  display: flex;
+  position: relative;
+
+  justify-content: space-between;
+  align-items: center;
+
+  .search-sort {
+    display: flex;
+    .search-btn {
+      cursor: pointer;
+      //to centralize
+      display: flex;
+    }
+  }
+  .search {
+    top:20px;
+    right:0;
+    position: absolute;
+    background-color: #6d76f7;
+    width: 90px;
+    height: 30px;
+
+  }
+}

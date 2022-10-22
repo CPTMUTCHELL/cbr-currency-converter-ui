@@ -1,12 +1,16 @@
-@import "src/scss/variables";
+@import "src/scss/variables", "src/scss/functions","column-header";
+
 .history-page-container {
+  p {
+    font-size: 1rem;
+  }
   margin-top: $margin-top;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 
   table {
-
+    // column-header.scss here
     tr {
       background-color: white;
     }
@@ -16,41 +20,28 @@
       border: 1px solid #ddd;
     }
 
-    .desc:after,
-    .asc:after {
-      content: ' ';
-      position: relative;
 
-      left: 2px;
-      border: 8px solid transparent;
-    }
-
-
-    .desc:after {
-      top: 10px;
-      border-top-color: silver;
-    }
-
-    .asc:after {
-      bottom: 15px;
-      border-bottom-color: silver;
-    }
   }
+
   .pagination-container {
     margin-top: 1rem;
     display: flex;
     justify-content: flex-end;
     gap: 40px;
     align-items: center;
-
+    @include media-medium{
+      gap: 20px;
+      flex-direction: column;
+    }
 
     .page-select {
+
       align-items: baseline;
       display: flex;
       gap: 10px;
       .box {
         height: 2rem;
-        width: 5rem;
+        width: 4rem;
         text-align: center;
 
       }

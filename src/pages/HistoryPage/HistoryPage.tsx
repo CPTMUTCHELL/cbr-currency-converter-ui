@@ -2,61 +2,82 @@ import React, {useEffect, useState} from 'react';
 import {JwtToken} from "../../functions/JwtToken";
 import axios from "axios";
 import {IHistoryPage} from "../../Interfaces";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow
+} from '@mui/material';
 import "./scss/HistoryPage.scss"
 import {singletonTokenInstance} from "../../functions/Tokens";
-import {useToLogin} from "../../hooks/useToLogin";
+import {ColumnHeader} from "./ColumnHeader";
 
+export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
+type sortDirType = "asc" | "desc"
+
+export interface ISort {
+    sortField: sortFieldType;
+    dir: sortDirType;
+}
+
+interface IColumn {
+    search?: boolean
+    columnName: string
+    columnSortId: sortFieldType
+}
+const COLS: IColumn[] = [
+    {columnName: "Base currency", columnSortId: "baseCurrency"},
+    {columnName: "Target currency", columnSortId: "targetCurrency"},
+    {columnName: "Quantity", columnSortId: "quantityToConvert"},
+    {columnName: "Result", columnSortId: "result"},
+    {columnName: "Date", columnSortId: "date"},
+]
+interface IPage{
+    currentPageNumber:number
+    pageSize: 5 | 10 | 25
+    currentPageSelect:number
+}
 const pageSizes: number[] = [5, 10, 25]
 export const HistoryPage: React.FC = () => {
-
-    const [pageNum, setPageNum] = useState<number>(0)
-    const [pageSize, setPageSize] = useState<number>(5)
-    const [dir, setDir] = useState<string>("desc")
-    const [sortField, setSortField] = useState<string>("date")
+    const [page,setPage] = useState<IPage>({currentPageNumber:0,pageSize:5,currentPageSelect:1})
+    const [sort, setSort] = useState<ISort>({sortField: "date", dir: "desc"})
     const [baseCurrency, setBaseCurrency] = useState<string>("")
     const [targetCurrency, setTargetCurrency] = useState<string>("")
     const [date, setDate] = useState<string>("")
-    const {performLogout} = useToLogin();
 
-    const [hpage, setPage] = useState<IHistoryPage>();
-    const [pageNumSelect, setPageNumSelect] = useState<number>(1)
-    const url = (`/backend/history/show/${pageNum + 1}?pageSize=${pageSize}
-    &sortField=${sortField}&dir=${dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
+    const [hpage, setHpage] = useState<IHistoryPage>();
+    const [filter, setFilter] = useState<sortFieldType | undefined>(undefined);
+    const url = (`/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}
+    &sortField=${sort.sortField}&dir=${sort.dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
 
     //to reduce auth-service calls
     useEffect(() => {
         JwtToken(localStorage.getItem("access")!)
     }, [])
     useEffect(() => {
-        setPageNumSelect(pageNum + 1)
+        setPage({...page,currentPageSelect:page.currentPageNumber + 1})
         axios
             .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
             .then((res) => {
-                setPage(res.data)
+                setHpage(res.data)
             })
-            //don't logout
-            // .catch((err) => {
-            //     performLogout(`Bad credentials \n ${err.response.data.error_message}`)
-            // });
-    }, [pageNum, pageSize, sortField, dir, baseCurrency, targetCurrency, date])
+
+    }, [page.currentPageNumber,page.pageSize, sort, baseCurrency, targetCurrency, date])
 
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPageSize(parseInt(e.target.value))
+        // @ts-ignore
+        setPage({...page,pageSize:(parseInt(e.target.value))})
+
 
     };
     const handleChangePage = (e: any, newPage: number) => {
-
-        setPageNum(newPage)
+        setPage({...page,currentPageNumber:newPage})
     };
 
-    const sortHandler = (e: any) => {
-        const col = e.target.id
-        setSortField(col)
-        dir == "desc" ? setDir("asc") : setDir("desc")
-
-
-    };
 
     //wait for data load
     if (typeof hpage === 'undefined') return null
@@ -80,19 +101,13 @@ export const HistoryPage: React.FC = () => {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={` ${sortField === "baseCurrency" ? `${dir}` : ""}`}
-                                           id="baseCurrency"
-                                           onClick={sortHandler} align="center">Base&nbsp;currency</TableCell>
-                                <TableCell className={` ${sortField === "targetCurrency" ? `${dir}` : ""}`}
-                                           id="targetCurrency" onClick={sortHandler}
-                                           align="center">Target&nbsp;currency</TableCell>
-                                <TableCell className={` ${sortField === "quantityToConvert" ? `${dir}` : ""}`}
-                                           id="quantityToConvert" onClick={sortHandler}
-                                           align="center">Quantity</TableCell>
-                                <TableCell className={` ${sortField === "result" ? `${dir}` : ""}`} id="result"
-                                           onClick={sortHandler} align="center">Result</TableCell>
-                                <TableCell className={` ${sortField === "date" ? `${dir}` : ""}`} id="date"
-                                           onClick={sortHandler} align="center">Date</TableCell>
+                                {COLS.map((column) =>
+                                    <ColumnHeader
+                                        sort={sort} setSort={setSort}
+                                        columnNane={column.columnName}
+                                        sortId={column.columnSortId}
+                                     setFilter={setFilter} filter={filter}/>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -118,34 +133,38 @@ export const HistoryPage: React.FC = () => {
                             }
                             if (e.key == 'Enter') {
 
-                                setPageNum((pageNumSelect - 1) < 1 ? 0 : pageNumSelect -1) //another pageNumState to avoid instant change, but use enter button
+                                setPage({...page, currentPageNumber:(page.currentPageSelect - 1) < 1 ? 0 : page.currentPageSelect - 1}) //another pageNumState to avoid instant change, but use enter button
                                 axios
                                     .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
                                     .then((res) => {
-                                        setPage(res.data)
+                                        setHpage(res.data)
                                     })
                             }
                         }}
+
+                               //validate page input
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                   Number(e.target.value) >= hpage.totalElements / pageSize
-                                       ? setPageNumSelect(Math.ceil(hpage.totalElements / pageSize))
-                                       : setPageNumSelect(Number(e.target.value))
+                                   Number(e.target.value) >= hpage.totalElements / page.pageSize
+                                       ? setPage({...page,currentPageSelect:Math.ceil(hpage.totalElements / page.pageSize)})
+                                       : setPage({...page,currentPageSelect: Number(e.target.value)})
                                }}
-                               value={pageNumSelect <= 1 ? 1 : pageNumSelect}/>
-                        <p> of {hpage.totalElements / pageSize<1 ? 1 : Math.ceil(hpage.totalElements / pageSize)}</p>
+                               value={page.currentPageSelect <= 1 ? 1 : page.currentPageSelect}/>
+                        <p> of {hpage.totalElements / page.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / page.pageSize)}</p>
+
+
                     </div>
                     <div className="pagination">
-                    <TablePagination
+                        <TablePagination
 
-                        rowsPerPageOptions={pageSizes}
-                        component="div"
-                        count={hpage.totalElements}
-                        rowsPerPage={pageSize}
-                        page={pageNum}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </div>
+                            rowsPerPageOptions={pageSizes}
+                            component="div"
+                            count={hpage.totalElements}
+                            rowsPerPage={page.pageSize}
+                            page={page.currentPageNumber}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </div>
                 </div>
             </div>
 
