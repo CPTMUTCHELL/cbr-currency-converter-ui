@@ -11,13 +11,17 @@
 
   table {
     // column-header.scss here
-    tr {
-      background-color: white;
+
+    thead tr {
+      background-color: $nav-color;
     }
+    td {
+      background-color: aliceblue;
+      border: 1px solid $nav-color;
+    }
+    th{
+      border: 1px solid $nav-color;
 
-    th, td {
-
-      border: 1px solid #ddd;
     }
 
 

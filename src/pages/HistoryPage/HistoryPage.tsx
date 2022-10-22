@@ -113,11 +113,11 @@ export const HistoryPage: React.FC = () => {
                         <TableBody>
                             {hpage.dto.map((row) => (
                                 <TableRow key={row.id}>
-                                    <TableCell>{row.baseCurrency}</TableCell>
-                                    <TableCell>{row.targetCurrency}</TableCell>
-                                    <TableCell>{row.quantityToConvert}</TableCell>
-                                    <TableCell>{row.result}</TableCell>
-                                    <TableCell>{row.date}</TableCell>
+                                    <TableCell><p>{row.baseCurrency}</p></TableCell>
+                                    <TableCell><p>{row.targetCurrency}</p></TableCell>
+                                    <TableCell><p>{row.quantityToConvert}</p></TableCell>
+                                    <TableCell><p>{row.result}</p></TableCell>
+                                    <TableCell><p>{row.date}</p></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

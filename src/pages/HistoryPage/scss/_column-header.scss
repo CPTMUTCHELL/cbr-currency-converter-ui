@@ -1,4 +1,8 @@
 .column-head {
+    p{
+      font-weight: bold;
+    }
+    color: white;
 
   display: flex;
   position: relative;
@@ -7,6 +11,13 @@
   align-items: center;
 
   .search-sort {
+
+    .MuiTableSortLabel-icon{
+      color: white !important;
+    }
+    .Mui-active{
+      color: white;
+    }
     display: flex;
     .search-btn {
       cursor: pointer;

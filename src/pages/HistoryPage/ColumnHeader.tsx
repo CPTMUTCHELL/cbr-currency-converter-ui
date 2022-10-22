@@ -1,5 +1,5 @@
 import React from "react";
-import {TableCell, TableSortLabel} from "@mui/material";
+import {createStyles, TableCell, TableSortLabel, Theme, withStyles} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {ISort, sortFieldType} from "./HistoryPage";
 
@@ -24,7 +24,7 @@ export const ColumnHeader: React.FC<IColumnHeadProps> = (sortProps) => {
         <>
             <TableCell>
                 <div className="column-head">
-                    <div>{columnNane}</div>
+                    <p>{columnNane}</p>
 
                     <div className="search-sort">
                         <TableSortLabel
