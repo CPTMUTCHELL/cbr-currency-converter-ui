@@ -41,6 +41,7 @@ export const LoginPage: React.FC = () => {
 
     const keyPressHandler = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (user.username != null && user.password != null)) {
+            console.log(user)
             axios
                 .post<IToken>(API_URL, user)
                 .then((res) => {
