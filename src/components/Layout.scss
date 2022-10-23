@@ -1,12 +1,13 @@
-
+@import "src/scss/functions";
 .container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    .outlet{
+        flex-grow: 1;
+    }
 }
-.outlet{
-    flex-grow: 1;
-}
+
 *{
     padding: 0;
     box-sizing: border-box;

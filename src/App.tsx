@@ -7,9 +7,10 @@ import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
 import {UserContext} from "./functions/UserContext";
 import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";
-import {NotFoundPage} from "./pages/ErrorPages/NotFoundPage";
+import {NotFoundPage} from "./pages/SupportPages/NotFoundPage";
 import {AdminPage} from "./pages/AdminPage/AdminPage";
 import {AboutPage} from "./pages/AboutPage/AboutPage";
+import {GreetingsPage} from "./pages/SupportPages/GreetingsPage";
 
 
 const App: React.FC = () => {
@@ -26,8 +27,8 @@ const App: React.FC = () => {
 
             <Routes>
 
-                <Route path="/" element={<Layout/>}>
-
+                <Route element={<Layout/>}>
+                    <Route element={<GreetingsPage/>} path="/"/>
                     <Route element={<SignUpPage/>} path="/registration"/>
                     <Route element={<LoginPage/>} path="/login"/>
                     <Route element={<AboutPage/>} path="/about"/>

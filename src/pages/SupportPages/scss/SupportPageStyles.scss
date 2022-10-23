@@ -1,6 +1,6 @@
 @import "src/scss/functions";
 
-.error-container{
+.support-page-container{
   height: calc(100vh - $footer-height - $navbar-height );
   @include flex-column-centered;
   h1 {

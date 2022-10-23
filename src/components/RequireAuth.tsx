@@ -4,7 +4,7 @@ import {UserContext} from "../functions/UserContext";
 import {getUser} from "../functions/JwtToken";
 import { singletonTokenInstance} from "../functions/Tokens";
 import { ClipLoader } from "react-spinners";
-import {NotAuthorizedPage} from "../pages/ErrorPages/NotAuthorizedPage";
+import {NotAuthorizedPage} from "../pages/SupportPages/NotAuthorizedPage";
 
 export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) => {
     const {userToken,setUserToken}  = useContext(UserContext);
