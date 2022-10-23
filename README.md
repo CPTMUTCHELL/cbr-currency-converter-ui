@@ -1,6 +1,6 @@
 # cbr-currency-converter-ui
 
-This is frontend for [cbr-currency converter](https://github.com/CPTMUTCHELL/cbr-currency-converter/tree/k8s)
+This is frontend for [cbr-currency converter](https://github.com/CPTMUTCHELL/cbr-currency-converter/tree/k8s) Ui is responsive
 
 It has following options to start:
 ## local
@@ -32,8 +32,3 @@ In [CM](https://github.com/CPTMUTCHELL/cbr-currency-converter-ui/blob/master/k8s
 
 I created Dockerfile.cache to cache node_modules in jenkins WORKSPACE, but you can install node_nodules with each push. Check Jenkinsfile.
 
-## P.S
-
-I plan to:
-- [ ] make css responsive for modible devices
-- [ ] refactore code :)
