@@ -4,7 +4,7 @@ import {UserContext} from "../functions/UserContext";
 import {getUser} from "../functions/JwtToken";
 import { singletonTokenInstance} from "../functions/Tokens";
 import { ClipLoader } from "react-spinners";
-import {NotAuthorizedPage} from "../pages/NotAuthorizedPage";
+import {NotAuthorizedPage} from "../pages/ErrorPages/NotAuthorizedPage";
 
 export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) => {
     const {userToken,setUserToken}  = useContext(UserContext);
@@ -24,6 +24,13 @@ export const RequireAuth:React.FC<{allowedRoles:string[]}> = ({allowedRoles}) =>
             <ClipLoader color={"#123abc"} loading={!useEffectCompleted} />
         </div> )
     }
-    return allowedRoles.some(role=>JSON.stringify(userToken.roles).includes(role)) ?  <Outlet/>: <NotAuthorizedPage/>;
+    if (userToken.roles) {
+        const hasPermission: boolean = allowedRoles.some(role => JSON.stringify(userToken.roles).includes(role))
+        if (hasPermission !== undefined && hasPermission)
+            return <Outlet/>
+
+    }
+    return <NotAuthorizedPage/>
+
 
 }

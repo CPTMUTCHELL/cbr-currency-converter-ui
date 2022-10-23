@@ -7,7 +7,7 @@ import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
 import {UserContext} from "./functions/UserContext";
 import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";
-import {NotFoundPage} from "./pages/NotFoundPage";
+import {NotFoundPage} from "./pages/ErrorPages/NotFoundPage";
 import {AdminPage} from "./pages/AdminPage/AdminPage";
 import {AboutPage} from "./pages/AboutPage/AboutPage";
 
@@ -40,8 +40,9 @@ const App: React.FC = () => {
                         <Route element={<AdminPage/>} path="/users"/>
 
                     </Route>
+                    <Route path="*" element={<NotFoundPage/>}/>
+
                 </Route>
-                <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
 
 

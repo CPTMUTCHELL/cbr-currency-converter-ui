@@ -1,10 +1,10 @@
-@import "src/scss/variables","src/scss/functions","variables","responsive-btn";
+@import "src/scss/variables","src/scss/functions","responsive-btn";
 .navbar-container {
-    height: $nav-height;
+    height: $navbar-height;
 
     nav {
         z-index: 4;
-        max-height: $nav-height;
+        max-height: $navbar-height;
 
         position: fixed;
         top: 0;
@@ -15,12 +15,12 @@
 
         .cbr-logo {
             display: grid;
-            grid-template-columns: repeat(1, 200px) $nav-height;
+            grid-template-columns: repeat(1, 200px) $navbar-height;
             grid-column-gap: min(2vw, 30px);
 
             img {
-                max-height: $nav-height;
-                max-width: $nav-height;
+                max-height: $navbar-height;
+                max-width: $navbar-height;
             }
 
             h3 {
@@ -32,8 +32,8 @@
             @include media-small {
                 img {
                     margin-top: 1.5rem;
-                    max-height: $nav-height /2;
-                    max-width: $nav-height /2;
+                    max-height: $navbar-height /2;
+                    max-width: $navbar-height /2;
                 }
             }
 
@@ -102,7 +102,7 @@
             &.open{
                 margin-top: 0;
                 position: fixed;
-                top:$nav-height;
+                top:$navbar-height;
                 visibility: visible;
                 background-color: $nav-color;
                 display: flex;
