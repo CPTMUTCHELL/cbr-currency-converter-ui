@@ -1,8 +1,17 @@
-import React from "react";
+import React, {useContext, useEffect} from "react";
 import "./scss/SupportPageStyles.scss"
+import {singletonTokenInstance} from "src/functions/Tokens";
+import {getUser} from "src/functions/JwtToken";
+import {UserContext} from "src/functions/UserContext";
 
 export const GreetingsPage:React.FC = () => {
-
+    const {setUserToken}  = useContext(UserContext);
+    const token = singletonTokenInstance.getToken().access;
+    useEffect(()=>{
+        if (token!==null) {
+            setUserToken(getUser(singletonTokenInstance.getToken().access))
+        }
+    },[])
     return <div className="support-page-container">
         <h1>
             Hey, welcome to my project :)
