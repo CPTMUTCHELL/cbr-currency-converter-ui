@@ -1,15 +1,16 @@
 import React, {useState, useContext, useEffect} from 'react';
-import axios from 'axios';
+import CircularProgress from "@mui/material/CircularProgress";
 import {IUserToken} from "@/Interfaces";
-import {JwtToken} from "../../functions/JwtToken";
-import {UserContext} from "../../functions/UserContext";
+import {JwtToken} from "src/functions/JwtToken";
+import {UserContext} from "src/functions/UserContext";
 import './scss/AdminPage.scss';
-import {singletonTokenInstance} from "../../functions/Tokens";
+import {singletonTokenInstance} from "src/functions/Tokens";
 import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 import {FadeOutText} from "./FadeOutText";
+import {useAxiosFunction} from "src/hooks/useAxiosFunction";
 
 export const AdminPage: React.FC = () => {
-    const API_URL_USERS = "backend/auth/admin/users";
+    const USERS_URL = "backend/auth/admin/users";
     const token = localStorage.getItem("access")!
     const {userToken} = useContext(UserContext);
     const [active, setActive] = useState<boolean>(false)
@@ -19,26 +20,41 @@ export const AdminPage: React.FC = () => {
     const [isShowingAlert, setShowingAlert] = useState<boolean>(false);
 
     const minRoleId = Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0])))
+    const [getUsersFuncLoading, getUsersFunc] = useAxiosFunction<IUserToken[]>({
+        method: "GET",
+        url: USERS_URL,
+    headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
+    })
+    const [deleteUserFuncLoading, deleteUserFunc] = useAxiosFunction({
+        method: "DELETE",
+        url: USERS_URL,
+        headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
+    })
+
     useEffect(() => {
         JwtToken(token)
-        axios
-            .get<IUserToken[]>(API_URL_USERS, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
-            .then((res) => {
-                setUsers(res.data)
+        const getUsers =  async () => {
+            const res = await getUsersFunc();
+            const {response,error} =res;
+            if (response) {
+                setUsers(response.data)
                 user?.roles.forEach(role => role.isAdded = true)
-            })
+            }
+
+        }
+        getUsers()
     }, [delMsg, active]);
-    const deleteUserHandler = (e: any) => {
+    const deleteUserHandler = async (e: any) => {
         if (window.confirm("Delete the item?")) {
             JwtToken(token)
-            axios
-                .delete(API_URL_USERS + "/" + e.target.id, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
-                .then((res) => {
-                    if (res.status == 204) {
-                        setDelMsg(e.target.value + " deleted")
-                        setShowingAlert(true)
-                    }
-                })
+            const res = await deleteUserFunc(undefined,USERS_URL + "/" + e.target.id)
+            const {response,error} =res;
+            if (response)
+                if (response.status === 204){
+                    setDelMsg(e.target.value + " deleted")
+                    setShowingAlert(true)
+                }
+
         }
     }
     const openRolesModalHandler = (e: any) => {
@@ -61,7 +77,8 @@ export const AdminPage: React.FC = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {Object.values(users).map((user) => (
+
+                    {getUsersFuncLoading ? <CircularProgress/> : Object.values(users).map((user) => (
                         <tr key={user.username}>
                             {userToken.username === user.username
                                 ? <td>{user.username} (me)</td>
@@ -85,13 +102,6 @@ export const AdminPage: React.FC = () => {
 
                     </tbody>
                 </table>
-
-                {/*<button onClick={()=>{*/}
-                {/*    setDelMsg("Admin" + " deleted")*/}
-                {/*    setShowingAlert(true)*/}
-
-                {/*}*/}
-                {/*}>fff</button>*/}
 
             </div>
         </>

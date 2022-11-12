@@ -1,6 +1,5 @@
 import React from "react";
-import {createStyles, TableCell, TableSortLabel, Theme, withStyles} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { TableCell, TableSortLabel} from "@mui/material";
 import {ISort, sortFieldType} from "./HistoryPage";
 
 interface IColumnHeadProps {
@@ -8,12 +7,10 @@ interface IColumnHeadProps {
     setSort: (sort: ISort) => void
     columnNane: string
     sortId: sortFieldType
-    setFilter:(filter:sortFieldType)=>void
-    filter:sortFieldType | undefined
 }
 
 export const ColumnHeader: React.FC<IColumnHeadProps> = (sortProps) => {
-    const {columnNane, sort, setSort, sortId,setFilter,filter} = {...sortProps}
+    const {columnNane, sort, setSort, sortId} = {...sortProps}
 
     const sortHandler = (sortField: sortFieldType) => {
 

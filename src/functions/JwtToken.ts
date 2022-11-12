@@ -1,5 +1,5 @@
 import axios from "axios";
-import {IToken, IUserToken} from "../Interfaces";
+import {IToken, IUserToken} from "@/Interfaces";
 import jwtDecode from "jwt-decode";
 import {singletonTokenInstance} from "./Tokens";
 interface MyToken {
@@ -15,7 +15,6 @@ export function JwtToken (accessToken:string)  {
     const refreshToken = singletonTokenInstance.getToken().refresh
     const decodedAccessToken=jwtDecode<MyToken>(accessToken)
     const decodedRefreshToken=jwtDecode<MyToken>(refreshToken)
-
     if (Date.now() >= decodedAccessToken.exp * 1000) {
         if (Date.now() >= decodedRefreshToken.exp * 1000){
                 localStorage.clear();

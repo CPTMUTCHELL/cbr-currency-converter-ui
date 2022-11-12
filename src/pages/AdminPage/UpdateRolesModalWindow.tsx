@@ -2,7 +2,9 @@ import React, {useEffect, useState} from 'react';
 import './scss/AdminPage.scss';
 import {IRole, IUserToken} from "@/Interfaces";
 import axios from "axios";
-import {singletonTokenInstance} from "../../functions/Tokens";
+import {singletonTokenInstance} from "src/functions/Tokens";
+import {useAxiosFunction} from "src/hooks/useAxiosFunction";
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 export interface ModalProps {
@@ -31,7 +33,11 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
     ])
     const [updateRoleErr, setUpdateRoleErr] = useState<string>("")
     const [rolesToUpdate, setRolesToUpdate] = useState<IRole[]>([])
-
+    const [updateFuncLoading, updateFunc] = useAxiosFunction<IUserToken>({
+        method: "PUT",
+        url: UPDATE_ROLES_URL,
+        headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
+    })
     const setRolesToUpdateHandler = (field: string) => (e: any) => {
         const upd = roles.map(role => {
             if (role.id === Number(e.target.id)) {
@@ -46,19 +52,15 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
         if (user)
             setRolesToUpdate([...user.roles.filter(userRole => roles.find(role => userRole.id == role.id && !role.isRevoked)), ...roles.filter(role => role.isAdded && !role.isRevoked)])
     }, [roles, user])
-    const updateRolesHandler = () => {
-        axios
-            .put<IUserToken>(UPDATE_ROLES_URL, {
-                ...user,
-                roles: rolesToUpdate
-            }, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
-            .then(() => {
-                // to avoid duplicates before browser page refresh
-                refreshState()
-            })
-            .catch((err) => {
-                setUpdateRoleErr(err.response.data.errors)
-            });
+    const updateRolesHandler = async () => {
+        const res = await updateFunc({
+            ...user,
+            roles: rolesToUpdate
+        })
+        const {response, error} =res;
+        if (response) refreshState()
+        if (error) setUpdateRoleErr(error)
+
     }
 
     return (
@@ -109,7 +111,7 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
                 <div className="apply-roles">
                     <span className="error">{updateRoleErr}</span>
                     <div className="apply-btn">
-                        <button type='button' onClick={updateRolesHandler}>Apply</button>
+                        {updateFuncLoading ? <CircularProgress/> : <button type="button" onClick={updateRolesHandler}>Submit</button>}
                     </div>
                 </div>
 

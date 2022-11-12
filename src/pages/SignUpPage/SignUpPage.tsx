@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import axios, {AxiosResponse, AxiosError} from 'axios';
-import {IUser} from "@/Interfaces";
+import {IToken, IUser} from "@/Interfaces";
 import {useNavigate} from 'react-router-dom';
 import './scss/SignUpPage.scss';
+import {useAxiosFunction} from "src/hooks/useAxiosFunction";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface IError {
     "usernameError": string,
@@ -12,19 +13,22 @@ interface IError {
     "errorMsg": string
 
 }
+const REGISTER_URL = "/backend/auth/registration"
 
 export const SignUpPage: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<IUser>(Object)
-    const [error, setError] = useState<IError>({
+    const [pageError, setPageError] = useState<IError>({
         usernameError: "",
         passwordError: "",
         validated: true,
         noError: false,
         errorMsg: ""
     })
-    const REGISTER_URL = "/backend/auth/registration"
-
+    const [registerFuncLoading, registerFunc] = useAxiosFunction<IUser>({
+        method: "POST",
+        url: REGISTER_URL
+    })
     const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement
         setUser({...user, [field]: target.value});
@@ -32,56 +36,57 @@ export const SignUpPage: React.FC = () => {
             case 'username':
                 if (target.value.length < 5) {
 
-                    setError({
-                        ...error,
+                    setPageError({
+                        ...pageError,
+                        errorMsg:"",
                         usernameError: "Username must be at least 5 characters long!"
                     });
-                } else setError({
-                    ...error,
+                } else setPageError({
+                    ...pageError,
                     usernameError: ""
                 });
                 break;
             case 'password':
                 if (target.value.length < 5) {
-                    setError(prevState => ({
+                    setPageError(prevState => ({
                         ...prevState,
+                        errorMsg:"",
                         passwordError: "Password must be at least 5 characters long!"
                     }));
-                } else setError(prevState => ({
+                } else setPageError(prevState => ({
                     ...prevState,
                     passwordError: ""
                 }));
                 break;
-
-
         }
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (error?.usernameError === "" && error?.passwordError === "") {
-            setError(prevState => ({
+        if (pageError?.usernameError === "" && pageError?.passwordError === "") {
+            setPageError(prevState => ({
                 ...prevState,
                 validated: true
             }));
-            axios
-                .post<IUser>(REGISTER_URL, user)
-                .then((res: AxiosResponse) => {
-                    if (res.status >= 200 && res.status < 400) setError(prevState => ({
-                        ...prevState,
-                        noError: true
+            const res = await registerFunc(user)
+            const {response,error} = res;
+            if (response) {
+                if (response.status >= 200 && response.status < 400) setPageError(prevState => ({
+                    ...prevState,
+                    noError: true
 
-                    }));
-                    navigate("/login", {state: {msg: "You've been registered"}});
-                }).catch((reason: AxiosError) => {
-                setError({
-                    ...error,
-                    errorMsg: reason.response?.data.message, noError: false
+                }));
+                navigate("/login", {state: {msg: "You've been registered"}});
+            }
+            if (error) {
+                setPageError({
+                    ...pageError,
+                    errorMsg: error, noError: false
                 });
+            }
 
-            })
-        } else setError({
-            ...error,
+        } else setPageError({
+            ...pageError,
             validated: false
         });
 
@@ -100,21 +105,21 @@ export const SignUpPage: React.FC = () => {
                                 <input onPaste={handleChange('username')} type='text'
                                        onChange={handleChange('username')}/>
                             </label>
-                        {error?.usernameError != "" &&  <p className="error">{error?.usernameError}</p>}
+                        {pageError?.usernameError != "" &&  <p className="error">{pageError?.usernameError}</p>}
                             <label>
                                 <p>Password</p>
                                 <input onPaste={handleChange('password')} type='password'
                                        onChange={handleChange('password')}/>
                             </label>
-                        {error?.passwordError != "" && <p className="error">{error?.passwordError}</p>}
+                        {pageError?.passwordError != "" && <p className="error">{pageError?.passwordError}</p>}
 
                         <div className="signup-error">
-                            {!error.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
-                            {error.noError && <p style={{color: "red"}}>You've been registered</p>}
-                            {error.errorMsg && <p style={{color: "red"}}>{error.errorMsg}</p>}
+                            {!pageError.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
+                            {pageError.noError && <p style={{color: "red"}}>You've been registered</p>}
+                            {pageError.errorMsg && <p style={{color: "red"}}>{pageError.errorMsg}</p>}
                         </div>
                     </form>
-                <button type="submit" onClick={handleSubmit}>Register Me</button>
+                {registerFuncLoading ? <CircularProgress/> : <button type="submit" onClick={handleSubmit}>Register me</button>}
 
 
             </div>

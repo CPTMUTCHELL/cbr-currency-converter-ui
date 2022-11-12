@@ -1,30 +1,38 @@
-import {useEffect, useState} from "react";
-import axios, {AxiosError} from "axios";
+import {useState} from "react";
+import axios from "axios";
+
 interface IAxiosProps<U> {
-    url:string
+    url: string
     method: "POST" | "PUT" | "GET" | "DELETE";
     headers?: any
-    data?:U
+    data?: U
 }
 
-export const useAxiosFunction = <T,U>(config:IAxiosProps<U>):[T | undefined,string | undefined,boolean, (data?:U)=>void] => {
-    const [response, setResponse] = useState<T| undefined>(undefined);
-    const [error, setError] = useState<string| undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(true);
-    const  axiosFetch = async (data?:U) => {
-        config= {...config,data:data}
+interface IAxiosResponse<T> {
+    response?: {data:T, status:number}
+    error?: string
+}
 
+export const useAxiosFunction = <U, T=never>(config: IAxiosProps<U>): [boolean, ((data?: U, changingUrl?:string) => Promise<IAxiosResponse<T>>)] => {
+    let response:IAxiosResponse<T> | undefined
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const axiosFetch = async (data?: U,changingUrl?:string): Promise<IAxiosResponse<T>> => {
+        config = {...config, url: (changingUrl) ? changingUrl : config.url,  data: data}
         try {
             setLoading(true)
-            const result = await axios.request(config);
-            setResponse(result.data);
-        } catch( err) {
-            // @ts-ignore
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
+            const res = await axios.request(config);
+            return  {response: {data:res.data,status:res.status}}
+        } catch (e: any) {
+            if (e.response.data.errors !==undefined) //Entity validation message
+            return {...response, error: e.response.data.errors}
+            else if (e.response.data.message !==undefined) return {...response, error: e.response.data.message}
+            else return {...response, error: e.response}
 
+        } finally {
+            setLoading(false)
+        }
     }
-    return [response, error, loading,axiosFetch];
+    return [loading, axiosFetch];
 };

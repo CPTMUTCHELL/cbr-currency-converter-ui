@@ -6,12 +6,6 @@ import logo from "./avatar.jpeg";
 
 
 export const AboutPage: React.FC = () => {
-    const [kazanUniState, setKazanUniState] = useState(false);
-    const [moscowUniState, setMoscowUniState] = useState(false);
-    const [smsoftExpState, setSmsoftExpState] = useState(false);
-    const [cbrExp, setCbrExp] = useState(false);
-    const [cbrUiExp, setCbrUiExp] = useState(false);
-
     return <>
 
         <div className="about-page">

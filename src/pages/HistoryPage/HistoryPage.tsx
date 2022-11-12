@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {JwtToken} from "../../functions/JwtToken";
-import axios from "axios";
-import {IHistoryPage} from "../../Interfaces";
+import { IHistoryPage} from "../../Interfaces";
 import {
     Paper,
     Table,
@@ -15,6 +14,8 @@ import {
 import "./scss/HistoryPage.scss"
 import {singletonTokenInstance} from "../../functions/Tokens";
 import {ColumnHeader} from "./ColumnHeader";
+import {useAxiosFunction} from "src/hooks/useAxiosFunction";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
 type sortDirType = "asc" | "desc"
@@ -29,6 +30,7 @@ interface IColumn {
     columnName: string
     columnSortId: sortFieldType
 }
+
 const COLS: IColumn[] = [
     {columnName: "Base currency", columnSortId: "baseCurrency"},
     {columnName: "Target currency", columnSortId: "targetCurrency"},
@@ -36,51 +38,55 @@ const COLS: IColumn[] = [
     {columnName: "Result", columnSortId: "result"},
     {columnName: "Date", columnSortId: "date"},
 ]
-interface IPage{
-    currentPageNumber:number
+
+interface IPage {
+    currentPageNumber: number
     pageSize: 5 | 10 | 25
-    currentPageSelect:number
+    currentPageSelect: number
 }
+
 const pageSizes: number[] = [5, 10, 25]
 export const HistoryPage: React.FC = () => {
-    const [page,setPage] = useState<IPage>({currentPageNumber:0,pageSize:5,currentPageSelect:1})
+    const [page, setPage] = useState<IPage>({currentPageNumber: 0, pageSize: 5, currentPageSelect: 1})
     const [sort, setSort] = useState<ISort>({sortField: "date", dir: "desc"})
     const [baseCurrency, setBaseCurrency] = useState<string>("")
     const [targetCurrency, setTargetCurrency] = useState<string>("")
     const [date, setDate] = useState<string>("")
 
     const [hpage, setHpage] = useState<IHistoryPage>();
-    const [filter, setFilter] = useState<sortFieldType | undefined>(undefined);
-    const url = (`/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}
+    const HISTORY_URL = (`/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}
     &sortField=${sort.sortField}&dir=${sort.dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
-
+    const [historyLoading, getHistoryFunc] = useAxiosFunction<never|string,IHistoryPage>({
+            method: "GET",
+            url: HISTORY_URL,
+            headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
+        })
     //to reduce auth-service calls
     useEffect(() => {
         JwtToken(localStorage.getItem("access")!)
     }, [])
+    const getHistory = useCallback(async (url:string) => {
+        const res = await getHistoryFunc(undefined,url);
+        const {response, error} = res;
+        setHpage(response?.data)
+    }, [])
     useEffect(() => {
         setPage({...page,currentPageSelect:page.currentPageNumber + 1})
-        axios
-            .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
-            .then((res) => {
-                setHpage(res.data)
-            })
+        getHistory(HISTORY_URL)
 
-    }, [page.currentPageNumber,page.pageSize, sort, baseCurrency, targetCurrency, date])
-
+    }, [page.currentPageNumber, page.pageSize, sort, baseCurrency, targetCurrency, date,HISTORY_URL])
+    console.log(historyLoading)
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
         // @ts-ignore
         setPage({...page,pageSize:(parseInt(e.target.value))})
 
-
     };
     const handleChangePage = (e: any, newPage: number) => {
-        setPage({...page,currentPageNumber:newPage})
+        setPage({...page, currentPageNumber: newPage})
     };
 
-
     //wait for data load
-    if (typeof hpage === 'undefined') return null
+    // if (typeof hpage === 'undefined' ) return <CircularProgress/>
     return (
 
         <>
@@ -96,7 +102,6 @@ export const HistoryPage: React.FC = () => {
                            onChange={e => setDate(e.target.value)}/>
 
                 </div>
-
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -106,21 +111,25 @@ export const HistoryPage: React.FC = () => {
                                         sort={sort} setSort={setSort}
                                         columnNane={column.columnName}
                                         sortId={column.columnSortId}
-                                     setFilter={setFilter} filter={filter}/>
+                                        />
                                 )}
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                            {hpage.dto.map((row) => (
-                                <TableRow key={row.id}>
-                                    <TableCell><p>{row.baseCurrency}</p></TableCell>
-                                    <TableCell><p>{row.targetCurrency}</p></TableCell>
-                                    <TableCell><p>{row.quantityToConvert}</p></TableCell>
-                                    <TableCell><p>{row.result}</p></TableCell>
-                                    <TableCell><p>{row.date}</p></TableCell>
-                                </TableRow>
-                            ))}
+                        {historyLoading ? <CircularProgress/> :
+
+                            <TableBody>
+                                {hpage && hpage.dto.map((row) => (
+                                    <TableRow key={row.id}>
+                                        <TableCell><p>{row.baseCurrency}</p></TableCell>
+                                        <TableCell><p>{row.targetCurrency}</p></TableCell>
+                                        <TableCell><p>{row.quantityToConvert}</p></TableCell>
+                                        <TableCell><p>{row.result}</p></TableCell>
+                                        <TableCell><p>{row.date}</p></TableCell>
+                                    </TableRow>
+                                ))}
+
                         </TableBody>
+                        }
                     </Table>
                 </TableContainer>
 
@@ -128,28 +137,32 @@ export const HistoryPage: React.FC = () => {
                     <div className="page-select">
                         <p>Select page: </p>
                         <input className="box" type="text" onKeyPress={(e) => {
-                            if (!/[.]|[0-9]/.test(e.key)) {
+                            if (!/[0-9]/.test(e.key)) {
                                 e.preventDefault();
                             }
                             if (e.key == 'Enter') {
 
-                                setPage({...page, currentPageNumber:(page.currentPageSelect - 1) < 1 ? 0 : page.currentPageSelect - 1}) //another pageNumState to avoid instant change, but use enter button
-                                axios
-                                    .get<IHistoryPage>(url, {headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}})
-                                    .then((res) => {
-                                        setHpage(res.data)
-                                    })
+                                setPage({
+                                    ...page,
+                                    currentPageNumber: (page.currentPageSelect - 1) < 1 ? 0 : page.currentPageSelect - 1
+                                }) //another pageNumState to avoid instant change, but use enter button
+                                getHistory(HISTORY_URL)
+
                             }
                         }}
 
-                               //validate page input
-                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                   Number(e.target.value) >= hpage.totalElements / page.pageSize
-                                       ? setPage({...page,currentPageSelect:Math.ceil(hpage.totalElements / page.pageSize)})
-                                       : setPage({...page,currentPageSelect: Number(e.target.value)})
+                            //validate page input
+
+                               onInput={(e: React.ChangeEvent<HTMLInputElement>) => { hpage &&
+                                   Number(e.target.value.substring(1)) >= hpage.totalElements / page.pageSize
+                                       ? setPage({
+                                           ...page,
+                                           currentPageSelect: Math.ceil(hpage.totalElements / page.pageSize)
+                                       })
+                                       : setPage({...page, currentPageSelect: Number(e.target.value.substring(1))})
                                }}
                                value={page.currentPageSelect <= 1 ? 1 : page.currentPageSelect}/>
-                        <p> of {hpage.totalElements / page.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / page.pageSize)}</p>
+                        {hpage &&<p> of {hpage.totalElements / page.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / page.pageSize)}</p>}
 
 
                     </div>
@@ -158,7 +171,7 @@ export const HistoryPage: React.FC = () => {
 
                             rowsPerPageOptions={pageSizes}
                             component="div"
-                            count={hpage.totalElements}
+                            count={hpage ? hpage.totalElements : 0}
                             rowsPerPage={page.pageSize}
                             page={page.currentPageNumber}
                             onPageChange={handleChangePage}
