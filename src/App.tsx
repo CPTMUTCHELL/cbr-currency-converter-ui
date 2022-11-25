@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {LoginPage} from "./pages/LoginPage/LoginPage";
 import {ConvertPage} from "./pages/ConvertPage/ConvertPage";
 import {SignUpPage} from "./pages/SignUpPage/SignUpPage";
@@ -26,7 +26,6 @@ const App: React.FC = () => {
 
 
             <Routes>
-
                 <Route element={<Layout/>}>
                     <Route element={<GreetingsPage/>} path="/"/>
                     <Route element={<SignUpPage/>} path="/registration"/>

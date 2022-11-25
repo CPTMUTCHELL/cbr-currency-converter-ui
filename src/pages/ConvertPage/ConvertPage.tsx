@@ -1,45 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {IConvert} from "@/Interfaces";
-
-import {JwtToken} from "src/functions/JwtToken";
+import {IConvert, ICurrency} from "@/Interfaces";
 import {useToLogin} from "src/hooks/useToLogin"
 import "./scss/ConvertPage.scss"
-import {singletonTokenInstance} from "src/functions/Tokens";
 import Select from 'react-select'
-import {useAxiosFunction} from "src/hooks/useAxiosFunction";
-import CircularProgress from "@mui/material/CircularProgress";
 
-interface ICurrency {
-    "date": Date
-    "id": string,
-    "numCode": number,
-    "charCode": string,
-    "nominal": number,
-    "name": string,
-    "value": number
-}
+import CircularProgress from "@mui/material/CircularProgress";
+import {Service} from "src/functions/Service";
+
 
 export const ConvertPage: React.FC = () => {
-    const token = localStorage.getItem("access")!
     const {performLogout} = useToLogin();
-    const CURRENCIES_URL = "backend/convert/currencies";
-    const CONVERT_URL = "backend/convert/convert";
     const [currency, setCurrency] = useState<ICurrency[]>([]);
     let today = Date.parse(new Date().toISOString().slice(0, 10))
-    const [getCurrenciesFuncLoading, getCurrenciesFunc] = useAxiosFunction< never,ICurrency[]>({
-        method: "GET",
-        url: CURRENCIES_URL,
-        headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
-    })
-    const [convertFuncLoading, convertFunc] = useAxiosFunction<IConvert, IConvert>({
-        method: "POST",
-        url: CONVERT_URL,
-        headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
-    })
-
-
+    const [loading,setLoading] = useState(false)
     useEffect(() => {
-        JwtToken(singletonTokenInstance.getToken().access)
         const raw = JSON.parse(localStorage.getItem("currencies") || '[]')
         setCurrency(raw)
     }, [])
@@ -47,9 +21,9 @@ export const ConvertPage: React.FC = () => {
 
         const storedDate = localStorage.getItem("date")
         if (storedDate == null || today > Date.parse(storedDate)) {
-            JwtToken(token)
+            
             const getCurrencies = async () => {
-                const res = await getCurrenciesFunc();
+                const res = await Service.getCurrencies();
                 const {response, error} = res;
                 if (response) {
                     localStorage.setItem("currencies", JSON.stringify(response.data));
@@ -79,8 +53,10 @@ export const ConvertPage: React.FC = () => {
         setConvert({...convert, [field]: e.value})
     }
     const getResultHandler = async () => {
-        JwtToken(token)
-        const res = await convertFunc(convert);
+
+        setLoading(true)
+        const res = await Service.convert(convert);
+        setLoading(false)
         const {response, error} = res;
         if (response)
             setConvert({...convert, result: response.data.result})
@@ -139,7 +115,7 @@ export const ConvertPage: React.FC = () => {
 
 
                 </div>
-                { convertFuncLoading ? <CircularProgress/> : <button onClick={getResultHandler} type="submit">Convert</button>}
+                { loading ? <CircularProgress/> : <button onClick={getResultHandler} type="submit">Convert</button>}
             </div>
 
         </>

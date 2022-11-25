@@ -1,11 +1,11 @@
 
 class Tokens {
 
-    setToken( tokens : Record<string, string>):void{
+    setToken( tokens : Record<"access" | "refresh", string>):void{
       localStorage.setItem("access",  tokens.access);
       localStorage.setItem("refresh",  tokens.refresh)
     }
-    getToken():Record<string, string>{
+    getToken():Record<"access" | "refresh", string>{
 
 
         return {

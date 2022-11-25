@@ -1,12 +1,13 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import {IUser, IToken} from "@/Interfaces";
-import {useNavigate, useLocation} from 'react-router-dom';
+import {IUser} from "@/Interfaces";
+import {useLocation, useNavigate} from 'react-router-dom';
 import {getUser} from "src/functions/JwtToken";
 import {UserContext} from "src/functions/UserContext";
 import './scss/LoginPage.scss';
 import {singletonTokenInstance} from "src/functions/Tokens";
-import {useAxiosFunction} from "src/hooks/useAxiosFunction";
+
+import {Service} from "src/functions/Service";
 
 interface IFrom {
     msg: string
@@ -24,11 +25,7 @@ export const LoginPage: React.FC = () => {
     }, [])
     const [user, setUser] = useState<IUser>(Object);
     const {setUserToken} = useContext(UserContext);
-
-    const [loginLoading, login] = useAxiosFunction<IUser,IToken>({
-        method: "POST",
-        url: "backend/auth/login"
-    })
+    const [loading,setLoading]=useState(false);
     const usernameHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser({...user, username: event.target.value})
 
@@ -38,7 +35,9 @@ export const LoginPage: React.FC = () => {
     }
     const keyPressHandler = async (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (user.username != null && user.password != null)) {
-            const res = await login(user)
+            setLoading(true)
+            const res = await Service.signIn(user)
+            setLoading(false)
             acceptResponse(res)
         }
     }
@@ -59,7 +58,9 @@ export const LoginPage: React.FC = () => {
 
     const clickHandler = async () => {
         if ((user.username != null && user.password != null)) {
-            const res = await login(user)
+            setLoading(true)
+            const res = await Service.signIn(user)
+            setLoading(false)
             acceptResponse(res)
 
         }
@@ -85,7 +86,7 @@ export const LoginPage: React.FC = () => {
 
                     </form>
                     {error && <p className="error">{error}</p>}
-                    {loginLoading ? <CircularProgress/> : <button type="button" onClick={clickHandler}>Submit</button>}
+                    {loading ? <CircularProgress/> : <button type="button" onClick={clickHandler}>Submit</button>}
                 </div>
 
         </>

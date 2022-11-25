@@ -1,13 +1,12 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import {IUserToken} from "@/Interfaces";
-import {JwtToken} from "src/functions/JwtToken";
 import {UserContext} from "src/functions/UserContext";
 import './scss/AdminPage.scss';
-import {singletonTokenInstance} from "src/functions/Tokens";
 import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 import {FadeOutText} from "./FadeOutText";
-import {useAxiosFunction} from "src/hooks/useAxiosFunction";
+
+import {Service} from "src/functions/Service";
 
 export const AdminPage: React.FC = () => {
     const USERS_URL = "backend/auth/admin/users";
@@ -20,21 +19,14 @@ export const AdminPage: React.FC = () => {
     const [isShowingAlert, setShowingAlert] = useState<boolean>(false);
 
     const minRoleId = Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0])))
-    const [getUsersFuncLoading, getUsersFunc] = useAxiosFunction<IUserToken[]>({
-        method: "GET",
-        url: USERS_URL,
-    headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
-    })
-    const [deleteUserFuncLoading, deleteUserFunc] = useAxiosFunction({
-        method: "DELETE",
-        url: USERS_URL,
-        headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
-    })
+    const [loading,setLoading]=useState(true)
+    //to reduce auth-service calls
 
     useEffect(() => {
-        JwtToken(token)
-        const getUsers =  async () => {
-            const res = await getUsersFunc();
+        const getUsers = async () => {
+
+            const res = await Service.getUsers();
+            setLoading(false)
             const {response,error} =res;
             if (response) {
                 setUsers(response.data)
@@ -43,11 +35,11 @@ export const AdminPage: React.FC = () => {
 
         }
         getUsers()
-    }, [delMsg, active]);
+    }, [delMsg, active,token]);
     const deleteUserHandler = async (e: any) => {
         if (window.confirm("Delete the item?")) {
-            JwtToken(token)
-            const res = await deleteUserFunc(undefined,USERS_URL + "/" + e.target.id)
+            
+            const res = await Service.deleteUser(e.target.id)
             const {response,error} =res;
             if (response)
                 if (response.status === 204){
@@ -78,7 +70,7 @@ export const AdminPage: React.FC = () => {
                     </thead>
                     <tbody>
 
-                    {getUsersFuncLoading ? <CircularProgress/> : Object.values(users).map((user) => (
+                    {loading ? <CircularProgress/> : Object.values(users).map((user) => (
                         <tr key={user.username}>
                             {userToken.username === user.username
                                 ? <td>{user.username} (me)</td>

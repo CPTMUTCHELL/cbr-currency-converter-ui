@@ -1,7 +1,8 @@
-import axios from "axios";
-import {IToken, IUserToken} from "@/Interfaces";
+import {IUserToken} from "@/Interfaces";
 import jwtDecode from "jwt-decode";
 import {singletonTokenInstance} from "./Tokens";
+import {Service} from "src/functions/Service";
+
 interface MyToken {
     sub: string;
     exp: number;
@@ -10,8 +11,7 @@ interface MyToken {
     }[]
 
 }
-export function JwtToken (accessToken:string)  {
-    const API_URL = "backend/auth/token";
+export async function JwtToken (accessToken:string):Promise<string| "expired" | undefined>  {
     const refreshToken = singletonTokenInstance.getToken().refresh
     const decodedAccessToken=jwtDecode<MyToken>(accessToken)
     const decodedRefreshToken=jwtDecode<MyToken>(refreshToken)
@@ -21,15 +21,19 @@ export function JwtToken (accessToken:string)  {
                 window.location.href = '/login';
             }
        else {
-            axios
-                .get<IToken>(API_URL, {headers: {"Authorization": `Bearer ${refreshToken}`}})
-                .then((res) => {
-                    singletonTokenInstance.setToken({"access": res.data.accessToken,"refresh": res.data.refreshToken})
-
+           const res =await Service.refreshToken()
+            if (res.response) {
+                singletonTokenInstance.setToken({
+                    "access": res.response.data.accessToken,
+                    "refresh": res.response.data.refreshToken
                 })
+                return res.response.data.accessToken
+            }
+
         }
     }
 }
+
 export  function getUser(accessToken:string):IUserToken {
     const decodedAccessToken=jwtDecode<MyToken>(accessToken)
     return {username:decodedAccessToken.sub,roles:decodedAccessToken.roles}

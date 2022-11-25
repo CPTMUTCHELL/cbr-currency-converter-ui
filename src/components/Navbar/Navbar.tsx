@@ -34,7 +34,7 @@ export const Navbar: React.FC = () => {
 
                     (<><ul>
 
-                        {Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0]))) <= 1 ?
+                        {Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0]))) <= 2 ?
                             <li><NavLink onClick={()=>setOpenResponsiveBtn(false)} to="/users">
                                 Admin Page
                             </NavLink></li> :

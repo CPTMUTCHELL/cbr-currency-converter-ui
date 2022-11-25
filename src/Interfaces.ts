@@ -39,3 +39,12 @@ export interface IUserContext {
     userToken:IUserToken
     setUserToken: (user: IUserToken|null) => void;
 }
+export interface ICurrency {
+    "date": Date
+    "id": string,
+    "numCode": number,
+    "charCode": string,
+    "nominal": number,
+    "name": string,
+    "value": number
+}

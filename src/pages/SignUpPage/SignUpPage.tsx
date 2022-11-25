@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {IToken, IUser} from "@/Interfaces";
+import {IUser} from "@/Interfaces";
 import {useNavigate} from 'react-router-dom';
 import './scss/SignUpPage.scss';
-import {useAxiosFunction} from "src/hooks/useAxiosFunction";
 import CircularProgress from "@mui/material/CircularProgress";
+import {Service} from "src/functions/Service";
 
 interface IError {
     "usernameError": string,
@@ -13,7 +13,6 @@ interface IError {
     "errorMsg": string
 
 }
-const REGISTER_URL = "/backend/auth/registration"
 
 export const SignUpPage: React.FC = () => {
     const navigate = useNavigate();
@@ -25,10 +24,8 @@ export const SignUpPage: React.FC = () => {
         noError: false,
         errorMsg: ""
     })
-    const [registerFuncLoading, registerFunc] = useAxiosFunction<IUser>({
-        method: "POST",
-        url: REGISTER_URL
-    })
+    const [loading,setLoading]=useState(false)
+
     const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement
         setUser({...user, [field]: target.value});
@@ -68,7 +65,9 @@ export const SignUpPage: React.FC = () => {
                 ...prevState,
                 validated: true
             }));
-            const res = await registerFunc(user)
+            setLoading(true)
+            const res = await Service.signUp(user)
+            setLoading(false)
             const {response,error} = res;
             if (response) {
                 if (response.status >= 200 && response.status < 400) setPageError(prevState => ({
@@ -119,7 +118,7 @@ export const SignUpPage: React.FC = () => {
                             {pageError.errorMsg && <p style={{color: "red"}}>{pageError.errorMsg}</p>}
                         </div>
                     </form>
-                {registerFuncLoading ? <CircularProgress/> : <button type="submit" onClick={handleSubmit}>Register me</button>}
+                {loading ? <CircularProgress/> : <button type="submit" onClick={handleSubmit}>Register me</button>}
 
 
             </div>

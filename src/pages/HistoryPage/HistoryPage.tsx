@@ -1,21 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {JwtToken} from "../../functions/JwtToken";
-import { IHistoryPage} from "../../Interfaces";
-import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TablePagination,
-    TableRow
-} from '@mui/material';
+import {IHistoryPage} from "../../Interfaces";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
 import "./scss/HistoryPage.scss"
-import {singletonTokenInstance} from "../../functions/Tokens";
 import {ColumnHeader} from "./ColumnHeader";
-import {useAxiosFunction} from "src/hooks/useAxiosFunction";
+
 import CircularProgress from "@mui/material/CircularProgress";
+import {Service} from "src/functions/Service";
 
 export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
 type sortDirType = "asc" | "desc"
@@ -56,17 +46,14 @@ export const HistoryPage: React.FC = () => {
     const [hpage, setHpage] = useState<IHistoryPage>();
     const HISTORY_URL = (`/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}
     &sortField=${sort.sortField}&dir=${sort.dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
-    const [historyLoading, getHistoryFunc] = useAxiosFunction<never|string,IHistoryPage>({
-            method: "GET",
-            url: HISTORY_URL,
-            headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().access}`}
-        })
-    //to reduce auth-service calls
-    useEffect(() => {
-        JwtToken(localStorage.getItem("access")!)
-    }, [])
+
+    const [historyLoading,setHistoryLoading] = useState<boolean>(true)
+    const token = localStorage.getItem("access")!
+
     const getHistory = useCallback(async (url:string) => {
-        const res = await getHistoryFunc(undefined,url);
+        const res = await Service.getHistoryPage(url);
+        setHistoryLoading(false)
+
         const {response, error} = res;
         setHpage(response?.data)
     }, [])
@@ -75,7 +62,6 @@ export const HistoryPage: React.FC = () => {
         getHistory(HISTORY_URL)
 
     }, [page.currentPageNumber, page.pageSize, sort, baseCurrency, targetCurrency, date,HISTORY_URL])
-    console.log(historyLoading)
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
         // @ts-ignore
         setPage({...page,pageSize:(parseInt(e.target.value))})
