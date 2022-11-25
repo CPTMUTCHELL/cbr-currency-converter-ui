@@ -7,9 +7,9 @@ const CURRENCIES_URL = "backend/convert/currencies";
 const CONVERT_URL = "backend/convert/convert";
 const LOGIN_URL = 'backend/auth/login'
 const REGISTRATION_URL = "/backend/auth/registration"
-const USERS_URL = "backend/auth/admin/users";
+const USERS_URL = "backend/auth/admin/users/";
 const UPDATE_ROLES_URL = "backend/auth/admin/roles"
-const REFRESH_TOKEN_URL= "backend/auth/token";
+const REFRESH_TOKEN_URL= "backend/auth/token/";
 
 class _Service {
     //history
@@ -18,7 +18,7 @@ class _Service {
 
         return await axiosFunction({
             method: "GET",
-            url: url,
+            url: url+"/",
             headers: {"Authorization": `Bearer ${token!==undefined ? token : singletonTokenInstance.getToken().access}`}
         });
     }
