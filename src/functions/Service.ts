@@ -27,7 +27,7 @@ class _Service {
         const token = await JwtToken(singletonTokenInstance.getToken().access);
         return await axiosFunction({
             method: "GET",
-            url: CURRENCIES_URL+"/",
+            url: CURRENCIES_URL,
             headers: {"Authorization": `Bearer ${token !== undefined ? token : singletonTokenInstance.getToken().access}`}
         });
     }

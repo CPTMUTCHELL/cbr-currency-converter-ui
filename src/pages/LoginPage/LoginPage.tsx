@@ -54,7 +54,7 @@ export const LoginPage: React.FC = () => {
          responseHandlerFunc( async ()=> {
              const res = await Service.signIn(user);
              acceptResponse(res.data)
-         })
+         },"Invalid username or password")
     }
 
 

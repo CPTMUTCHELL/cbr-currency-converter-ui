@@ -53,7 +53,6 @@ export const HistoryPage: React.FC = () => {
 
     const getHistory = useCallback((url: string) => {
         responseHandlerFunc( async ()=> {
-            console.log(url)
             const res = await Service.getHistoryPage(url);
             setHpage(res.data)
         })

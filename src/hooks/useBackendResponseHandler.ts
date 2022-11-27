@@ -12,12 +12,12 @@ export const useBackendResponseHandler = ({setLoading}: IUseBackendResponse): an
     const {setError, setShow} = useContext(ErrorContext) as IErrorContext;
 
     const {performLogout} = useToLogin()
-    const responseHandlerFunc = async (backendCall: () => Promise<any>) => {
+    const responseHandlerFunc = async (backendCall: () => Promise<any>, customErrorMsg?:string) => {
         try {
             setLoading(true)
             await backendCall()
         } catch (e: any) {
-            setError(e.message)
+            setError(customErrorMsg ?? e.message)
             setShow(true)
             if (e instanceof CustomError) {
                 performLogout()

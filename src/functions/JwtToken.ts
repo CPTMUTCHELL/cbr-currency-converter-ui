@@ -7,34 +7,27 @@ interface MyToken {
     sub: string;
     exp: number;
     roles: {
-        name:string
+        name: string
     }[]
 
 }
-export async function JwtToken (accessToken:string):Promise<{ token?:string,error?:string } | undefined>  {
-    const refreshToken = singletonTokenInstance.getToken().refresh
-    const decodedAccessToken=jwtDecode<MyToken>(accessToken)
-    const decodedRefreshToken=jwtDecode<MyToken>(refreshToken)
+
+export async function JwtToken(accessToken: string): Promise<{ token?: string, error?: string } | undefined> {
+    const decodedAccessToken = jwtDecode<MyToken>(accessToken)
 
     if (Date.now() >= decodedAccessToken.exp * 1000) {
+        const res = await Service.refreshToken()
+            singletonTokenInstance.setToken({
+                "access": res.data.accessToken,
+                "refresh": res.data.refreshToken
+            })
+            return {token: res.data.accessToken}
 
-        {
-           const res =await Service.refreshToken()
-            if (res.response) {
-                singletonTokenInstance.setToken({
-                    "access": res.response.data.accessToken,
-                    "refresh": res.response.data.refreshToken
-                })
-                return {token:res.response.data.accessToken}
-            }
-
-
-
-        }
     }
+
 }
 
-export  function getUser(accessToken:string):IUserToken {
-    const decodedAccessToken=jwtDecode<MyToken>(accessToken)
-    return {username:decodedAccessToken.sub,roles:decodedAccessToken.roles}
+export function getUser(accessToken: string): IUserToken {
+    const decodedAccessToken = jwtDecode<MyToken>(accessToken)
+    return {username: decodedAccessToken.sub, roles: decodedAccessToken.roles}
 }
