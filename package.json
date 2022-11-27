@@ -53,6 +53,7 @@
   ],
   "devDependencies": {
     "env": "0.0.2",
+    "tsc-alias": "^1.7.1",
     "tsconfig-paths-webpack-plugin": "^4.0.0"
   }
 }

@@ -3,6 +3,7 @@ import './scss/AdminPage.scss';
 import {IRole, IUserToken} from "@/Interfaces";
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
+import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 
 export interface ModalProps {
@@ -14,12 +15,8 @@ export interface ModalProps {
 
 
 export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,active, setActive}) => {
-    function refreshState() {
-        setActive(false)
-        roles.forEach(role => role.isAdded = false)
-        roles.forEach(role => role.isRevoked = false)
-        setUpdateRoleErr("")
-    }
+    const [loading,setLoading] = useState(false)
+    const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
 
     const [roles, setRoles] = useState<IRole[]>([
         {id: 1, name: "OWNER", isAdded: false, isRevoked: false},
@@ -29,7 +26,15 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
     ])
     const [updateRoleErr, setUpdateRoleErr] = useState<string>("")
     const [rolesToUpdate, setRolesToUpdate] = useState<IRole[]>([])
-    const [loading,setLoading] = useState(false)
+
+
+    function refreshState() {
+        setActive(false)
+        roles.forEach(role => role.isAdded = false)
+        roles.forEach(role => role.isRevoked = false)
+        setUpdateRoleErr("")
+    }
+
     const setRolesToUpdateHandler = (field: string) => (e: any) => {
         const upd = roles.map(role => {
             if (role.id === Number(e.target.id)) {
@@ -44,16 +49,13 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
         if (user)
             setRolesToUpdate([...user.roles.filter(userRole => roles.find(role => userRole.id == role.id && !role.isRevoked)), ...roles.filter(role => role.isAdded && !role.isRevoked)])
     }, [roles, user])
-    const updateRolesHandler = async () => {
-        setLoading(true)
-        const res = await Service.updateUserRoles({
-            ...user,
-            roles: rolesToUpdate
+    const updateRolesHandler = () => {
+        responseHandlerFunc( async ()=>{
+            await Service.updateUserRoles({
+                ...user,
+                roles: rolesToUpdate})
+            refreshState()
         })
-        setLoading(false)
-        const {response, error} =res;
-        if (response) refreshState()
-        if (error) setUpdateRoleErr(error)
 
     }
 

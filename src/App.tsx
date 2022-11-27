@@ -11,6 +11,7 @@ import {NotFoundPage} from "./pages/SupportPages/NotFoundPage";
 import {AdminPage} from "./pages/AdminPage/AdminPage";
 import {AboutPage} from "./pages/AboutPage/AboutPage";
 import {GreetingsPage} from "./pages/SupportPages/GreetingsPage";
+import {ErrorContext} from "./functions/ErrorContext";
 
 
 const App: React.FC = () => {
@@ -20,10 +21,17 @@ const App: React.FC = () => {
         () => ({userToken, setUserToken}),
         [userToken]
     );
+    const [error, setError] = useState<string>("")
+    const [show, setShow] = useState<boolean>(false)
 
     return <BrowserRouter>
         <UserContext.Provider value={value}>
-
+            <ErrorContext.Provider  value={{
+                error: error,
+                setError: setError,
+                show: show,
+                setShow: setShow
+            }}>
 
             <Routes>
                 <Route element={<Layout/>}>
@@ -45,7 +53,7 @@ const App: React.FC = () => {
                 </Route>
             </Routes>
 
-
+            </ErrorContext.Provider>
         </UserContext.Provider>
     </BrowserRouter>
 }

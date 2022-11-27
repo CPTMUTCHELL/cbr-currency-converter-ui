@@ -6,6 +6,7 @@ import {ColumnHeader} from "./ColumnHeader";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
+import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
 type sortDirType = "asc" | "desc"
@@ -47,32 +48,30 @@ export const HistoryPage: React.FC = () => {
     const HISTORY_URL = (`/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}
     &sortField=${sort.sortField}&dir=${sort.dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
 
-    const [historyLoading,setHistoryLoading] = useState<boolean>(true)
-    const token = localStorage.getItem("access")!
+    const [loading, setLoading] = useState<boolean>(true)
+    const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
 
-    const getHistory = useCallback(async (url:string) => {
-        const res = await Service.getHistoryPage(url);
-        setHistoryLoading(false)
-
-        const {response, error} = res;
-        setHpage(response?.data)
+    const getHistory = useCallback((url: string) => {
+        responseHandlerFunc( async ()=> {
+            console.log(url)
+            const res = await Service.getHistoryPage(url);
+            setHpage(res.data)
+        })
     }, [])
     useEffect(() => {
-        setPage({...page,currentPageSelect:page.currentPageNumber + 1})
+        setPage({...page, currentPageSelect: page.currentPageNumber + 1})
         getHistory(HISTORY_URL)
 
-    }, [page.currentPageNumber, page.pageSize, sort, baseCurrency, targetCurrency, date,HISTORY_URL])
+    }, [page.currentPageNumber, page.pageSize, sort, baseCurrency, targetCurrency, date, HISTORY_URL])
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
         // @ts-ignore
-        setPage({...page,pageSize:(parseInt(e.target.value))})
+        setPage({...page, pageSize: (parseInt(e.target.value))})
 
     };
     const handleChangePage = (e: any, newPage: number) => {
         setPage({...page, currentPageNumber: newPage})
     };
 
-    //wait for data load
-    // if (typeof hpage === 'undefined' ) return <CircularProgress/>
     return (
 
         <>
@@ -97,11 +96,11 @@ export const HistoryPage: React.FC = () => {
                                         sort={sort} setSort={setSort}
                                         columnNane={column.columnName}
                                         sortId={column.columnSortId}
-                                        />
+                                    />
                                 )}
                             </TableRow>
                         </TableHead>
-                        {historyLoading ? <CircularProgress/> :
+                        {loading ? <CircularProgress/> :
 
                             <TableBody>
                                 {hpage && hpage.dto.map((row) => (
@@ -114,7 +113,7 @@ export const HistoryPage: React.FC = () => {
                                     </TableRow>
                                 ))}
 
-                        </TableBody>
+                            </TableBody>
                         }
                     </Table>
                 </TableContainer>
@@ -139,7 +138,8 @@ export const HistoryPage: React.FC = () => {
 
                             //validate page input
 
-                               onInput={(e: React.ChangeEvent<HTMLInputElement>) => { hpage &&
+                               onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                   hpage &&
                                    Number(e.target.value.substring(1)) >= hpage.totalElements / page.pageSize
                                        ? setPage({
                                            ...page,
@@ -148,7 +148,8 @@ export const HistoryPage: React.FC = () => {
                                        : setPage({...page, currentPageSelect: Number(e.target.value.substring(1))})
                                }}
                                value={page.currentPageSelect <= 1 ? 1 : page.currentPageSelect}/>
-                        {hpage &&<p> of {hpage.totalElements / page.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / page.pageSize)}</p>}
+                        {hpage &&
+                            <p> of {hpage.totalElements / page.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / page.pageSize)}</p>}
 
 
                     </div>

@@ -7,9 +7,10 @@ import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 import {FadeOutText} from "./FadeOutText";
 
 import {Service} from "src/functions/Service";
+import {ErrorContext, IErrorContext} from "src/functions/ErrorContext";
+import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 export const AdminPage: React.FC = () => {
-    const USERS_URL = "backend/auth/admin/users";
     const token = localStorage.getItem("access")!
     const {userToken} = useContext(UserContext);
     const [active, setActive] = useState<boolean>(false)
@@ -17,35 +18,34 @@ export const AdminPage: React.FC = () => {
     const [user, setUser] = useState<IUserToken | undefined>();
     const [delMsg, setDelMsg] = useState<string>("")
     const [isShowingAlert, setShowingAlert] = useState<boolean>(false);
+    const {setError, setShow} = useContext(ErrorContext) as IErrorContext;
 
     const minRoleId = Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0])))
-    const [loading,setLoading]=useState(true)
+    const [loading, setLoading] = useState(true)
+    const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
     //to reduce auth-service calls
 
     useEffect(() => {
-        const getUsers = async () => {
-
-            const res = await Service.getUsers();
-            setLoading(false)
-            const {response,error} =res;
-            if (response) {
-                setUsers(response.data)
+        const getUsers = () => {
+            responseHandlerFunc( async ()=>{
+                const res = await Service.getUsers();
+                setUsers(res.data)
                 user?.roles.forEach(role => role.isAdded = true)
-            }
+            })
+
 
         }
         getUsers()
-    }, [delMsg, active,token]);
-    const deleteUserHandler = async (e: any) => {
+    }, [delMsg, active, token]);
+    const deleteUserHandler = (e: any) => {
         if (window.confirm("Delete the item?")) {
-            
-            const res = await Service.deleteUser(e.target.id)
-            const {response,error} =res;
-            if (response)
-                if (response.status === 204){
+            responseHandlerFunc( async ()=>{
+                const res = await Service.deleteUser(e.target.id);
+                if (res.status === 204){
                     setDelMsg(e.target.value + " deleted")
                     setShowingAlert(true)
                 }
+            })
 
         }
     }
@@ -58,6 +58,7 @@ export const AdminPage: React.FC = () => {
     return (
         <>
             <div className="admin-page-container">
+
                 <FadeOutText isShowingAlert={isShowingAlert} setShowingAlert={setShowingAlert}>{delMsg}</FadeOutText>
                 <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
                 <table className="admin-table">

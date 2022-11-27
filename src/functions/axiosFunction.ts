@@ -8,17 +8,32 @@ interface IAxiosProps<U> {
 }
 
 export interface IAxiosResponse<T> {
-    response?: { data: T, status: number }
-    error?: string
+    data: T,
+    status: number
 }
 
 export const axiosFunction = async <U, T>(config: IAxiosProps<U>): Promise<IAxiosResponse<T>> => {
+
     try {
         const res = await axios.request(config);
-        return {response: {data: res.data, status: res.status}}
+        return {data: res.data, status: res.status}
     } catch (e: any) {
-         if (e.response.data.message !==undefined) return {error: e.response.data.message}
-        else return {error: e.response}
+
+        if (e.response.data.message !==undefined){
+            if (config.url.includes("/token")) throw new CustomError(e.response.data.message,e.response.data.message)
+            else throw new Error(e.response.data.message)
+        }
+        else throw new Error(e.response.data)
     }
 
+}
+
+export class CustomError extends Error{
+    tokenErr:string
+    constructor(message: string,custom:string) {
+        super(message);
+       this.tokenErr= custom
+        Object.setPrototypeOf(this, CustomError.prototype);
+
+    }
 }

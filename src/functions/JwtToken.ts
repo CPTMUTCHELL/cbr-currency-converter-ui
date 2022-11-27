@@ -11,24 +11,24 @@ interface MyToken {
     }[]
 
 }
-export async function JwtToken (accessToken:string):Promise<string| "expired" | undefined>  {
+export async function JwtToken (accessToken:string):Promise<{ token?:string,error?:string } | undefined>  {
     const refreshToken = singletonTokenInstance.getToken().refresh
     const decodedAccessToken=jwtDecode<MyToken>(accessToken)
     const decodedRefreshToken=jwtDecode<MyToken>(refreshToken)
+
     if (Date.now() >= decodedAccessToken.exp * 1000) {
-        if (Date.now() >= decodedRefreshToken.exp * 1000){
-                localStorage.clear();
-                window.location.href = '/login';
-            }
-       else {
+
+        {
            const res =await Service.refreshToken()
             if (res.response) {
                 singletonTokenInstance.setToken({
                     "access": res.response.data.accessToken,
                     "refresh": res.response.data.refreshToken
                 })
-                return res.response.data.accessToken
+                return {token:res.response.data.accessToken}
             }
+
+
 
         }
     }

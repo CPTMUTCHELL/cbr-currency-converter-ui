@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import './scss/SignUpPage.scss';
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
+import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 interface IError {
     "usernameError": string,
@@ -24,7 +25,8 @@ export const SignUpPage: React.FC = () => {
         noError: false,
         errorMsg: ""
     })
-    const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
+    const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
 
     const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement
@@ -35,7 +37,7 @@ export const SignUpPage: React.FC = () => {
 
                     setPageError({
                         ...pageError,
-                        errorMsg:"",
+                        errorMsg: "",
                         usernameError: "Username must be at least 5 characters long!"
                     });
                 } else setPageError({
@@ -47,7 +49,7 @@ export const SignUpPage: React.FC = () => {
                 if (target.value.length < 5) {
                     setPageError(prevState => ({
                         ...prevState,
-                        errorMsg:"",
+                        errorMsg: "",
                         passwordError: "Password must be at least 5 characters long!"
                     }));
                 } else setPageError(prevState => ({
@@ -65,24 +67,18 @@ export const SignUpPage: React.FC = () => {
                 ...prevState,
                 validated: true
             }));
-            setLoading(true)
-            const res = await Service.signUp(user)
-            setLoading(false)
-            const {response,error} = res;
-            if (response) {
-                if (response.status >= 200 && response.status < 400) setPageError(prevState => ({
-                    ...prevState,
-                    noError: true
+            responseHandlerFunc( async ()=> {
+                const res = await Service.signUp(user)
+                if (res.status >= 200 && res.status < 400) {
+                    setPageError(prevState => ({
+                        ...prevState,
+                        noError: true
 
-                }));
-                navigate("/login", {state: {msg: "You've been registered"}});
-            }
-            if (error) {
-                setPageError({
-                    ...pageError,
-                    errorMsg: error, noError: false
-                });
-            }
+                    }));
+                    navigate("/login", {state: {msg: "You've been registered"}});
+                }
+
+            })
 
         } else setPageError({
             ...pageError,
@@ -97,27 +93,26 @@ export const SignUpPage: React.FC = () => {
             <div className='signup-container'>
                 <h1 className="alg">Sign Up</h1>
 
-                    <form>
+                <form>
 
-                            <label>
-                                <p>Username</p>
-                                <input onPaste={handleChange('username')} type='text'
-                                       onChange={handleChange('username')}/>
-                            </label>
-                        {pageError?.usernameError != "" &&  <p className="error">{pageError?.usernameError}</p>}
-                            <label>
-                                <p>Password</p>
-                                <input onPaste={handleChange('password')} type='password'
-                                       onChange={handleChange('password')}/>
-                            </label>
-                        {pageError?.passwordError != "" && <p className="error">{pageError?.passwordError}</p>}
+                    <label>
+                        <p>Username</p>
+                        <input onPaste={handleChange('username')} type='text'
+                               onChange={handleChange('username')}/>
+                    </label>
+                    {pageError?.usernameError != "" && <p className="error">{pageError?.usernameError}</p>}
+                    <label>
+                        <p>Password</p>
+                        <input onPaste={handleChange('password')} type='password'
+                               onChange={handleChange('password')}/>
+                    </label>
+                    {pageError?.passwordError != "" && <p className="error">{pageError?.passwordError}</p>}
 
-                        <div className="signup-error">
-                            {!pageError.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
-                            {pageError.noError && <p style={{color: "red"}}>You've been registered</p>}
-                            {pageError.errorMsg && <p style={{color: "red"}}>{pageError.errorMsg}</p>}
-                        </div>
-                    </form>
+                    <div className="signup-error">
+                        {!pageError.validated && <p style={{color: "red"}}>You cannot be registered!!!</p>}
+                        {pageError.noError && <p style={{color: "red"}}>You've been registered</p>}
+                    </div>
+                </form>
                 {loading ? <CircularProgress/> : <button type="submit" onClick={handleSubmit}>Register me</button>}
 
 

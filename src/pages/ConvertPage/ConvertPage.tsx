@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {IConvert, ICurrency} from "@/Interfaces";
-import {useToLogin} from "src/hooks/useToLogin"
 import "./scss/ConvertPage.scss"
 import Select from 'react-select'
 
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
+import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 
 export const ConvertPage: React.FC = () => {
-    const {performLogout} = useToLogin();
     const [currency, setCurrency] = useState<ICurrency[]>([]);
     let today = Date.parse(new Date().toISOString().slice(0, 10))
+
     const [loading,setLoading] = useState(false)
+    const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
+
     useEffect(() => {
         const raw = JSON.parse(localStorage.getItem("currencies") || '[]')
         setCurrency(raw)
@@ -22,21 +24,15 @@ export const ConvertPage: React.FC = () => {
         const storedDate = localStorage.getItem("date")
         if (storedDate == null || today > Date.parse(storedDate)) {
             
-            const getCurrencies = async () => {
-                const res = await Service.getCurrencies();
-                const {response, error} = res;
-                if (response) {
-                    localStorage.setItem("currencies", JSON.stringify(response.data));
-                    setCurrency(response.data.sort((o1, o2) => o1.charCode > o2.charCode ? 1 : o2.charCode > o1.charCode ? -1 : 0))
+
+                responseHandlerFunc( async ()=> {
+                    const res = await Service.getCurrencies();
+                    localStorage.setItem("currencies", JSON.stringify(res.data));
+                    setCurrency(res.data.sort((o1, o2) => o1.charCode > o2.charCode ? 1 : o2.charCode > o1.charCode ? -1 : 0))
                     if (Date.parse(localStorage.getItem("date")!) != today) {
                         localStorage.setItem("date", new Date().toISOString().slice(0, 10))
                     }
-                }
-
-            }
-
-            getCurrencies();
-
+                })
 
         }
     }, [])
@@ -49,19 +45,15 @@ export const ConvertPage: React.FC = () => {
     })
 
     const convertInputHandler = (field: string) => (e: any) => {
-
         setConvert({...convert, [field]: e.value})
     }
     const getResultHandler = async () => {
 
-        setLoading(true)
-        const res = await Service.convert(convert);
-        setLoading(false)
-        const {response, error} = res;
-        if (response)
-            setConvert({...convert, result: response.data.result})
-        if (error) performLogout(`Bad credentials \n ${error}`)
+        responseHandlerFunc( async ()=> {
+            const res = await Service.convert(convert);
+            setConvert({...convert, result: res.data.result})
 
+        })
     }
     const options = (): { label: string, value: string }[] => {
         const res: { label: string, value: string }[] = [];
