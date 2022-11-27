@@ -67,7 +67,7 @@ export const SignUpPage: React.FC = () => {
                 ...prevState,
                 validated: true
             }));
-            responseHandlerFunc( async ()=> {
+            await responseHandlerFunc(async () => {
                 const res = await Service.signUp(user)
                 if (res.status >= 200 && res.status < 400) {
                     setPageError(prevState => ({
@@ -75,12 +75,14 @@ export const SignUpPage: React.FC = () => {
                         noError: true
 
                     }));
-                    navigate("/login", {state: {msg: "You've been registered"}});
+                    navigate("/login");
                 }
+            }, {alertProp: {message: "You've been registered", alertType: "success"}}
+            )
+        }
 
-            })
 
-        } else setPageError({
+         else setPageError({
             ...pageError,
             validated: false
         });

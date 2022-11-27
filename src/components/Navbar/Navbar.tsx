@@ -1,17 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {NavLink} from 'react-router-dom'
-import {UserContext} from "../../functions/UserContext"
+import {INotificationContext, NotificationContext, UserContext} from "src/functions/Contexts"
 import {Logout} from "../Logout";
 import "./scss/Navbar.scss"
 import logo from "./logo.png"
-import {ErrorContext, IErrorContext} from "src/functions/ErrorContext";
 import {Alert, IconButton} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 
 export const Navbar: React.FC = () => {
 
     const {userToken} = useContext(UserContext);
-    const {error, show, setShow} = useContext(ErrorContext) as IErrorContext;
+    const {message, show, setShow,alertType} = useContext(NotificationContext) as INotificationContext;
     useEffect(() => {
         const timer = setTimeout(() => setShow(false), 3000)
         return () => clearTimeout(timer)
@@ -32,7 +31,6 @@ export const Navbar: React.FC = () => {
                 <div className={openResponsiveBtn ? "pages open" : "pages"}>
                     {userToken.username == undefined || userToken.username === "" ? (
                             <ul>
-
                                 <li><NavLink onClick={() => setOpenResponsiveBtn(false)} to="/login">Login</NavLink></li>
                                 <li><NavLink onClick={() => setOpenResponsiveBtn(false)} to="/registration">Sign
                                     Up</NavLink></li>
@@ -80,9 +78,9 @@ export const Navbar: React.FC = () => {
                 >
                     <CloseIcon fontSize="inherit"/>
                 </IconButton>}
-                   className={show ? "show" : ""} severity="error">
+                   className={show ? "show" : ""} severity={alertType}>
 
-                {error}
+                {message}
             </Alert>
 
         </div>

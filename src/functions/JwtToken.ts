@@ -12,7 +12,7 @@ interface MyToken {
 
 }
 
-export async function JwtToken(accessToken: string): Promise<{ token?: string, error?: string } | undefined> {
+export async function JwtToken(accessToken: string): Promise< string | undefined> {
     const decodedAccessToken = jwtDecode<MyToken>(accessToken)
 
     if (Date.now() >= decodedAccessToken.exp * 1000) {
@@ -21,7 +21,7 @@ export async function JwtToken(accessToken: string): Promise<{ token?: string, e
                 "access": res.data.accessToken,
                 "refresh": res.data.refreshToken
             })
-            return {token: res.data.accessToken}
+            return res.data.accessToken
 
     }
 

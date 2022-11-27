@@ -55,7 +55,7 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
                 ...user,
                 roles: rolesToUpdate})
             refreshState()
-        })
+        },{alertProp: {message: `Roles of ${user.username} have been updated`, alertType: "success"}})
 
     }
 

@@ -4,14 +4,14 @@ import {LoginPage} from "./pages/LoginPage/LoginPage";
 import {ConvertPage} from "./pages/ConvertPage/ConvertPage";
 import {SignUpPage} from "./pages/SignUpPage/SignUpPage";
 import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
-import {UserContext} from "./functions/UserContext";
+import {NotificationContext, UserContext} from "./functions/Contexts";
 import {RequireAuth} from "./components/RequireAuth";
 import {Layout} from "./components/Layout";
 import {NotFoundPage} from "./pages/SupportPages/NotFoundPage";
 import {AdminPage} from "./pages/AdminPage/AdminPage";
 import {AboutPage} from "./pages/AboutPage/AboutPage";
 import {GreetingsPage} from "./pages/SupportPages/GreetingsPage";
-import {ErrorContext} from "./functions/ErrorContext";
+import {alertTypes} from "@/Interfaces";
 
 
 const App: React.FC = () => {
@@ -23,14 +23,17 @@ const App: React.FC = () => {
     );
     const [error, setError] = useState<string>("")
     const [show, setShow] = useState<boolean>(false)
+    const [alertType, setAlertType] = useState<alertTypes>("error")
 
     return <BrowserRouter>
         <UserContext.Provider value={value}>
-            <ErrorContext.Provider  value={{
-                error: error,
-                setError: setError,
+            <NotificationContext.Provider value={{
+                message: error,
+                setMessage: setError,
                 show: show,
-                setShow: setShow
+                setShow: setShow,
+                alertType: alertType,
+                setAlertType: setAlertType
             }}>
 
             <Routes>
@@ -53,7 +56,7 @@ const App: React.FC = () => {
                 </Route>
             </Routes>
 
-            </ErrorContext.Provider>
+            </NotificationContext.Provider>
         </UserContext.Provider>
     </BrowserRouter>
 }

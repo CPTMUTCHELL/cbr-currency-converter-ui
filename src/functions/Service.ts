@@ -18,7 +18,7 @@ class _Service {
         return await axiosFunction({
             method: "GET",
             url: url ,
-            headers: {"Authorization": `Bearer ${token !== undefined ? token : singletonTokenInstance.getToken().access}`}
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`}
         });
     }
 
@@ -28,7 +28,7 @@ class _Service {
         return await axiosFunction({
             method: "GET",
             url: CURRENCIES_URL,
-            headers: {"Authorization": `Bearer ${token !== undefined ? token : singletonTokenInstance.getToken().access}`}
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`}
         });
     }
 
@@ -38,7 +38,7 @@ class _Service {
         return await axiosFunction({
             method: "POST",
             url: CONVERT_URL,
-            headers: {"Authorization": `Bearer ${token !== undefined ? token : singletonTokenInstance.getToken().access}`},
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`},
             data: payload
         });
     }
@@ -64,19 +64,20 @@ class _Service {
     //admin
     public async deleteUser(id: number): Promise<IAxiosResponse<any>> {
         const token = await JwtToken(singletonTokenInstance.getToken().access);
+
         return await axiosFunction({
             method: "DELETE",
             url: USERS_URL + `/${id}`,
-            headers: {"Authorization": `Bearer ${token !== undefined ? token : singletonTokenInstance.getToken().access}`}
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`}
         });
     }
 
     public async getUsers(): Promise<IAxiosResponse<IUserToken[]>> {
-        const res = await JwtToken(singletonTokenInstance.getToken().access)
+        const token = await JwtToken(singletonTokenInstance.getToken().access)
         return await axiosFunction({
             method: "GET",
             url: USERS_URL,
-            headers: {"Authorization": `Bearer ${res !== undefined && res.token !== undefined ? res.token : singletonTokenInstance.getToken().access}`}
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`}
         });
 
 
@@ -87,7 +88,7 @@ class _Service {
         return await axiosFunction({
             method: "PUT",
             url: UPDATE_ROLES_URL,
-            headers: {"Authorization": `Bearer ${token !== undefined ? token : singletonTokenInstance.getToken().access}`},
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`},
             data: payload
         });
     }

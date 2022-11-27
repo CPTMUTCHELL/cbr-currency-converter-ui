@@ -48,3 +48,13 @@ export interface ICurrency {
     "name": string,
     "value": number
 }
+
+export type alertTypes = 'error' | 'info' | 'success' | 'warning'
+export interface IAlertMessage{
+    message:string,
+    alertType:alertTypes
+}
+export interface IBackendResponseNotification {
+    customErrorMsg?:string
+    alertProp?:IAlertMessage
+}

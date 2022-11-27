@@ -1,23 +1,31 @@
 import {CustomError} from "src/functions/axiosFunction";
 import {useToLogin} from "src/hooks/useToLogin";
 import {useContext} from "react";
-import {ErrorContext, IErrorContext} from "src/functions/ErrorContext";
+import {INotificationContext, NotificationContext} from "src/functions/Contexts";
+import {IBackendResponseNotification} from "@/Interfaces";
 
 interface IUseBackendResponse {
     setLoading: (loading: boolean) => void;
 
 }
 
-export const useBackendResponseHandler = ({setLoading}: IUseBackendResponse): any => {
-    const {setError, setShow} = useContext(ErrorContext) as IErrorContext;
+export const useBackendResponseHandler = ({setLoading}: IUseBackendResponse) => {
+    const {setMessage, setShow, setAlertType} = useContext(NotificationContext) as INotificationContext;
 
     const {performLogout} = useToLogin()
-    const responseHandlerFunc = async (backendCall: () => Promise<any>, customErrorMsg?:string) => {
+    const responseHandlerFunc = async (backendCall:any,notificationProps?:IBackendResponseNotification) => {
+
         try {
             setLoading(true)
             await backendCall()
+            if (notificationProps && notificationProps.alertProp){
+                setMessage(notificationProps.alertProp.message)
+                setAlertType(notificationProps.alertProp.alertType)
+                setShow(true)
+            }
         } catch (e: any) {
-            setError(customErrorMsg ?? e.message)
+            setMessage(notificationProps && notificationProps.customErrorMsg ?  notificationProps.customErrorMsg: e.message)
+            setAlertType( "error")
             setShow(true)
             if (e instanceof CustomError) {
                 performLogout()
@@ -28,5 +36,7 @@ export const useBackendResponseHandler = ({setLoading}: IUseBackendResponse): an
         }
 
     }
+
     return {responseHandlerFunc}
 }
+

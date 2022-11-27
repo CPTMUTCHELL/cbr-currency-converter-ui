@@ -1,13 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import {IUserToken} from "@/Interfaces";
-import {UserContext} from "src/functions/UserContext";
+import {UserContext} from "src/functions/Contexts";
 import './scss/AdminPage.scss';
 import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 import {FadeOutText} from "./FadeOutText";
 
 import {Service} from "src/functions/Service";
-import {ErrorContext, IErrorContext} from "src/functions/ErrorContext";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 export const AdminPage: React.FC = () => {
@@ -18,7 +17,6 @@ export const AdminPage: React.FC = () => {
     const [user, setUser] = useState<IUserToken | undefined>();
     const [delMsg, setDelMsg] = useState<string>("")
     const [isShowingAlert, setShowingAlert] = useState<boolean>(false);
-    const {setError, setShow} = useContext(ErrorContext) as IErrorContext;
 
     const minRoleId = Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0])))
     const [loading, setLoading] = useState(true)
@@ -27,7 +25,7 @@ export const AdminPage: React.FC = () => {
 
     useEffect(() => {
         const getUsers = () => {
-            responseHandlerFunc( async ()=>{
+            responseHandlerFunc(  async ()=>{
                 const res = await Service.getUsers();
                 setUsers(res.data)
                 user?.roles.forEach(role => role.isAdded = true)
@@ -52,7 +50,6 @@ export const AdminPage: React.FC = () => {
     const openRolesModalHandler = (e: any) => {
         setActive(true);
         setUser(users.find(user => user.id == e.target.id))
-
     }
 
     return (

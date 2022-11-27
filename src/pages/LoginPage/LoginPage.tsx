@@ -1,29 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import {IToken, IUser} from "@/Interfaces";
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {getUser} from "src/functions/JwtToken";
-import {UserContext} from "src/functions/UserContext";
+import {UserContext} from "src/functions/Contexts";
 import './scss/LoginPage.scss';
 import {singletonTokenInstance} from "src/functions/Tokens";
 
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
-interface IFrom {
-    msg: string
-}
-
 
 export const LoginPage: React.FC = () => {
-    const from = useLocation();
     const navigate = useNavigate();
 
-    const [redirectMsg] = useState(from.state as IFrom);
-    //to remove logout msg after page refresh
-    useEffect(() => {
-        navigate(from.pathname, {replace: true});
-    }, [])
     const [user, setUser] = useState<IUser>(Object);
     const {setUserToken} = useContext(UserContext);
     const [loading, setLoading] = useState(false);
@@ -54,7 +44,7 @@ export const LoginPage: React.FC = () => {
          responseHandlerFunc( async ()=> {
              const res = await Service.signIn(user);
              acceptResponse(res.data)
-         },"Invalid username or password")
+         },{customErrorMsg:"Invalid username or password"})
     }
 
 
@@ -67,7 +57,6 @@ export const LoginPage: React.FC = () => {
     return (
         <>
             <div className="login-wrapper">
-                {redirectMsg !== null && <h3>{redirectMsg.msg}</h3>}
                 <h1 className="alg">Please Log In</h1>
                 <form>
                     <label>

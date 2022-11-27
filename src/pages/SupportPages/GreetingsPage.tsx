@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from "react";
 import "./scss/SupportPageStyles.scss"
 import {singletonTokenInstance} from "src/functions/Tokens";
 import {getUser} from "src/functions/JwtToken";
-import {UserContext} from "src/functions/UserContext";
+import {UserContext} from "src/functions/Contexts";
 
 export const GreetingsPage:React.FC = () => {
     const {setUserToken}  = useContext(UserContext);

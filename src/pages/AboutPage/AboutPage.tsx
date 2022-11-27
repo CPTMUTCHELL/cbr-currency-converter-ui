@@ -61,7 +61,7 @@ export const AboutPage: React.FC = () => {
                         <div className="text-block">
 
 
-                                <h3>Smartsoft (10/2020 - present)</h3>
+                                <h3>Smartsoft (04/2020 - present)</h3>
 
                     <span>As a Java developer I create Spring web services, write jenkinsfile, dockerize them and deploy to
 Openshift. Sometimes I do help with frontend apps (React) and drink coffee. The code quality is checked by Sonarqube's quality gates and test coverage.
