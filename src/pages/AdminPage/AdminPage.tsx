@@ -40,10 +40,11 @@ export const AdminPage: React.FC = () => {
             responseHandlerFunc( async ()=>{
                 const res = await Service.deleteUser(e.target.id);
                 if (res.status === 204){
-                    setDelMsg(e.target.value + " deleted")
-                    setShowingAlert(true)
+                    //replaced with Alert context
+                    // setDelMsg(e.target.value + " deleted")
+                    // setShowingAlert(true)
                 }
-            })
+            },{alertProp:{message:e.target.value + " deleted",alertType:"info"}})
 
         }
     }
