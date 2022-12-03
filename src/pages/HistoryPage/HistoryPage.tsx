@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import {IHistoryPage} from "../../Interfaces";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
 import "./scss/HistoryPage.scss"
@@ -10,11 +10,6 @@ import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
 type sortDirType = "asc" | "desc"
-
-export interface ISort {
-    sortField: sortFieldType;
-    dir: sortDirType;
-}
 
 interface IColumn {
     search?: boolean
@@ -36,17 +31,47 @@ interface IPage {
     currentPageSelect: number
 }
 
+type reducerTypes = "FILTER" | "SORT" | "PAGE"
+
+
+export interface IAction{
+    type:reducerTypes,
+    payload:any
+}
+export interface IFilterAndSort {
+    baseCurrency:string
+    targetCurrency:string
+    date:string
+    sortField: sortFieldType;
+    dir: sortDirType;
+}
+
+const filterReducer = (state:IFilterAndSort , action:IAction) => {
+    switch (action.type) {
+        case "FILTER":
+            return {...state, [action.payload.name]:action.payload.value}
+        case "SORT":
+            return {...state, sortField:action.payload.sortField,dir:action.payload.dir}
+
+
+        default:
+            return state
+    }
+}
+const HISTORY_INITIAL_STATE:IFilterAndSort  = {
+    date:"",
+    baseCurrency:"",
+    targetCurrency:"",
+    dir:"desc",
+    sortField:"date"
+}
+
 const pageSizes: number[] = [5, 10, 25]
 export const HistoryPage: React.FC = () => {
     const [page, setPage] = useState<IPage>({currentPageNumber: 0, pageSize: 5, currentPageSelect: 1})
-    const [sort, setSort] = useState<ISort>({sortField: "date", dir: "desc"})
-    const [baseCurrency, setBaseCurrency] = useState<string>("")
-    const [targetCurrency, setTargetCurrency] = useState<string>("")
-    const [date, setDate] = useState<string>("")
-
+    const [historyState, dispatch]  = useReducer(filterReducer,HISTORY_INITIAL_STATE)
     const [hpage, setHpage] = useState<IHistoryPage>();
-    const HISTORY_URL = (`/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}
-    &sortField=${sort.sortField}&dir=${sort.dir}&baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&date=${date}`);
+    const HISTORY_URL = `/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}&sortField=${historyState.sortField}&dir=${historyState.dir}&baseCurrency=${historyState.baseCurrency}&targetCurrency=${historyState.targetCurrency}&date=${historyState.date}`
 
     const [loading, setLoading] = useState<boolean>(true)
     const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
@@ -57,11 +82,13 @@ export const HistoryPage: React.FC = () => {
             setHpage(res.data)
         })
     }, [])
+
     useEffect(() => {
+        console.log(HISTORY_URL)
         setPage({...page, currentPageSelect: page.currentPageNumber + 1})
         getHistory(HISTORY_URL)
 
-    }, [page.currentPageNumber, page.pageSize, sort, baseCurrency, targetCurrency, date, HISTORY_URL])
+    }, [page.currentPageNumber, page.pageSize, historyState, HISTORY_URL])
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
         // @ts-ignore
         setPage({...page, pageSize: (parseInt(e.target.value))})
@@ -70,20 +97,23 @@ export const HistoryPage: React.FC = () => {
     const handleChangePage = (e: any, newPage: number) => {
         setPage({...page, currentPageNumber: newPage})
     };
+    const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({
+            type:"FILTER",
+            payload: {name:e.target.name,value:e.target.value}
+        })
+    }
 
     return (
 
         <>
             <div className="history-page-container">
                 <div className="filters">
-                    <input type="text" placeholder="Search for base currency" value={baseCurrency}
-                           onChange={e => setBaseCurrency(e.target.value)}/>
+                    <input type="text" placeholder="Search for base currency" value={historyState.baseCurrency} name="baseCurrency" onChange={handleFilter}/>
                     &nbsp;
-                    <input type="text" placeholder="Search for target currency" value={targetCurrency}
-                           onChange={e => setTargetCurrency(e.target.value)}/>
+                    <input type="text" placeholder="Search for target currency" value={historyState.targetCurrency} name="targetCurrency" onChange={handleFilter}/>
                     &nbsp;
-                    <input type="date" data-date-format="yyyy-MM-dd" placeholder="Search for date" value={date}
-                           onChange={e => setDate(e.target.value)}/>
+                    <input type="date" data-date-format="yyyy-MM-dd" placeholder="Search for date" value={historyState.date} name="date" onChange={handleFilter}/>
 
                 </div>
                 <TableContainer component={Paper}>
@@ -92,7 +122,8 @@ export const HistoryPage: React.FC = () => {
                             <TableRow>
                                 {COLS.map((column) =>
                                     <ColumnHeader
-                                        sort={sort} setSort={setSort}
+                                        state={historyState}
+                                        dispatch={dispatch}
                                         columnNane={column.columnName}
                                         sortId={column.columnSortId}
                                     />

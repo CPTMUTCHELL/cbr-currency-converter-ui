@@ -1,22 +1,22 @@
 import React from "react";
-import { TableCell, TableSortLabel} from "@mui/material";
-import {ISort, sortFieldType} from "./HistoryPage";
+import {TableCell, TableSortLabel} from "@mui/material";
+import {IAction, IFilterAndSort, sortFieldType} from "./HistoryPage";
 
 interface IColumnHeadProps {
-    sort: ISort
-    setSort: (sort: ISort) => void
     columnNane: string
     sortId: sortFieldType
 }
+interface IDispatch {
+    state: IFilterAndSort
+    dispatch:React.Dispatch<IAction>
+}
 
-export const ColumnHeader: React.FC<IColumnHeadProps> = (sortProps) => {
-    const {columnNane, sort, setSort, sortId} = {...sortProps}
+export const ColumnHeader: React.FC<IColumnHeadProps & IDispatch> = (sortProps) => {
+    const {columnNane, sortId,state,dispatch} = {...sortProps}
 
     const sortHandler = (sortField: sortFieldType) => {
-
-        setSort({sortField: sortField, dir: sort.dir === "desc" ? "asc" : "desc"})
-    };
-
+        dispatch({type: "SORT", payload: {sortField: sortField, dir: state.dir === "desc" ? "asc" : "desc"}});
+    }
     return (
         <>
             <TableCell>
@@ -28,8 +28,8 @@ export const ColumnHeader: React.FC<IColumnHeadProps> = (sortProps) => {
                             onClick={() => {
                                 sortHandler(sortId)
                             }}
-                            direction={sort.dir}
-                            active={sort.sortField === sortId}/>
+                            direction={state.dir}
+                            active={state.sortField === sortId}/>
                     </div>
 
                 </div>
