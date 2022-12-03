@@ -37,7 +37,7 @@ export const ConvertPage: React.FC = () => {
         }
     }, [])
 
-    const [convert, setConvert] = useState<IConvert>({
+    const [convert, setConvert] = useState<Omit<IConvert,"id">>({
         baseCurrency: "RUB",
         targetCurrency: "USD",
         result: 0,

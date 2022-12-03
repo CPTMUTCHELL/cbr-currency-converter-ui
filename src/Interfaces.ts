@@ -1,3 +1,4 @@
+
 export interface IUser {
     username:string,
     password: string
@@ -8,7 +9,7 @@ export interface IToken {
     refreshToken: string,
 }
 export interface IConvert {
-    "id"?:number
+    "id":number
     "baseCurrency": string
     "quantityToConvert": number,
     "targetCurrency": string,
@@ -58,3 +59,28 @@ export interface IBackendResponseNotification {
     customErrorMsg?:string
     alertProp?:IAlertMessage
 }
+
+//history
+export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
+type sortDirType = "asc" | "desc"
+
+interface ISort {
+    dir:sortDirType
+    sortField:sortFieldType
+}
+interface IFilter {
+    baseCurrency:string
+    targetCurrency:string
+    date:string
+}
+interface IPage {
+    currentPageNumber: number
+    pageSize: 5 | 10 | 25
+}
+
+export type Action =
+    {type:"PAGE", payload: IPage } |
+    {type:"SORT", payload: ISort} |
+    {type:"FILTER", payload: {name:string,value:string}}
+
+export interface IHistoryParams extends ISort,IFilter,IPage {}

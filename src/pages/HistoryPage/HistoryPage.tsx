@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useReducer, useState} from 'react';
-import {IHistoryPage} from "../../Interfaces";
+import {Action, IHistoryPage, IHistoryParams, sortFieldType} from "@/Interfaces";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
 import "./scss/HistoryPage.scss"
 import {ColumnHeader} from "./ColumnHeader";
@@ -7,9 +7,6 @@ import {ColumnHeader} from "./ColumnHeader";
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
-
-export type sortFieldType = "date" | "baseCurrency" | "targetCurrency" | "quantityToConvert" | "result"
-type sortDirType = "asc" | "desc"
 
 interface IColumn {
     search?: boolean
@@ -25,77 +22,61 @@ const COLS: IColumn[] = [
     {columnName: "Date", columnSortId: "date"},
 ]
 
-interface IPage {
-    currentPageNumber: number
-    pageSize: 5 | 10 | 25
-    currentPageSelect: number
-}
 
-type reducerTypes = "FILTER" | "SORT" | "PAGE"
-
-
-export interface IAction{
-    type:reducerTypes,
-    payload:any
-}
-export interface IFilterAndSort {
-    baseCurrency:string
-    targetCurrency:string
-    date:string
-    sortField: sortFieldType;
-    dir: sortDirType;
-}
-
-const filterReducer = (state:IFilterAndSort , action:IAction) => {
+const filterReducer = (state:IHistoryParams , action:Action) => {
     switch (action.type) {
         case "FILTER":
             return {...state, [action.payload.name]:action.payload.value}
         case "SORT":
             return {...state, sortField:action.payload.sortField,dir:action.payload.dir}
-
+        case "PAGE":
+            return {
+                ...state,
+                pageSize: action.payload.pageSize,
+                currentPageNumber: action.payload.currentPageNumber
+            }
 
         default:
             return state
     }
 }
-const HISTORY_INITIAL_STATE:IFilterAndSort  = {
+const HISTORY_INITIAL_STATE:IHistoryParams  = {
     date:"",
     baseCurrency:"",
     targetCurrency:"",
     dir:"desc",
-    sortField:"date"
+    sortField:"date",
+    currentPageNumber: 0,
+    pageSize: 5
 }
 
 const pageSizes: number[] = [5, 10, 25]
 export const HistoryPage: React.FC = () => {
-    const [page, setPage] = useState<IPage>({currentPageNumber: 0, pageSize: 5, currentPageSelect: 1})
     const [historyState, dispatch]  = useReducer(filterReducer,HISTORY_INITIAL_STATE)
     const [hpage, setHpage] = useState<IHistoryPage>();
-    const HISTORY_URL = `/backend/history/show/${page.currentPageNumber + 1}?pageSize=${page.pageSize}&sortField=${historyState.sortField}&dir=${historyState.dir}&baseCurrency=${historyState.baseCurrency}&targetCurrency=${historyState.targetCurrency}&date=${historyState.date}`
-
+    const [currentPageSelect,setCurrentPageSelect] = useState(1)
     const [loading, setLoading] = useState<boolean>(true)
     const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
 
-    const getHistory = useCallback((url: string) => {
+    const getHistory = useCallback((historyState:IHistoryParams,pageNum:number) => {
         responseHandlerFunc( async ()=> {
-            const res = await Service.getHistoryPage(url);
+            const res = await Service.getHistoryPage(historyState,pageNum);
             setHpage(res.data)
         })
     }, [])
 
     useEffect(() => {
-        console.log(HISTORY_URL)
-        setPage({...page, currentPageSelect: page.currentPageNumber + 1})
-        getHistory(HISTORY_URL)
+        setCurrentPageSelect(historyState.currentPageNumber + 1)
+        getHistory(historyState,historyState.currentPageNumber + 1)
 
-    }, [page.currentPageNumber, page.pageSize, historyState, HISTORY_URL])
+    }, [historyState])
     const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // @ts-ignore
-        setPage({...page, pageSize: (parseInt(e.target.value))})
+        dispatch({type:"PAGE",payload:{ ...historyState,pageSize:(parseInt(e.target.value )as 5|10|25)}})
 
     };
     const handleChangePage = (e: any, newPage: number) => {
-        setPage({...page, currentPageNumber: newPage})
+        dispatch({type:"PAGE",payload:{...historyState, currentPageNumber: newPage}})
+
     };
     const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch({
@@ -156,12 +137,8 @@ export const HistoryPage: React.FC = () => {
                                 e.preventDefault();
                             }
                             if (e.key == 'Enter') {
-
-                                setPage({
-                                    ...page,
-                                    currentPageNumber: (page.currentPageSelect - 1) < 1 ? 0 : page.currentPageSelect - 1
-                                }) //another pageNumState to avoid instant change, but use enter button
-                                getHistory(HISTORY_URL)
+                                //another pageNumState to avoid instant change, but use enter button, because history URL doesn't have currentPageSelect
+                                dispatch({type:"PAGE",payload:{...historyState, currentPageNumber: ( currentPageSelect - 1) < 1 ? 0 :  currentPageSelect - 1}})
 
                             }
                         }}
@@ -170,27 +147,25 @@ export const HistoryPage: React.FC = () => {
 
                                onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    hpage &&
-                                   Number(e.target.value.substring(1)) >= hpage.totalElements / page.pageSize
-                                       ? setPage({
-                                           ...page,
-                                           currentPageSelect: Math.ceil(hpage.totalElements / page.pageSize)
-                                       })
-                                       : setPage({...page, currentPageSelect: Number(e.target.value.substring(1))})
+                                     Number(e.target.value.substring(1)) >= hpage.totalElements / historyState.pageSize
+                                       ?  setCurrentPageSelect(Math.ceil(hpage.totalElements / historyState.pageSize))
+                                       :  setCurrentPageSelect(Number(e.target.value.substring(1)))
+
                                }}
-                               value={page.currentPageSelect <= 1 ? 1 : page.currentPageSelect}/>
-                        {hpage &&
-                            <p> of {hpage.totalElements / page.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / page.pageSize)}</p>}
+
+                               value={currentPageSelect <= 1 ? 1 : currentPageSelect}/>
+                        {hpage && <p> of {hpage.totalElements / historyState.pageSize < 1 ? 1 : Math.ceil(hpage.totalElements / historyState.pageSize)}</p>}
 
 
                     </div>
-                    <div className="pagination">
+                    <div>
                         <TablePagination
 
                             rowsPerPageOptions={pageSizes}
                             component="div"
                             count={hpage ? hpage.totalElements : 0}
-                            rowsPerPage={page.pageSize}
-                            page={page.currentPageNumber}
+                            rowsPerPage={historyState.pageSize}
+                            page={historyState.currentPageNumber}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />

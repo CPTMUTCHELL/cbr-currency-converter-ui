@@ -1,14 +1,14 @@
 import React from "react";
 import {TableCell, TableSortLabel} from "@mui/material";
-import {IAction, IFilterAndSort, sortFieldType} from "./HistoryPage";
+import {Action, IHistoryParams, sortFieldType} from "@/Interfaces";
 
 interface IColumnHeadProps {
     columnNane: string
     sortId: sortFieldType
 }
 interface IDispatch {
-    state: IFilterAndSort
-    dispatch:React.Dispatch<IAction>
+    state: IHistoryParams
+    dispatch:React.Dispatch<Action>
 }
 
 export const ColumnHeader: React.FC<IColumnHeadProps & IDispatch> = (sortProps) => {

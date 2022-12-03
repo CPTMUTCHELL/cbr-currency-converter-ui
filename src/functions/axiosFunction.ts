@@ -5,6 +5,7 @@ interface IAxiosProps<U> {
     method: "POST" | "PUT" | "GET" | "DELETE";
     headers?: any
     data?: U
+    params?:any
 }
 
 export interface IAxiosResponse<T> {

@@ -1,5 +1,5 @@
 import {axiosFunction, IAxiosResponse} from "./axiosFunction"
-import {IConvert, ICurrency, IHistoryPage, IToken, IUser, IUserToken} from "@/Interfaces";
+import {IConvert, ICurrency, IHistoryPage, IHistoryParams, IToken, IUser, IUserToken} from "@/Interfaces";
 import {singletonTokenInstance} from "src/functions/Tokens";
 import {JwtToken} from "src/functions/JwtToken";
 
@@ -7,18 +7,21 @@ const CURRENCIES_URL = "backend/convert/currencies";
 const CONVERT_URL = "backend/convert/convert";
 const LOGIN_URL = 'backend/auth/login'
 const REGISTRATION_URL = "/backend/auth/registration"
-const USERS_URL = "backend/auth/admin/users/";
+const USERS_URL = "backend/auth/admin/users";
 const UPDATE_ROLES_URL = "backend/auth/admin/roles"
-const REFRESH_TOKEN_URL = "backend/auth/token/";
+const REFRESH_TOKEN_URL = "backend/auth/token";
+const HISTORY_URL = `/backend/history/show`
 
 class _Service {
     //history
-    public async getHistoryPage(url: string): Promise<IAxiosResponse<IHistoryPage>> {
+    public async getHistoryPage(params:IHistoryParams,page:number): Promise<IAxiosResponse<IHistoryPage>> {
         const token = await JwtToken(singletonTokenInstance.getToken().access);
         return await axiosFunction({
             method: "GET",
-            url: url ,
-            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`}
+            url: HISTORY_URL +  `/${page}`,
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`},
+            params: params
+
         });
     }
 
@@ -32,7 +35,7 @@ class _Service {
         });
     }
 
-    public async convert(payload: IConvert): Promise<IAxiosResponse<IConvert>> {
+    public async convert(payload: Omit<IConvert,"id">): Promise<IAxiosResponse<IConvert>> {
         const token = await JwtToken(singletonTokenInstance.getToken().access);
 
         return await axiosFunction({
