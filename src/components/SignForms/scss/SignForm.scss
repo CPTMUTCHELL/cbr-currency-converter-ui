@@ -1,0 +1,35 @@
+@import "src/scss/functions","src/scss/variables";
+.signup{
+  margin-top: 10px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+
+  .form{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    .MuiSvgIcon-root{
+      color: black;
+    }
+  }
+
+
+  .MuiInput-underline{
+    width: $signForm-width /2 ;
+    @include media-medium{
+      width: $signForm-width / 4 ;
+
+    }
+
+  }
+  .MuiButton-root{
+    width: $signForm-width /2 ;
+    @include media-medium{
+      width: $signForm-width / 4 ;
+
+    }
+  }
+}
