@@ -5,7 +5,7 @@ This is frontend for [cbr-currency converter](https://github.com/CPTMUTCHELL/cbr
 It has following options to start:
 ## local
 [Locally](#local)
-Execute `yarn install && yarn start` to start react in dev mode. Proxy to backend is configured [here](https://github.com/CPTMUTCHELL/cbr-currency-converter-ui/blob/master/src/webpack.config.js)
+Execute `yarn install && yarn start` to start react in dev mode. Proxy to backend is configured [here](https://github.com/CPTMUTCHELL/cbr-currency-converter-ui/blob/master/webpack.config.js)
 
 ## compose
 [**Docker**](#compose)
