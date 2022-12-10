@@ -11,7 +11,7 @@
   }
 
   th.subject,.user {
-    width: $table-width/2;
+    width: calc($table-width/2);
     @include media-medium{
       width: 100vw;
     }

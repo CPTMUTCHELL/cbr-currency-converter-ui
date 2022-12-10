@@ -1,7 +1,6 @@
 import React from 'react';
-
-import './scss/AboutPage.scss';
 import logo from "./avatar.jpeg";
+import './scss/AboutPage.scss';
 
 
 export const AboutPage: React.FC = () => {

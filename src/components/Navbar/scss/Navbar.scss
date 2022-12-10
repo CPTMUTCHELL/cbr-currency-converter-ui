@@ -32,8 +32,8 @@
             @include media-small {
                 img {
                     margin-top: 1.5rem;
-                    max-height: $navbar-height /2;
-                    max-width: $navbar-height /2;
+                    max-height: calc($navbar-height /2);
+                    max-width: calc($navbar-height /2);
                 }
             }
 

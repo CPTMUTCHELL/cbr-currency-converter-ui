@@ -120,7 +120,7 @@ export const HistoryPage: React.FC = () => {
                                         <TableCell><p>{row.targetCurrency}</p></TableCell>
                                         <TableCell><p>{row.quantityToConvert}</p></TableCell>
                                         <TableCell><p>{row.result}</p></TableCell>
-                                        <TableCell><p>{row.date}</p></TableCell>
+                                        <TableCell><p>{row.date!.toString()}</p></TableCell>
                                     </TableRow>
                                 ))}
 

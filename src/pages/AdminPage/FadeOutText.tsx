@@ -1,8 +1,10 @@
 import React from 'react';
 import './scss/AdminPage.scss';
+
 interface FadeOutTextProps {
     isShowingAlert: boolean
     setShowingAlert: (isShowingAlert: boolean) => void
+    children:any
 
 }
 

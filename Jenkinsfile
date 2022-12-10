@@ -25,8 +25,8 @@ pipeline {
             }
             steps {
                 sh """
-               npm i
-               CI= npm run build
+               yarn install
+               CI= yarn run build
                """
 
                 withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {

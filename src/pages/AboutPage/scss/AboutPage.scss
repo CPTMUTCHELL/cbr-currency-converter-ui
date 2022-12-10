@@ -5,7 +5,7 @@
   flex-direction: column;
 
   align-items: center;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  url("../back.JPG");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  url("../back.jpg");
   background-size: cover;
   background-position-y: 80%;
   @include media-medium{
