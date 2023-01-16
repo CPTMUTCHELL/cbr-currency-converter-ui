@@ -26,7 +26,6 @@ module.exports = {
     entry: './src/index.tsx',
     target: "web",
     output: {
-        publicPath: "/public",
         filename: "bundle.js",
         path: path.join(__dirname,'/build')
     },
