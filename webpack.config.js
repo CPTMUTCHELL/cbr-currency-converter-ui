@@ -58,13 +58,10 @@ module.exports = {
 
             },
             {
-                test: /\.(jpg|png|svg|gif|jpeg)$/,
+                test: /\.(pdf|jpg|png|svg|gif|jpeg)$/,
                 type: "asset/resource",
 
-            },
-            {
-                test: /\.(otf|pdf)$/,
-                loader: 'file-loader'
+
             }
         ]
     }
