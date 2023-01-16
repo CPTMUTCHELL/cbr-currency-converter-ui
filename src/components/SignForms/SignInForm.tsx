@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Button, FormControl, IconButton, Input, InputAdornment, InputLabel} from "@mui/material";
+import {FormControl, IconButton, Input, InputAdornment, InputLabel} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {IToken, IUser} from "@/Interfaces";
 import Box from "@mui/material/Box";
@@ -11,6 +11,7 @@ import {useNavigate} from "react-router-dom";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 import {UserContext} from "src/functions/Contexts";
 import "./scss/SignForm.scss"
+import {LoadingButton} from "@mui/lab";
 
 export const SignInForm:React.FC = () => {
     const navigate = useNavigate();
@@ -48,8 +49,8 @@ export const SignInForm:React.FC = () => {
     }
 
     return (
-    <div className="signup">
-        <Box className="form">
+    <Box className="sign-form">
+        <Box className="input-form">
 
         <FormControl variant="standard">
             <InputLabel>Username or Email</InputLabel>
@@ -77,9 +78,9 @@ export const SignInForm:React.FC = () => {
             />
         </FormControl>
         </Box>
-        <Button  onClick={clickHandler} variant="contained" size="small" endIcon={<AppRegistrationIcon/>}>
+        <LoadingButton loading={loading}  onClick={clickHandler} variant="contained" size="small" endIcon={<AppRegistrationIcon/>}>
             Sign in
-        </Button>
-    </div>
+        </LoadingButton>
+    </Box>
     )
 }

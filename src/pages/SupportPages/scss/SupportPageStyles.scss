@@ -44,7 +44,7 @@
       }
     }
     @include media-medium{
-      width: $signForm-width / 2;
+      width: calc($signForm-width / 2);
 
 
     }

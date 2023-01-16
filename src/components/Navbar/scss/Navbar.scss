@@ -166,6 +166,7 @@
         }
     }
     .MuiAlert-root{
+        z-index: 3;
         position: absolute;
         top: -$navbar-height;
         width: 100vw;

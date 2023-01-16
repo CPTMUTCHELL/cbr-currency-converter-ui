@@ -1,15 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {
-    Box,
-    Button,
-    FormControl,
-    FormHelperText,
-    IconButton,
-    Input,
-    InputAdornment,
-    InputLabel,
-    Tooltip
-} from "@mui/material";
+import {Box, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel, Tooltip} from "@mui/material";
 
 import WarningIcon from '@mui/icons-material/Warning';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
@@ -17,7 +7,8 @@ import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {IUser} from "@/Interfaces";
 import "./scss/SignForm.scss"
 import {Service} from "src/functions/Service";
-import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
+import {useBackendResponseHandler} from "@/hooks/useBackendResponseHandler";
+import {LoadingButton} from "@mui/lab";
 
 export const SignUpForm: React.FC = () => {
     const [signUpUser, setSignUpUser] = useState<IUser>(Object)
@@ -54,8 +45,8 @@ export const SignUpForm: React.FC = () => {
 
 
     return (
-        <Box className="signup">
-            <Box className="form">
+        <Box className="sign-form">
+            <Box className="input-form">
                 <FormControl error={true} variant="standard">
                     <InputLabel error={true}>Email</InputLabel>
 
@@ -98,9 +89,9 @@ export const SignUpForm: React.FC = () => {
                     />
                 </FormControl>
             </Box>
-            <Button  onClick={handleSubmit} disabled={!isValidForm} variant="contained" size="small" endIcon={<AppRegistrationIcon/>}>
+            <LoadingButton  onClick={handleSubmit} disabled={!isValidForm} variant="contained" size="small" endIcon={<AppRegistrationIcon/>}>
                 Sign up
-            </Button>
+            </LoadingButton>
 
             {/*<Divider variant="middle" >or</Divider>*/}
 

@@ -1,12 +1,13 @@
 @import "src/scss/functions","src/scss/variables";
-.signup{
+.sign-form{
   margin-top: 10px;
   align-items: center;
   display: flex;
   flex-direction: column;
   gap: 50px;
 
-  .form{
+
+  .input-form{
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -18,17 +19,17 @@
 
 
   .MuiInput-underline{
-    width: $signForm-width /2 ;
+    width: calc($signForm-width /2) ;
     @include media-medium{
-      width: $signForm-width / 4 ;
+      width: calc($signForm-width / 4) ;
 
     }
 
   }
   .MuiButton-root{
-    width: $signForm-width /2 ;
+    width: calc($signForm-width /2) ;
     @include media-medium{
-      width: $signForm-width / 4 ;
+      width: calc($signForm-width / 4) ;
 
     }
   }
