@@ -11,7 +11,7 @@ export const AboutPage: React.FC = () => {
             <img src={logo} width="340" height="340"/>
                 </div>
 
-            <a style={{textDecoration:"none"}} href={resume} target='_blank' download="resume.pdf">
+            <a style={{textDecoration:"none"}} href={resume}  download="resume.pdf">
                 <div className="download__btn">
                     <span>
                     Download CV (PDF)</span>
