@@ -71,7 +71,7 @@ module.exports = {
 
                         sources: {
                             list: [
-
+                                "...",
                                 {
                                     tag: 'a',
                                     attribute: 'href',
