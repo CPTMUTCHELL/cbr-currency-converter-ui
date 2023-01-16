@@ -62,6 +62,10 @@ module.exports = {
                 type: "asset/resource",
 
             },
+            {
+                test: /\.(otf|pdf)$/,
+                loader: 'file-loader'
+            }
         ]
     }
 }
