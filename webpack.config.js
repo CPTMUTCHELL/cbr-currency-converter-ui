@@ -63,25 +63,6 @@ module.exports = {
                 test: /\.(pdf|jpg|png|svg|gif|jpeg)$/,
                 type: "asset/resource",
             },
-            {
-                test: /\.html$/i,
-                use: {
-                    loader: 'html-loader',
-                    options: {
-
-                        sources: {
-                            list: [
-                                "...",
-                                {
-                                    tag: 'a',
-                                    attribute: 'href',
-                                    type: 'src'
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
 
         ]
     }
