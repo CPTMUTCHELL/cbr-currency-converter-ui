@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from "./avatar.jpeg";
 import './scss/AboutPage.scss';
+import resume from "./resume.pdf"
 
 export const AboutPage: React.FC = () => {
     return <>
@@ -10,7 +11,7 @@ export const AboutPage: React.FC = () => {
             <img src={logo} width="340" height="340"/>
                 </div>
 
-            <a style={{textDecoration:"none"}} href="build/88cbc24eb97dc1b1215e.pdf" download="resume.pdf">
+            <a style={{textDecoration:"none"}} href={resume} download="resume.pdf">
                 <div className="download__btn">
                     <span>
                     Download CV (PDF)</span>

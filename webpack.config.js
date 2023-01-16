@@ -19,12 +19,14 @@ module.exports = {
                 target: 'http://localhost:8083',
                 changeOrigin: true,
             },
+
         },
 
     },
     entry: './src/index.tsx',
     target: "web",
     output: {
+        publicPath: "/public",
         filename: "bundle.js",
         path: path.join(__dirname,'/build')
     },
@@ -60,9 +62,27 @@ module.exports = {
             {
                 test: /\.(pdf|jpg|png|svg|gif|jpeg)$/,
                 type: "asset/resource",
+            },
+            {
+                test: /\.html$/i,
+                use: {
+                    loader: 'html-loader',
+                    options: {
 
+                        sources: {
+                            list: [
 
+                                {
+                                    tag: 'a',
+                                    attribute: 'href',
+                                    type: 'src'
+                                }
+                            ]
+                        }
+                    }
+                }
             }
+
         ]
     }
 }
