@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 export const Navbar: React.FC = () => {
 
     const {userToken} = useContext(UserContext);
-    const {message, show, setShow,alertType} = useContext(NotificationContext) as INotificationContext;
+    const {message, show, setShow, alertType} = useContext(NotificationContext) as INotificationContext;
     useEffect(() => {
         const timer = setTimeout(() => setShow(false), 3000)
         return () => clearTimeout(timer)
@@ -29,38 +29,29 @@ export const Navbar: React.FC = () => {
                      className={openResponsiveBtn ? "responsive-btn open" : "responsive-btn"}/>
 
                 <div className={openResponsiveBtn ? "pages open" : "pages"}>
-                    {userToken.username == undefined || userToken.username === "" ? (
+                    {userToken.username == undefined || userToken.username === "" ? null :
+                        <>
                             <ul>
-                                <li><NavLink onClick={() => setOpenResponsiveBtn(false)} to="/login">Login</NavLink></li>
-                                <li><NavLink onClick={() => setOpenResponsiveBtn(false)} to="/registration">Sign
-                                    Up</NavLink></li>
+
+                                {Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0]))) <= 2 ?
+                                    <li><NavLink onClick={() => setOpenResponsiveBtn(false)} to="/users">
+                                        Admin Page
+                                    </NavLink></li> :
+                                    <></>}
+                                <li><NavLink onClick={() => setOpenResponsiveBtn(false)}
+                                             to="/convert">Converter</NavLink></li>
+                                <li><NavLink onClick={() => setOpenResponsiveBtn(false)}
+                                             to="/history">History</NavLink></li>
+
                             </ul>
-                        ) :
+                            <div className="user-and-logout">
 
+                                <p>Logged as <i>{userToken.username}</i></p>
 
-                        (<>
-                                <ul>
+                                <Logout setOpenResponsiveBtn={setOpenResponsiveBtn} logoutBtn="logoutBtn"/>
+                            </div>
 
-                                    {Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0]))) <= 2 ?
-                                        <li><NavLink onClick={() => setOpenResponsiveBtn(false)} to="/users">
-                                            Admin Page
-                                        </NavLink></li> :
-                                        <></>}
-                                    <li><NavLink onClick={() => setOpenResponsiveBtn(false)}
-                                                 to="/convert">Converter</NavLink></li>
-                                    <li><NavLink onClick={() => setOpenResponsiveBtn(false)}
-                                                 to="/history">History</NavLink></li>
-
-                                </ul>
-                                <div className="user-and-logout">
-
-                                    <p>Logged as <i>{userToken.username}</i></p>
-
-                                    <Logout setOpenResponsiveBtn={setOpenResponsiveBtn} logoutBtn="logoutBtn"/>
-                                </div>
-
-                            </>
-                        )
+                        </>
 
 
                     }

@@ -34,17 +34,21 @@ export const SignInForm:React.FC = () => {
         responseHandlerFunc( async ()=> {
             const res = await Service.signIn(user);
             acceptResponse(res.data)
-        },{customErrorMsg:"Invalid username or password"})
+        })
     }
-
 
     const clickHandler =  () => {
         if ((user.username != null && user.password != null)) {
             callBackend()
         }
     }
+    const keyPressHandler =  (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && (user.username != null && user.password != null)) {
+            callBackend()
+        }
+    }
     const userHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.name==='login') setUser({...user, ["username"]: e.target.value,["email"]: e.target.value});
+        if (e.target.name==='login') setUser({...user, ["username"]: e.target.value});
         else setUser({...user, ["password"]: e.target.value});
     }
 
@@ -53,14 +57,14 @@ export const SignInForm:React.FC = () => {
         <Box className="input-form">
 
         <FormControl variant="standard">
-            <InputLabel>Username or Email</InputLabel>
-            <Input name="login" onChange={userHandler}
-            />
+            <InputLabel>Username/Email</InputLabel>
+            <Input  name="login" onChange={userHandler} onKeyDown={keyPressHandler}/>
         </FormControl>
 
         <FormControl variant="standard">
             <InputLabel>Password</InputLabel>
             <Input
+                onKeyDown={keyPressHandler}
                 name="password"
                 type={showPass ? 'text' : 'password'}
                 onChange={userHandler}

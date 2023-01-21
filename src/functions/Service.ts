@@ -6,6 +6,7 @@ import {JwtToken} from "src/functions/JwtToken";
 const CURRENCIES_URL = "backend/convert/currencies";
 const CONVERT_URL = "backend/convert/convert";
 const LOGIN_URL = 'backend/auth/login'
+const VERIFY_URL = 'backend/auth/verification'
 const REGISTRATION_URL = "/backend/auth/registration"
 const USERS_URL = "backend/auth/admin/users";
 const UPDATE_ROLES_URL = "backend/auth/admin/roles"
@@ -48,6 +49,7 @@ class _Service {
 
     //login
     public async signIn(payload: IUser): Promise<IAxiosResponse<IToken>> {
+        console.log(payload)
         return await axiosFunction({
             method: "POST",
             url: LOGIN_URL,
@@ -103,6 +105,13 @@ class _Service {
             url: REFRESH_TOKEN_URL,
             headers: {"Authorization": `Bearer ${singletonTokenInstance.getToken().refresh}`}
         });
+    }
+    public async verifyUser(token:string):Promise<IAxiosResponse<string>>{
+        return await axiosFunction({
+            method: "GET",
+            url: VERIFY_URL,
+            params: {token:token}
+        })
     }
 
 }

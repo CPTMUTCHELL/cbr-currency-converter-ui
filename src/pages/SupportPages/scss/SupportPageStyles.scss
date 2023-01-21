@@ -2,9 +2,11 @@
 
 .support-page-container{
   height: calc(100vh - $footer-height - $navbar-height );
-
+  display: flex;
+  flex-direction: column;;
   .welcome-text {
-      margin-top: 10px;
+
+      margin-top: 2rem;
     text-align: center;
 
     h1 {
@@ -15,15 +17,14 @@
   }
   @include button-style;
   .sign-container{
+    align-self: center;
     border: rgb(54, 145, 241) solid;
     border-top: 0;
     border-radius: 0 0 15px 15px;
-    margin-left: auto ;
-
     width: $signForm-width;
     height: 400px;
     ul{
-
+      margin-top: 0.5rem;
       display: flex;
       justify-content: space-evenly;
       list-style: none;

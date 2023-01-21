@@ -1,5 +1,5 @@
 import {useCallback, useContext} from "react";
-import {INotificationContext, NotificationContext, UserContext} from "../functions/Contexts";
+import {INotificationContext, NotificationContext, UserContext} from "@/functions/Contexts";
 import {useNavigate} from "react-router-dom";
 
 export const useToLogin = () => {
@@ -14,7 +14,7 @@ export const useToLogin = () => {
             setAlertType("info")
             setMessage(message)
         }
-        navigate("/login");
+        navigate("/");
         setUserToken({username:"",roles:[]})
     }, [])
     return {performLogout};
