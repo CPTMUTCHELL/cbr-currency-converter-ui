@@ -1,12 +1,25 @@
 import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import {Action, IHistoryPage, IHistoryParams, sortFieldType} from "@/Interfaces";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    TextField
+} from '@mui/material';
 import "./scss/HistoryPage.scss"
 import {ColumnHeader} from "./ColumnHeader";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
+import {DesktopDatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {Dayjs} from "dayjs";
 
 interface IColumn {
     search?: boolean
@@ -84,19 +97,35 @@ export const HistoryPage: React.FC = () => {
             payload: {name:e.target.name,value:e.target.value}
         })
     }
+    const handleChange = (date: Dayjs | null) => {
+        dispatch({
+            type:"FILTER",
+            payload:{name:"date", value: date!.format("YYYY-MM-DD")}
+        })
+    };
 
     return (
 
         <>
             <div className="history-page-container">
                 <div className="filters">
-                    <input type="text" placeholder="Search for base currency" value={historyState.baseCurrency} name="baseCurrency" onChange={handleFilter}/>
+                    <TextField type="text" placeholder="Search for base currency" value={historyState.baseCurrency} name="baseCurrency" onChange={handleFilter}/>
                     &nbsp;
-                    <input type="text" placeholder="Search for target currency" value={historyState.targetCurrency} name="targetCurrency" onChange={handleFilter}/>
+                    <TextField type="text" placeholder="Search for target currency" value={historyState.targetCurrency} name="targetCurrency" onChange={handleFilter}/>
                     &nbsp;
-                    <input type="date" data-date-format="yyyy-MM-dd" placeholder="Search for date" value={historyState.date} name="date" onChange={handleFilter}/>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
 
+                    <DesktopDatePicker
+                        label="Conversion date"
+                        inputFormat="YYYY-MM-DD"
+                        value={historyState.date}
+                        onChange={handleChange}
+                        renderInput={(params) => <TextField {...params} inputProps={{...params.inputProps, readOnly: true}} error={false}/>}
+
+                    />
+                    </LocalizationProvider>
                 </div>
+
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>

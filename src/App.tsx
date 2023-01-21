@@ -1,8 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {LoginPage} from "./pages/LoginPage/LoginPage";
 import {ConvertPage} from "./pages/ConvertPage/ConvertPage";
-import {SignUpPage} from "./pages/SignUpPage/SignUpPage";
 import {HistoryPage} from "./pages/HistoryPage/HistoryPage";
 import {NotificationContext, UserContext} from "./functions/Contexts";
 import {RequireAuth} from "./components/RequireAuth";
@@ -39,8 +37,6 @@ const App: React.FC = () => {
             <Routes>
                 <Route element={<Layout/>}>
                     <Route element={<GreetingsPage/>} path="/"/>
-                    <Route element={<SignUpPage/>} path="/registration"/>
-                    <Route element={<LoginPage/>} path="/login"/>
                     <Route element={<AboutPage/>} path="/about"/>
                     <Route element={<RequireAuth allowedRoles={["OWNER","ADMIN", "USER"]}/>}>
                         <Route path="/convert" element={<ConvertPage/>}/>

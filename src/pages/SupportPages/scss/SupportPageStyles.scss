@@ -1,10 +1,53 @@
-@import "src/scss/functions";
+@import "src/scss/functions", "src/scss/variables";
 
 .support-page-container{
   height: calc(100vh - $footer-height - $navbar-height );
-  @include flex-column-centered;
-  h1 {
-    font-family: "Fontdiner Swanky", cursive;
+  display: flex;
+  flex-direction: column;;
+  .welcome-text {
+
+      margin-top: 2rem;
+    text-align: center;
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      font-family: "Fontdiner Swanky", cursive;
+    }
   }
-  @include button-style
+  @include button-style;
+  .sign-container{
+    align-self: center;
+    border: rgb(54, 145, 241) solid;
+    border-top: 0;
+    border-radius: 0 0 15px 15px;
+    width: $signForm-width;
+    height: 400px;
+    ul{
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-evenly;
+      list-style: none;
+      overflow: hidden;
+      li {
+        margin-top: 10px;
+
+        button{
+
+          &.active {
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            padding-bottom: 3px;
+            border-radius: 0;
+          }
+        }
+
+      }
+    }
+    @include media-medium{
+      width: calc($signForm-width / 2);
+
+
+    }
+  }
 }

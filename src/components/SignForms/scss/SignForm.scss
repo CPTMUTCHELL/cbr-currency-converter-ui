@@ -1,0 +1,36 @@
+@import "src/scss/functions","src/scss/variables";
+.sign-form{
+  margin-top: 1rem;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+
+
+  .input-form{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    .MuiSvgIcon-root{
+      color: black;
+    }
+  }
+
+
+  .MuiInput-underline{
+    width: calc($signForm-width /2) ;
+    @include media-medium{
+      width: calc($signForm-width / 4) ;
+
+    }
+
+  }
+  .MuiButton-root{
+    width: calc($signForm-width /2) ;
+    @include media-medium{
+      width: calc($signForm-width / 4) ;
+
+    }
+  }
+}

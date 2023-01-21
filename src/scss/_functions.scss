@@ -1,6 +1,6 @@
 @import "variables";
 @mixin button-style{
-  button {
+  .apply-btn {
     padding: 4px;
     border: none;
     background-color: aliceblue;
