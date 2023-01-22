@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import {IUserToken} from "@/Interfaces";
 import {UserContext} from "src/functions/Contexts";
 import './scss/AdminPage.scss';
 import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
-import {FadeOutText} from "./FadeOutText";
 
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
@@ -15,16 +14,14 @@ export const AdminPage: React.FC = () => {
     const [active, setActive] = useState<boolean>(false)
     const [users, setUsers] = useState<IUserToken[]>(Object);
     const [user, setUser] = useState<IUserToken | undefined>();
-    const [delMsg, setDelMsg] = useState<string>("")
-    const [isShowingAlert, setShowingAlert] = useState<boolean>(false);
 
     const minRoleId = Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0])))
     const [loading, setLoading] = useState(true)
     const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
     //to reduce auth-service calls
 
-    useEffect(() => {
-        const getUsers = () => {
+
+        const getUsers = useCallback(() => {
             responseHandlerFunc(  async ()=>{
                 const res = await Service.getUsers();
                 setUsers(res.data)
@@ -32,14 +29,19 @@ export const AdminPage: React.FC = () => {
             })
 
 
-        }
-        getUsers()
-    }, [delMsg, active, token]);
+        },[])
+
+        useEffect(() => getUsers() , [active, token])
+
+
+
     const deleteUserHandler = (e: any) => {
         if (window.confirm("Delete the item?")) {
             responseHandlerFunc( async ()=>{
                 const res = await Service.deleteUser(e.target.id);
                 if (res.status === 204){
+                    getUsers()
+
                     //replaced with Alert context
                     // setDelMsg(e.target.value + " deleted")
                     // setShowingAlert(true)
@@ -57,7 +59,6 @@ export const AdminPage: React.FC = () => {
         <>
             <div className="admin-page-container">
 
-                <FadeOutText isShowingAlert={isShowingAlert} setShowingAlert={setShowingAlert}>{delMsg}</FadeOutText>
                 <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
                 <table className="admin-table">
                     <thead>
