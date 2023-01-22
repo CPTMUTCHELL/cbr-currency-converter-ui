@@ -24,13 +24,15 @@ export const Navbar: React.FC = () => {
                     <h3>Cbr converter</h3>
                     <img src={logo} width="118" height="119"/>
                 </div>
-                <div onClick={() => setOpenResponsiveBtn(!openResponsiveBtn)} className="invisible"/>
-                <div onClick={() => setOpenResponsiveBtn(!openResponsiveBtn)}
-                     className={openResponsiveBtn ? "responsive-btn open" : "responsive-btn"}/>
 
-                <div className={openResponsiveBtn ? "pages open" : "pages"}>
+
+
                     {userToken.username == undefined || userToken.username === "" ? null :
                         <>
+                            <div onClick={() => setOpenResponsiveBtn(!openResponsiveBtn)} className="invisible"/>
+                            <div onClick={() => setOpenResponsiveBtn(!openResponsiveBtn)}
+                                 className={openResponsiveBtn ? "responsive-btn open" : "responsive-btn"}/>
+                        <div className={openResponsiveBtn ? "pages open" : "pages"}>
                             <ul>
 
                                 {Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0]))) <= 2 ?
@@ -50,12 +52,14 @@ export const Navbar: React.FC = () => {
 
                                 <Logout setOpenResponsiveBtn={setOpenResponsiveBtn} logoutBtn="logoutBtn"/>
                             </div>
+                        </div>
 
                         </>
 
 
+
                     }
-                </div>
+
 
             </nav>
             <Alert action={
