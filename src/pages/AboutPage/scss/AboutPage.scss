@@ -1,5 +1,14 @@
-@import "src/scss/functions","variables","download-btn";
+@import "src/scss/functions","variables","download-btn","accordion-group";
 .about-page {
+
+  .experience-list {
+    margin-left: 15px;
+
+    .bullet-list {
+      margin-right: 10px;
+    }
+  }
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
