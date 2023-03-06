@@ -5,6 +5,7 @@ RUN yarn install && yarn run build && rm -rf node_modules
 
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
+RUN apk add bind-tools
 RUN mkdir /etc/nginx/templates/
 COPY nginx-k8s.conf.template /etc/nginx/templates/default.conf.template
 EXPOSE 80
