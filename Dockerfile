@@ -5,10 +5,11 @@ RUN yarn install && yarn run build && rm -rf node_modules
 
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
-RUN apk add bind-tools
 RUN mkdir /etc/nginx/templates/
 COPY nginx-k8s.conf.template /etc/nginx/templates/default.conf.template
 EXPOSE 80
+COPY entrypoint.sh entrypoint.sh
+RUN echo "$(cat /entrypoint.sh)\n$(cat /docker-entrypoint.sh)" > /docker-entrypoint.sh
 #Required for creating default.conf in conf.d folder outta .template
 # The final command docker-entrypoint.sh nginx -g daemon off;
 # https://github.com/nginxinc/docker-nginx/blob/master/stable/alpine/docker-entrypoint.sh#L12
