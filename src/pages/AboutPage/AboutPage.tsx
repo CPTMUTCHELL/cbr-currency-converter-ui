@@ -90,6 +90,7 @@ const aboutInfo: AccordionGroupType = {
                     <span>Converts currencies according to Russian Central Bank rates, stores the history and supports JWT role-based authentication and authorization.
                         It can be run in docker-compose, in local k8s cluster or on a cloud provider.
                         Using Ansible I have automated Jenkins setup, creation of pipelines and webhooks is accomplished by JCasc, creation of k3s cluster, transfer kubeconfig to Jenkins VM to restrict Jenkins within specific namespace and acquiring tls certificates from Let's encrypt with Traefik.
+                        The project is deployed on GCP, the latter is configured via Terraform
                         The project's main purpose is to practice with technologies such as:
                      <BulletList data={cbrExp}/>
 
