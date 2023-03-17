@@ -8,9 +8,8 @@ pipeline {
 
     environment {
         registryCredential = 'dockerhub_id'
-        me = 'cptmutchell'
-        set = 'helm upgrade --install cbr-ui ./cbr-ui --set '
-
+        BUILD_VERSION = "${GIT_BRANCH.split("/")[1]}"+"-"+"${GIT_COMMIT[0..7]}"+"-"
+        BUILD_VERSION1 = sh(script: "echo \$(date +%Y%m%d%H%M%S)", returnStdout: true).trim()
     }
     parameters {
         booleanParam(name: 'USE_CACHE', defaultValue: true, description: 'node_modules are cached in WORKSPACE')
@@ -31,12 +30,10 @@ pipeline {
 
                 withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
                     sh """
-                             bash ./docker.sh cbr-ui v${BUILD_NUMBER} Dockerfile.cache
+                             bash ./docker.sh cbr-ui ${BUILD_VERSION}${BUILD_VERSION1} Dockerfile.cache
                              """
                 }
-                script {
-                    set = set + 'tag=v${BUILD_NUMBER},'
-                }
+
             }
 
         }
@@ -49,29 +46,8 @@ pipeline {
             steps {
                 withDockerRegistry(credentialsId: registryCredential, url: 'https://index.docker.io/v1/') {
                     sh """
-                   bash ./docker.sh cbr-ui v${BUILD_NUMBER} Dockerfile
+                   bash ./docker.sh cbr-ui ${BUILD_VERSION}${BUILD_VERSION1} Dockerfile
                     """
-                }
-                script {
-                    set = set + 'tag=v${BUILD_NUMBER},'
-                }
-            }
-        }
-        stage("Helm") {
-            steps {
-                script {
-                    if (set =~ '--set [A-Za-z]') {
-                        set = set.substring(0, set.length() - 1);
-                        sh """
-                                cd k8s/helm
-                                eval ${set}
-                                """
-                    } else {
-                        sh """
-                            cd k8s/helm
-                            helm upgrade --install -n cbr  cbr-ui ./cbr-ui
-                                """
-                    }
                 }
             }
         }
