@@ -23,13 +23,11 @@ const smartsoftExp:BulletListType =
     ]
 const cbrExp:BulletListType =
     [
-        <span> Jenkins</span>,
-        <span> Kubernetes</span>,
-        <span> Helm</span>,
+
+        <span> Java</span>,
+        <span> Spring boot, security</span>,
+        <span> Hibernate</span>,
         <span> Docker</span>,
-        <span> Ansible</span>,
-        <span> Traefik</span>,
-        <span> RabbitMQ</span>,
         <span> Kotlin</span>
     ]
 const cbrUiExp:BulletListType =
@@ -41,6 +39,19 @@ const cbrUiExp:BulletListType =
         <span> Typescript</span>,
         <span> Webpack</span>
     ]
+
+const devopsExp:BulletListType =
+    [
+        <span> FluxCD</span>,
+        <span> Jenkins</span>,
+        <span> Kubernetes</span>,
+        <span> Helm</span>,
+        <span> Ansible</span>,
+        <span> RabbitMQ</span>,
+        <span> Terraform</span>,
+        <span> GCP</span>
+    ]
+
 
 const aboutInfo: AccordionGroupType = {
 
@@ -87,11 +98,8 @@ const aboutInfo: AccordionGroupType = {
             sub: [{
                 title: "Cbr-currency-converter",
                 value:
-                    <span>Converts currencies according to Russian Central Bank rates, stores the history and supports JWT role-based authentication and authorization.
+                    <span>Converts currencies according to Russian Central Bank rates, stores the history and supports JWT role-based authentication and email authorization.
                         It can be run in docker-compose, in local k8s cluster or on a cloud provider.
-                        Using Ansible I have automated Jenkins setup, creation of pipelines and webhooks is accomplished by JCasc, creation of k3s cluster, transfer kubeconfig to Jenkins VM to restrict Jenkins within specific namespace and acquiring tls certificates from Let's encrypt with Traefik.
-                        The project is deployed on GCP, the latter is configured via Terraform
-                        The project's main purpose is to practice with technologies such as:
                      <BulletList data={cbrExp}/>
 
                         More details are available in Readme.   <a href="https://github.com/CPTMUTCHELL/cbr-currency-converter">Github link</a>
@@ -106,6 +114,18 @@ const aboutInfo: AccordionGroupType = {
                             <BulletList data={cbrUiExp}/>
                         The app stores JWT tokens in Local storage.
                         Some pages are access-restricted based on JWT roles.   <a href="https://github.com/CPTMUTCHELL/cbr-currency-converter-ui">Github link</a>
+                    </span>
+                },
+                {
+                    title: "Cbr-devops",
+                    value:
+                        <span>
+                     My devops experience for this project.
+                            <BulletList data={devopsExp}/>
+                            Using Ansible I have automated Jenkins setup, creation of pipelines and webhooks is accomplished by JCasc, kubernetes cluster configuration is done with Ansible.
+                            Ansible installs Helm, RabbitMQ, Traefik, FluxCD, Metallb to the cluster
+                            The project is deployed on GCP. GCP is configured with Terraform
+                            FluxCD scans a docker registry for new tags, updates tags in Helm values and runs Helm upgrade. <a href="https://github.com/CPTMUTCHELL/cbr-devops">Github link</a>
                     </span>
                 }]
         }
