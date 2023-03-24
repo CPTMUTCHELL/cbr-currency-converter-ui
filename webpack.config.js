@@ -59,8 +59,15 @@ module.exports = {
 
             },
             {
-                test: /\.(pdf|jpg|png|svg|gif|jpeg)$/,
+                test: /\.(jpg|png|svg|gif|jpeg)$/,
                 type: "asset/resource",
+            },
+            {
+                test: /\.(pdf)$/,
+                type: "asset/resource",
+                generator : {
+                    filename : '[name][ext]',
+                }
             },
 
         ]
