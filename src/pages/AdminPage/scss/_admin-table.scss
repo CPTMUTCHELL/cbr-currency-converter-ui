@@ -1,58 +1,41 @@
-@import 'src/scss/variables',"src/scss/functions","variables";
+@import 'src/scss/variables', "src/scss/functions", "variables";
 
 .admin-table {
-  margin-top: $margin-top;
   border-bottom: 2px $nav-color solid;
   border-collapse: collapse;
 
-  thead tr {
-    background-color: $nav-color;
+  .MuiCheckbox-root.header-checkbox {
     color: white;
   }
 
-  th.subject,.user {
-    width: calc($table-width/2);
-    @include media-medium{
-      width: 100vw;
+  .MuiTableCell-root {
+    .MuiTableSortLabel-root {
+      color: white;
+
+      .MuiTableSortLabel-icon {
+        color: white;
+      }
     }
+
+  }
+
+  .MuiTableBody-root {
+    background-color: aliceblue;
+  }
+
+  thead tr {
+    background-color: $nav-color;
   }
 
 
   th, td {
     padding: 1rem;
-    &:not(:last-child){
+
+    &:not(:last-child) {
       border-right: 1px solid $nav-color;
     }
 
-    .material-icons.red {
-      @include media-medium{
-        width: 20px;
-        height: 20px;
-      }
-      color: red;
-      float: right;
-      background: transparent;
-      border: none;
 
-    }
-    .material-icons.blue {
-      @include media-medium{
-        width: 20px;
-        height: 20px;
-      }
-      float: right;
-      color: blue;
-      background: transparent;
-      border: none;
-
-    }
-  }
-
-
-  tbody {
-    tr, td {
-      background-color: aliceblue;
-    }
   }
 
 }

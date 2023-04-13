@@ -9,6 +9,14 @@
     padding: 0;
 
   }
+  .MuiToolbar-root{
+    flex-direction: row;
+    justify-content: space-between;
+    .action-buttons{
+      display: flex;
+    }
+  }
+
 
 }
 

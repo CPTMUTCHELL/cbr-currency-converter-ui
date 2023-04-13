@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import './scss/AdminPage.scss';
-import {IRole, IUserToken} from "@/Interfaces";
+import {IRole, IUser} from "@/Interfaces";
 import CircularProgress from "@mui/material/CircularProgress";
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
@@ -8,16 +8,15 @@ import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 
 export interface ModalProps {
     minRoleId: number
-    user: IUserToken
+    user: IUser
     active: boolean,
     setActive: (active: boolean) => void
 }
 
 
-export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,active, setActive}) => {
+export const UpdateRolesModalWindow: React.FC<ModalProps> = memo(({minRoleId, user,active, setActive}) => {
     const [loading,setLoading] = useState(false)
     const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
-
     const [roles, setRoles] = useState<IRole[]>([
         {id: 1, name: "OWNER", isAdded: false, isRevoked: false},
         {id: 2, name: "ADMIN", isAdded: false, isRevoked: false},
@@ -116,4 +115,4 @@ export const UpdateRolesModalWindow: React.FC<ModalProps> = ({minRoleId, user,ac
         </div>
     )
 
-}
+})

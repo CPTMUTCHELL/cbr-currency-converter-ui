@@ -1,101 +1,243 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import CircularProgress from "@mui/material/CircularProgress";
-import {IUserToken} from "@/Interfaces";
-import {UserContext} from "src/functions/Contexts";
+import React, {useContext, useEffect, useState} from 'react';
+import {IUser} from "@/Interfaces";
+import {INotificationContext, NotificationContext, UserContext} from "src/functions/Contexts";
 import './scss/AdminPage.scss';
-import {UpdateRolesModalWindow} from "./UpdateRolesModalWindow";
 
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
+import {Checkbox, Table, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Toolbar} from "@mui/material";
+import TableBody from "@mui/material/TableBody";
+import TablePagination from "@mui/material/TablePagination";
+import {SortOrder} from "@/Types";
+import {sortAndSlicePages} from "@/functions/SortFunction";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
+import {UpdateRolesModalWindow} from "@/pages/AdminPage/UpdateRolesModalWindow";
+import CircularProgress from "@mui/material/CircularProgress";
+
+type ColumnId = keyof IUser
+
+interface IColumn {
+    label: string,
+    id: ColumnId
+}
+
+const columns: IColumn[] =
+    [
+        {label: "username", id: "username"},
+        {label: "roles", id: "roles"},
+        {label: "email", id: "email"},
+        {label: "verified", id: "verified"}
+    ]
+
 
 export const AdminPage: React.FC = () => {
+
+    const [order, setOrder] = React.useState<SortOrder>("asc");
+    const [orderBy, setOrderBy] = React.useState<ColumnId>("username");
+    const [selected, setSelected] = React.useState<number[]>([]);
+
     const token = localStorage.getItem("access")!
     const {userToken} = useContext(UserContext);
     const [active, setActive] = useState<boolean>(false)
-    const [users, setUsers] = useState<IUserToken[]>(Object);
-    const [user, setUser] = useState<IUserToken | undefined>();
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [user, setUser] = useState<IUser | undefined>();
+    const [visibleUsers, setVisibleUsers] = useState<IUser[]>([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     const minRoleId = Math.min(...userToken.roles.map(role => Number(String(role).split("-")[0])))
     const [loading, setLoading] = useState(true)
     const {responseHandlerFunc} = useBackendResponseHandler({setLoading});
-    //to reduce auth-service calls
+    const {setMessage, setShow, setAlertType} = useContext(NotificationContext) as INotificationContext;
+    const isSelected = (id: number) => selected.includes(id)
 
 
-        const getUsers = useCallback(() => {
-            responseHandlerFunc(  async ()=>{
-                const res = await Service.getUsers();
-                setUsers(res.data)
-                user?.roles.forEach(role => role.isAdded = true)
-            })
+    const getUsers = () => {
+        responseHandlerFunc(async () => {
+            const res = await Service.getUsers();
+            setUsers(res.data)
+            user?.roles.forEach(role => role.isAdded = true)
+            const sorted = sortAndSlicePages(res.data, order, orderBy, page, rowsPerPage)
 
+            setVisibleUsers(sorted)
 
-        },[])
+        })
 
-        useEffect(() => getUsers() , [active, token])
-
-
+    }
+    useEffect(() => getUsers(), [active, token])
 
     const deleteUserHandler = (e: any) => {
-        if (window.confirm("Delete the item?")) {
-            responseHandlerFunc( async ()=>{
-                const res = await Service.deleteUser(e.target.id);
-                if (res.status === 204){
-                    getUsers()
-
-                    //replaced with Alert context
-                    // setDelMsg(e.target.value + " deleted")
-                    // setShowingAlert(true)
+        if (window.confirm("Delete items?")) {
+            responseHandlerFunc(async () => {
+                const res = await Service.deleteUsers(selected);
+                const notDeletedNames = res.data.map(el => el.username)
+                getUsers()
+                if (notDeletedNames.length!=0) {
+                    setShow(true)
+                    setAlertType("warning")
+                    setMessage(notDeletedNames.join(", ") + " not deleted. Insufficient rights")
                 }
-            },{alertProp:{message:e.target.value + " deleted",alertType:"info"}})
+            })
 
         }
     }
     const openRolesModalHandler = (e: any) => {
         setActive(true);
-        setUser(users.find(user => user.id == e.target.id))
+        setUser(users.find(user => user.id == selected[0]))
+
     }
+
+
+    const sortHandler = (sortId: ColumnId) => (e: React.MouseEvent<unknown>) => {
+        setOrderBy(sortId)
+        const newOrder = order == "asc" ? "desc" : "asc"
+        setOrder(newOrder)
+        const sorted = sortAndSlicePages(users, newOrder, orderBy, page, rowsPerPage)
+        setVisibleUsers(sorted)
+
+    }
+
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage)
+        const sorted = sortAndSlicePages(users, order, orderBy, newPage, rowsPerPage)
+        setVisibleUsers(sorted)
+    }
+    const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const rowsPerPage = parseInt(e.target.value)
+
+        setRowsPerPage(rowsPerPage)
+        const sorted = sortAndSlicePages(users, order, orderBy, page, rowsPerPage)
+
+        setVisibleUsers(sorted)
+    }
+
+    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+        if (selected.includes(id)) {
+            setSelected(prevState => prevState.filter(el => el != id))
+        } else setSelected([...selected, id])
+
+    };
+    const handleSelectAllClick = () => {
+        const selectedVisibleIds = visibleUsers.filter(el => canRemove(el)).map(el => el.id)
+        if (checked) setSelected(prevState => prevState.filter(el => !selectedVisibleIds.includes(el)))
+        else setSelected([...selected, ...selectedVisibleIds.filter(el => !selected.includes(el))])
+
+    }
+    const canRemove = (user: IUser) => minRoleId < Math.min(...user.roles.map(role => role.id!))
+
+    const visibleAndSelectedIntersection = visibleUsers.map(el => el.id).filter(el => selected.includes(el))
+
+    const checked = visibleAndSelectedIntersection.length == visibleUsers.filter(el => canRemove(el)).length
+    const indeterminate = visibleAndSelectedIntersection.length < visibleUsers.length && visibleAndSelectedIntersection.length > 0 && !checked
+
 
     return (
         <>
-            <div className="admin-page-container">
+            {loading ? <CircularProgress/> :
+                <div className="admin-page-container">
+                    <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
 
-                <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
-                <table className="admin-table">
-                    <thead>
-                    <tr>
-                        <th className="user" align="center">User</th>
-                        <th className="subject" align="center">Roles</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {loading ? <CircularProgress/> : Object.values(users).map((user) => (
-                        <tr key={user.username}>
-                            {userToken.username === user.username
-                                ? <td>{user.username} (me)</td>
-                                : <td>{user.username}</td>
-
+                    <Toolbar>
+                        <div>{selected.length != 0 ? <h3>{selected.length} selected</h3> : <h3>Users</h3>}</div>
+                        <div className="action-buttons">
+                            {selected.length == 1 ?
+                                <IconButton onClick={openRolesModalHandler}>
+                                    <ListOutlinedIcon/>
+                                </IconButton> :
+                                null
                             }
-                            <td>{user.roles.map(role => role.name).join(", ")}  &nbsp;  &nbsp;
-                                {minRoleId < Math.min(...user.roles.map(role => role.id!)) ?
-                                    <button id={String(user.id)} onClick={openRolesModalHandler}
-                                            className="material-icons blue">menu</button> : null}
+                            {selected.length != 0 ?
+                                <div>
+                                    <IconButton onClick={deleteUserHandler}>
+                                        <DeleteIcon color="error"/>
+                                    </IconButton>
+                                </div> :
+                                null
+                            }
+                        </div>
+                    </Toolbar>
+                    <TableContainer>
+                        <Table className="admin-table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        <Checkbox className="header-checkbox"
+                                                  color="primary"
+                                                  onChange={handleSelectAllClick}
+                                                  checked={checked}
+                                                  indeterminate={indeterminate}
+                                        />
+                                    </TableCell>
+                                    {columns.map((col) => (
+                                        <TableCell
+                                            key={col.id}
+                                            sortDirection={orderBy === col.id ? order : false}
+                                        >
+                                            <TableSortLabel
+                                                active={orderBy === col.id}
+                                                direction={orderBy === col.id ? order : 'asc'}
+                                                onClick={sortHandler(col.id)}
+                                            >
+                                                <h4>{col.label}</h4>
+                                            </TableSortLabel>
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {visibleUsers.map((row) => {
+                                    const isItemSelected = isSelected(row.id);
+                                    const canRemove = minRoleId < Math.min(...row.roles.map(role => role.id!))
 
-                                {minRoleId < Math.min(...user.roles.map(role => role.id!)) ?
-                                    <button className="material-icons red" value={user.username} id={String(user.id)}
-                                            onClick={deleteUserHandler}>delete</button>
-                                    : null}
-                            </td>
+                                    return (
 
+                                        <TableRow
 
-                        </tr>
-                    ))}
+                                            key={row.id}
+                                            hover={canRemove}
+                                            sx={{cursor: canRemove ? 'pointer' : ''}}
 
-                    </tbody>
-                </table>
+                                            selected={isItemSelected}
+                                            onClick={(event) => canRemove ? handleClick(event, row.id) : null}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    disabled={!canRemove}
+                                                    disableRipple={!canRemove}
 
-            </div>
+                                                />
+                                            </TableCell>
+
+                                            <TableCell width="30%">{row.username}</TableCell>
+                                            <TableCell
+                                                width="30%">{row.roles.map(el => el.name).sort((a, b) => a.localeCompare(b)).join(",")}</TableCell>
+                                            <TableCell width="30%">{row.email}</TableCell>
+                                            <TableCell width="10%">{String(row.verified)}</TableCell>
+                                        </TableRow>
+                                    );
+                                })
+                                }
+
+                            </TableBody>
+                        </Table>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={users.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </TableContainer>
+                </div>
+
+            }
         </>
     )
 }

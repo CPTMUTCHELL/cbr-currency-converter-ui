@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react";
 import {FormControl, IconButton, Input, InputAdornment, InputLabel} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import {IToken, IUser} from "@/Interfaces";
+import {IToken} from "@/Interfaces";
 import Box from "@mui/material/Box";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import {getUser} from "src/functions/JwtToken";
@@ -12,11 +12,12 @@ import {useBackendResponseHandler} from "src/hooks/useBackendResponseHandler";
 import {UserContext} from "src/functions/Contexts";
 import "./scss/SignForm.scss"
 import {LoadingButton} from "@mui/lab";
+import {SignInUpType} from "@/Types";
 
 export const SignInForm:React.FC = () => {
     const navigate = useNavigate();
 
-    const [user, setUser] = useState<IUser>(Object);
+    const [user, setUser] = useState<SignInUpType>(Object);
     const {setUserToken} = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const {responseHandlerFunc} = useBackendResponseHandler({setLoading});

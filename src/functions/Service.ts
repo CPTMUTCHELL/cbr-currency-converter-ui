@@ -2,6 +2,7 @@ import {axiosFunction, IAxiosResponse} from "./axiosFunction"
 import {IConvert, ICurrency, IHistoryPage, IHistoryParams, IToken, IUser, IUserToken} from "@/Interfaces";
 import {singletonTokenInstance} from "src/functions/Tokens";
 import {JwtToken} from "src/functions/JwtToken";
+import {SignInUpType} from "@/Types";
 
 const CURRENCIES_URL = "backend/convert/currencies";
 const CONVERT_URL = "backend/convert/convert";
@@ -48,7 +49,7 @@ class _Service {
     }
 
     //login
-    public async signIn(payload: IUser): Promise<IAxiosResponse<IToken>> {
+    public async signIn(payload: SignInUpType): Promise<IAxiosResponse<IToken>> {
         console.log(payload)
         return await axiosFunction({
             method: "POST",
@@ -58,7 +59,7 @@ class _Service {
     }
 
     //registration
-    public async signUp(payload: IUser): Promise<IAxiosResponse<IUser>> {
+    public async signUp(payload: SignInUpType): Promise<IAxiosResponse<IUser>> {
         return await axiosFunction({
             method: "POST",
             url: REGISTRATION_URL,
@@ -67,17 +68,18 @@ class _Service {
     }
 
     //admin
-    public async deleteUser(id: number): Promise<IAxiosResponse<any>> {
+    public async deleteUsers(payload: number[]): Promise<IAxiosResponse<IUserToken[]>> {
         const token = await JwtToken(singletonTokenInstance.getToken().access);
 
         return await axiosFunction({
             method: "DELETE",
-            url: USERS_URL + `/${id}`,
-            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`}
+            url: USERS_URL,
+            headers: {"Authorization": `Bearer ${token ?? singletonTokenInstance.getToken().access}`},
+            data: payload
         });
     }
 
-    public async getUsers(): Promise<IAxiosResponse<IUserToken[]>> {
+    public async getUsers(): Promise<IAxiosResponse<IUser[]>> {
         const token = await JwtToken(singletonTokenInstance.getToken().access)
         return await axiosFunction({
             method: "GET",

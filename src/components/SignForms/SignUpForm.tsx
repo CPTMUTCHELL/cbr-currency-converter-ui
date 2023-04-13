@@ -3,7 +3,7 @@ import {Box, FormControl, FormHelperText, IconButton, Input, InputAdornment, Inp
 
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import {IUser} from "@/Interfaces";
+import {SignInUpType} from "@/Types";
 import "./scss/SignForm.scss"
 import {Service} from "src/functions/Service";
 import {useBackendResponseHandler} from "@/hooks/useBackendResponseHandler";
@@ -21,9 +21,8 @@ const validationObj:IValidation ={
     username:false
 }
 
-
 export const SignUpForm: React.FC = () => {
-    const [signUpUser, setSignUpUser] = useState<IUser>({username:"",email:"",password:""})
+    const [signUpUser, setSignUpUser] = useState<SignInUpType>({username:"",email:"",password:""})
     const [showPass, setShowPass] = useState<boolean>(false)
     const [validation, setValidation] = useState<IValidation>(validationObj)
     const [loading, setLoading] = useState(false)

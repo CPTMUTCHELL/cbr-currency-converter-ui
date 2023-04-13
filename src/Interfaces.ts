@@ -1,8 +1,11 @@
 
 export interface IUser {
+    id:number
     email:string
     username:string,
     password: string
+    verified:boolean,
+    roles:IRole[]
 }
 
 export interface IToken {
