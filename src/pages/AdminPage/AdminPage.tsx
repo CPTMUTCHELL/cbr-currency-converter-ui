@@ -133,12 +133,13 @@ export const AdminPage: React.FC = () => {
     const checked = visibleAndSelectedIntersection.length == visibleUsers.filter(el => canRemove(el)).length
     const indeterminate = visibleAndSelectedIntersection.length < visibleUsers.length && visibleAndSelectedIntersection.length > 0 && !checked
 
-
+    console.log("d")
     return (
         <>
+            <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
+
             {loading ? <CircularProgress/> :
                 <div className="admin-page-container">
-                    <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
 
                     <Toolbar>
                         <div>{selected.length != 0 ? <h3>{selected.length} selected</h3> : <h3>Users</h3>}</div>

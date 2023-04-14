@@ -1,3 +1,5 @@
+import {SortOrder} from "@/Types";
+
 export const comparator = <T>(objects:T[],order:SortOrder,orderBy: keyof T):T[] => {
   return objects.sort((a, b) => {
       if (order=="desc"){
