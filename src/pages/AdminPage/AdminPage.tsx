@@ -79,6 +79,7 @@ export const AdminPage: React.FC = () => {
                     setAlertType("warning")
                     setMessage(notDeletedNames.join(", ") + " not deleted. Insufficient rights")
                 }
+                setSelected([])
             })
 
         }
@@ -130,10 +131,8 @@ export const AdminPage: React.FC = () => {
 
     const visibleAndSelectedIntersection = visibleUsers.map(el => el.id).filter(el => selected.includes(el))
 
-    const checked = visibleAndSelectedIntersection.length == visibleUsers.filter(el => canRemove(el)).length
+    const checked = visibleAndSelectedIntersection.length == visibleUsers.filter(el => canRemove(el)).length && visibleUsers.filter(el=>canRemove(el)).length!=0
     const indeterminate = visibleAndSelectedIntersection.length < visibleUsers.length && visibleAndSelectedIntersection.length > 0 && !checked
-
-    console.log("d")
     return (
         <>
             <UpdateRolesModalWindow minRoleId={minRoleId} user={user!} active={active} setActive={setActive}/>
@@ -170,6 +169,7 @@ export const AdminPage: React.FC = () => {
                                                   onChange={handleSelectAllClick}
                                                   checked={checked}
                                                   indeterminate={indeterminate}
+                                                  disabled={visibleUsers.filter(el=>canRemove(el)).length==0}
                                         />
                                     </TableCell>
                                     {columns.map((col) => (
